@@ -78,7 +78,7 @@
             width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: #f1f1ff;
         }
         ::-webkit-scrollbar-thumb {
             background: #c1c1c1;
@@ -270,68 +270,121 @@
         }
 
 
-        /* == Auth View == */
+        /* == Auth View (NEUMORPHIC RE-DESIGN) == */
         #auth-view {
             justify-content: center;
             align-items: center;
-            padding: 24px;
+            padding: 20px;
             gap: 20px;
-            /* Using white for form background */
-            background: #fff;
+            /* Neumorphic background color */
+            background: #f0f2f5; 
             z-index: 50; /* Below calculator, above main */
         }
-        #auth-view h1 {
-            color: var(--wa-header-bg);
-            font-size: 2.5rem;
-            font-weight: 700;
+
+        /* New container for the soft UI card */
+        .auth-form-container {
+            width: 100%;
+            max-width: 380px;
+            background: #f0f2f5;
+            padding: 30px;
+            border-radius: 20px;
+            /* The main "extruded" shadow */
+            box-shadow: 12px 12px 24px #bebebe, -12px -12px 24px #ffffff;
         }
+
+        #auth-view h1 {
+            /* This styles "SECRET MESSAGING" */
+            color: #444; /* Darker gray text */
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px; /* MODIFIED: Reduced margin */
+        }
+        
+        /* --- NEW STYLE FOR DEVELOPER SUBTITLE --- */
+        .auth-developer-subtitle {
+            color: #555;
+            font-size: 1rem;
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+        /* --- END NEW STYLE --- */
+        
         .auth-form {
             display: flex;
             flex-direction: column;
             width: 100%;
-            gap: 15px;
+            gap: 20px; /* Increased gap */
         }
+        
         .auth-form input {
-            padding: 12px 15px;
-            border: 1px solid var(--wa-border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-        .auth-form input:focus {
-            outline: none;
-            border-color: var(--wa-accent-blue);
-            box-shadow: 0 0 0 2px rgba(52, 183, 241, 0.3);
-        }
-        .auth-btn {
-            padding: 12px;
-            background-color: var(--wa-button-color);
-            color: white;
+            /* This is the "inset" style */
             border: none;
-            border-radius: 8px;
+            outline: none;
+            background: #f0f2f5;
+            padding: 15px 20px;
+            border-radius: 10px;
             font-size: 1rem;
-            font-weight: 500;
+            color: #555;
+            /* The "inset" or "impressed" shadow */
+            box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
+        }
+        
+        .auth-form input:focus {
+            /* Optional: slightly change shadow on focus */
+            box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;
+        }
+        
+        .auth-btn {
+            /* This is the "extruded" button style */
+            padding: 15px;
+            background: #f0f2f5;
+            color: #555; /* Match text color */
+            border: none;
+            outline: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: background-color 0.2s;
+            /* The "extruded" button shadow */
+            box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
+            transition: all 0.2s ease-in-out;
         }
+        
         .auth-btn:hover {
-            background-color: #006652; /* Darker green on hover */
+            /* Slightly stronger shadow on hover */
+            box-shadow: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff;
         }
+
+        .auth-btn:active {
+            /* "Pressed" effect by reversing to inset shadow */
+            box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
+            color: #333;
+        }
+        
         .auth-link {
-            color: var(--wa-link-color);
+            color: #555; /* Match style */
             text-decoration: none;
             font-size: 0.9rem;
             text-align: center;
             cursor: pointer;
+            margin-top: 10px; /* Add some space */
         }
+        
         .auth-link:hover {
             text-decoration: underline;
         }
+        
         .error-message {
             color: var(--call-end-red);
             font-size: 0.9rem;
             text-align: center;
             min-height: 1.2em;
         }
+        /* == End Auth View Re-design == */
+
 
         /* == Main View == */
         #main-view {
@@ -1097,25 +1150,27 @@
         </div>
         
         <div id="auth-view" class="view hidden">
-            <h1>SECRET MESSAGING</h1>
+            <div class="auth-form-container">
+                <h1>SECRET MESSAGING</h1>
+                <p class="auth-developer-subtitle">𝐃𝐄𝐕𝐀𝐋𝐎𝐏𝐄𝐑 𝐊𝐀𝐖𝐒𝐀𝐑</p>
             
-            <form id="login-form" class="auth-form">
-                <div id="login-error" class="error-message"></div>
-                <input type="email" id="login-email" placeholder="Email" required>
-                <input type="password" id="login-password" placeholder="Password" required>
-                <button type="submit" class="auth-btn">LOGIN</button>
-                <a id="show-signup" class="auth-link">SIGN UP</a>
-            </form>
+                <form id="login-form" class="auth-form">
+                    <div id="login-error" class="error-message"></div>
+                    <input type="email" id="login-email" placeholder="Email" required>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                    <button type="submit" class="auth-btn">LOGIN</button>
+                    <a id="show-signup" class="auth-link">SIGN UP</a>
+                </form>
 
-            <form id="signup-form" class="auth-form hidden">
-                <div id="signup-error" class="error-message"></div>
-                <input type="email" id="signup-email" placeholder="Email" required>
-                <input type="password" id="signup-password" placeholder="Password" required>
-                <button type="submit" class="auth-btn">SIGN UP</button>
-                <a id="show-login" class="auth-link">LOGIN</a>
-            </form>
+                <form id="signup-form" class="auth-form hidden">
+                    <div id="signup-error" class="error-message"></div>
+                    <input type="email" id="signup-email" placeholder="Email" required>
+                    <input type="password" id="signup-password" placeholder="Password" required>
+                    <button type="submit" class="auth-btn">SIGN UP</button>
+                    <a id="show-login" class="auth-link">LOGIN</a>
+                </form>
+            </div>
         </div>
-
         <div id="main-view" class="view hidden">
             <header class="main-header">
                 <div class="header-top">
