@@ -1,17 +1,6 @@
 :root{--wa-header-bg:#53051D;--wa-accent-blue:#34B7F1;--wa-message-out-bg:#e1f6fb;--wa-message-in-bg:#ffffff;--wa-app-bg:#FFF2C3;--wa-chat-bg:#e5ddd5;--wa-icon-color:#f0f2f5;--wa-text-primary:#111b21;--wa-text-secondary:#667781;--wa-border-color:#e9edef;--wa-active-tab-indicator:var(--wa-accent-blue);--wa-button-color:#008069;--wa-link-color:#00a8e8;--wa-shadow:rgba(17,27,33,0.15);--call-end-red:#e91e63;--call-accept-green:#4CAF50;--modal-bg:#f7f7f7;--modal-border-radius:12px;--modal-shadow:0 8px 25px rgba(0,0,0,0.3);--calc-bg:#1c1c1c;--calc-display-bg:#1c1c1c;--calc-btn-bg:#505050;--calc-btn-op-bg:#FF9500;--calc-btn-other-bg:#D4D4D2;--calc-text-primary:#FFFFFF;--calc-text-op:#FFFFFF;--calc-text-other:#1c1c1c;}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;}
-html,body{
-    width: 100%;
-    /* Updated for optimal mobile screen fit using dynamic viewport height (100dvh) */
-    height: 100dvh; 
-    min-height: 100vh; /* Fallback and full height assurance */
-    overflow: hidden;
-    background-color: #d1d7db;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--wa-text-primary);
-}
+html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;display:flex;align-items:center;justify-content:center;color:var(--wa-text-primary);}
 .hidden{display:none!important;}
 ::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:#f1f1ff;}
