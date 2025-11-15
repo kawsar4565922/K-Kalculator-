@@ -13,23 +13,29 @@ let currentChatPartner=null;
 let currentChatListener=null;
 let unreadListeners={};
 let contactListeners={};
+let requestListener=null;
+let callListener=null;
 let lastMessageTimestamps={};
 let messageElements={};
 let calcDisplayValue='0';
+let peerConnection=null;
+let localStream=null;
+let remoteStream=null;
+let incomingCallData=null;
+let activeCallId=null;
 let customPromptResolver = null;
+const rtcConfig={iceServers:[{urls:'stun:stun.l.google.com:19302'}]};
 const appContainer=document.getElementById('app-container');
 const calculatorView=document.getElementById('calculator-view');
 const authView=document.getElementById('auth-view');
 const mainView=document.getElementById('main-view');
 const chatView=document.getElementById('chat-view');
-// --- কল-সম্পর্কিত ভিউ ভ্যারিয়েবল মুছে ফেলা হয়েছে ---
-// const videoCallView=document.getElementById('video-call-view');
-// const voiceCallView=document.getElementById('voice-call-view');
+const videoCallView=document.getElementById('video-call-view');
+const voiceCallView=document.getElementById('voice-call-view');
 const allViews=document.querySelectorAll('.view');
 const addFriendModal=document.getElementById('add-friend-modal');
 const profileViewModal=document.getElementById('profile-view-modal');
-// --- কল-সম্পর্কিত মোডাল ভ্যারিয়েবল মুছে ফেলা হয়েছে ---
-// const incomingCallModal=document.getElementById('incoming-call-modal');
+const incomingCallModal=document.getElementById('incoming-call-modal');
 const customPromptModal=document.getElementById('custom-prompt-modal');
 const customPromptForm=document.getElementById('custom-prompt-form');
 const promptInput=document.getElementById('prompt-input');
@@ -46,18 +52,15 @@ const showLoginBtn=document.getElementById('show-login');
 const addFriendBtn=document.getElementById('add-friend-btn');
 const menuBtn=document.getElementById('menu-btn');
 const navHome=document.getElementById('nav-home');
-// --- নোটিফিকেশন ভ্যারিয়েবল মুছে ফেলা হয়েছে ---
-// const navNotifications=document.getElementById('nav-notifications');
+const navNotifications=document.getElementById('nav-notifications');
 const navCalls=document.getElementById('nav-calls');
 const homeContent=document.getElementById('home-content');
-// --- নোটিফিকেশন ভ্যারিয়েবল মুছে ফেলা হয়েছে ---
-// const notificationsContent=document.getElementById('notifications-content');
+const notificationsContent=document.getElementById('notifications-content');
 const callsContent=document.getElementById('calls-content');
 const allNavTabs=document.querySelectorAll('.nav-tab');
 const allContentPanels=document.querySelectorAll('.content-panel');
 const chatsBadge=document.getElementById('chats-badge');
-// --- নোটিফিকেশন ভ্যারিয়েবল মুছে ফেলা হয়েছে ---
-// const notificationsBadge=document.getElementById('notifications-badge');
+const notificationsBadge=document.getElementById('notifications-badge');
 const chatBackBtn=document.getElementById('chat-back-btn');
 const chatHeaderInfo=document.getElementById('chat-header-info');
 const chatHeaderPicWrapper=document.getElementById('chat-header-pic-wrapper');
@@ -66,19 +69,17 @@ const chatMoreBtn=document.getElementById('chat-more-btn');
 const chatMessages=document.getElementById('chat-messages');
 const chatInput=document.getElementById('chat-input');
 const chatSendBtn=document.getElementById('chat-send-btn');
-// --- কল-সম্পর্কিত অডিও/ভিডিও এলিমেন্ট মুছে ফেলা হয়েছে ---
-// const remoteVideo=document.getElementById('remote-video');
-// const localVideo=document.getElementById('local-video');
-// const remoteAudio=document.getElementById('remote-audio');
-// const ringtone=document.getElementById('ringtone');
-// --- কল-সম্পর্কিত UI এলিমেন্ট মুছে ফেলা হয়েছে ---
-// const videoCallerPicWrapper=document.getElementById('video-caller-pic-wrapper');
-// const videoCallerName=document.getElementById('video-caller-name');
-// const videoEndCallBtn=document.getElementById('video-end-call-btn');
-// const voiceCallerPicWrapper=document.getElementById('voice-caller-pic-wrapper');
-// const voiceCallerName=document.getElementById('voice-caller-name');
-// const voiceCallStatus=document.getElementById('voice-call-status');
-// const voiceEndCallBtn=document.getElementById('voice-end-call-btn');
+const remoteVideo=document.getElementById('remote-video');
+const localVideo=document.getElementById('local-video');
+const remoteAudio=document.getElementById('remote-audio');
+const ringtone=document.getElementById('ringtone');
+const videoCallerPicWrapper=document.getElementById('video-caller-pic-wrapper');
+const videoCallerName=document.getElementById('video-caller-name');
+const videoEndCallBtn=document.getElementById('video-end-call-btn');
+const voiceCallerPicWrapper=document.getElementById('voice-caller-pic-wrapper');
+const voiceCallerName=document.getElementById('voice-caller-name');
+const voiceCallStatus=document.getElementById('voice-call-status');
+const voiceEndCallBtn=document.getElementById('voice-end-call-btn');
 const addFriendForm=document.getElementById('add-friend-form');
 const friendIdInput=document.getElementById('friend-id-input');
 const profilePicWrapper=document.getElementById('profile-pic-wrapper');
@@ -94,12 +95,11 @@ const profileCopyIdBtn=document.getElementById('profile-copy-id-btn');
 const profileCopyEmailBtn=document.getElementById('profile-copy-email-btn');
 const blockedUsersList=document.getElementById('blocked-users-list');
 const logoutBtn=document.getElementById('logout-btn');
-// --- ইনকামিং কল মোডাল এলিমেন্ট মুছে ফেলা হয়েছে ---
-// const incomingCallPicWrapper=document.getElementById('incoming-call-pic-wrapper');
-// const incomingCallName=document.getElementById('incoming-call-name');
-// const incomingCallType=document.getElementById('incoming-call-type');
-// const acceptCallBtn=document.getElementById('accept-call-btn');
-// const rejectCallBtn=document.getElementById('reject-call-btn');
+const incomingCallPicWrapper=document.getElementById('incoming-call-pic-wrapper');
+const incomingCallName=document.getElementById('incoming-call-name');
+const incomingCallType=document.getElementById('incoming-call-type');
+const acceptCallBtn=document.getElementById('accept-call-btn');
+const rejectCallBtn=document.getElementById('reject-call-btn');
 const notificationContainer = document.getElementById('notification-container');
 
 // --- Custom Notification Functions ---
@@ -155,15 +155,12 @@ function showNotification(message, duration = 3000, actions = null) {
 }
 
 function hideNotification(notification, timeout) {
-    if(timeout) clearTimeout(timeout);
+    clearTimeout(timeout);
     notification.classList.remove('show');
     notification.addEventListener('transitionend', () => {
-        if(notification.parentElement) {
-            notification.remove();
-        }
+        notification.remove();
     }, { once: true });
 }
-
 
 function customConfirm(message) {
     return new Promise(resolve => {
@@ -250,9 +247,8 @@ return`<span style="font-size: ${placeholderSize}; line-height: 1; user-select: 
 }
 function cleanupListeners(){
 if(currentChatListener)currentChatListener.off();
-// --- রিকোয়েস্ট এবং কল লিসেনার মুছে ফেলা হয়েছে ---
-// if(requestListener)requestListener.off();
-// if(callListener)callListener.off();
+if(requestListener)requestListener.off();
+if(callListener)callListener.off();
 Object.values(unreadListeners).forEach(listener=>{
 if(listener&&typeof listener.off==='function'){
 listener.off();
@@ -266,14 +262,31 @@ listener.off();
 unreadListeners={};
 contactListeners={};
 currentChatListener=null;
-// requestListener=null; // মুছে ফেলা হয়েছে
-// callListener=null; // মুছে ফেলা হয়েছে
+requestListener=null;
+callListener=null;
 lastMessageTimestamps={};
 messageElements={};
 }
-
-// --- cleanupCall ফাংশনটি মুছে ফেলা হয়েছে ---
-
+function cleanupCall(){
+if(peerConnection){
+peerConnection.close();
+peerConnection=null;
+}
+if(localStream){
+localStream.getTracks().forEach(track=>track.stop());
+localStream=null;
+}
+remoteVideo.srcObject=null;
+localVideo.srcObject=null;
+remoteAudio.srcObject=null;
+ringtone.pause();
+showModal('incoming-call-modal',false);
+if(currentUser){
+showView('main-view');
+}
+incomingCallData=null;
+activeCallId=null;
+}
 function copyText(text,message){
 if(!text)return;
 try{
@@ -308,23 +321,22 @@ if(!addFriendModal.classList.contains('hidden')){
 showModal('add-friend-modal',false);
 return true;
 }
-// --- কল-সম্পর্কিত মোডাল/ভিউ ব্যাক হ্যান্ডলিং মুছে ফেলা হয়েছে ---
-// if(!incomingCallModal.classList.contains('hidden')){
-// rejectCallBtn.click();
-// return true;
-// }
+if(!incomingCallModal.classList.contains('hidden')){
+rejectCallBtn.click();
+return true;
+}
 if(!chatView.classList.contains('hidden')){
 chatBackBtn.click();
 return true;
 }
-// if(!videoCallView.classList.contains('hidden')){
-// videoEndCallBtn.click();
-// return true;
-// }
-// if(!voiceCallView.classList.contains('hidden')){
-// voiceEndCallBtn.click();
-// return true;
-// }
+if(!videoCallView.classList.contains('hidden')){
+videoEndCallBtn.click();
+return true;
+}
+if(!voiceCallView.classList.contains('hidden')){
+voiceEndCallBtn.click();
+return true;
+}
 if(!authView.classList.contains('hidden')){
 showView('calculator-view');
 return true;
@@ -459,7 +471,7 @@ authStateResolve();
 currentUser=null;
 currentUserData=null;
 appInitialized=false;
-// cleanupCall(); // মুছে ফেলা হয়েছে
+cleanupCall();
 if(authStateInitialized){
 showView('calculator-view');
 }
@@ -643,9 +655,8 @@ showView('main-view');
 showPanel('home-content');
 history.pushState(null,'',window.location.pathname);
 listenForContacts();
-// --- listenForFriendRequests() এবং listenForIncomingCalls() কল দুটি মুছে ফেলা হয়েছে ---
-// listenForFriendRequests();
-// listenForIncomingCalls();
+listenForFriendRequests();
+listenForIncomingCalls();
 listenForAllFriends();
 appInitialized=true;
 }
@@ -654,70 +665,132 @@ addFriendForm.reset();
 showModal('add-friend-modal');
 history.pushState(null,'',window.location.pathname);
 });
-
-// --- addFriendForm 'submit' ইভেন্ট লিসেনার আপডেট করা হয়েছে ---
 addFriendForm.addEventListener('submit',(e)=>{
 e.preventDefault();
 const friendId=friendIdInput.value.trim();
 const initialMessage=document.getElementById('friend-message-input').value.trim();
-
 if(friendId===currentUser.uid){
-showNotification("You can't add yourself as a friend.", 5000);
+showNotification("You can't add yourself as a friend.", 5000); // Replaced alert
 return;
 }
 if(currentUserData.blocked&&currentUserData.blocked[friendId]){
-showNotification("You have blocked this user. Unblock them to add as a friend.", 5000);
+showNotification("You have blocked this user. Unblock them to send a request.", 5000); // Replaced alert
 return;
 }
-
 db.ref('users/'+friendId).once('value',snapshot=>{
 if(snapshot.exists()){
 const recipient=snapshot.val();
 if(recipient.blocked&&recipient.blocked[currentUser.uid]){
-// --- এই সেই বিভ্রান্তিকর বার্তাটি যা ঠিক করা হয়েছে ---
-showNotification("Cannot add user. You may be blocked by them.", 5000); 
+showNotification("This user is not accepting friend requests.", 5000); // Replaced alert
 return;
 }
-
-// --- সরাসরি কন্টাক্ট এবং মেসেজ যোগ করার লজিক ---
+const requestRef=db.ref(`requests/${friendId}/${currentUser.uid}`);
+const requestData={
+fromUid:currentUser.uid,
+fromName:currentUserData.name,
+fromProfilePicUrl:currentUserData.profilePicUrl||"",
+timestamp:firebase.database.ServerValue.TIMESTAMP
+};
+if(initialMessage){
+requestData.initialMessage=initialMessage;
+}
+requestRef.set(requestData).then(()=>{
+showNotification('Friend request sent!'); // Replaced alert
+showModal('add-friend-modal',false);
+if(history.state)history.back();
+});
+}else{
+showNotification('User not found.', 5000); // Replaced alert
+}
+});
+});
+function listenForFriendRequests(){
+if(requestListener)requestListener.off();
+requestListener=db.ref('requests/'+currentUser.uid);
+requestListener.on('value',snapshot=>{
+notificationsContent.innerHTML='';
+let requestCount=0;
+if(snapshot.exists()){
+snapshot.forEach(childSnapshot=>{
+const request=childSnapshot.val();
+if(currentUserData.blocked&&currentUserData.blocked[request.fromUid]){
+return;
+}
+requestCount++;
+const item=document.createElement('div');
+item.className='list-item';
+const subtext=request.initialMessage
+?`<div class="item-subtext" style="font-style: italic; color: var(--wa-text-primary); white-space: normal;">"${request.initialMessage}"</div>`
+:'<div class="item-subtext">Wants to be your contact.</div>';
+item.innerHTML=`
+<div class="item-emoji">
+${getProfilePicHTML({name:request.fromName,profilePicUrl:request.fromProfilePicUrl})}
+</div>
+<div class="item-details">
+<div class="item-name">${request.fromName}</div>
+${subtext} <div class="notification-actions">
+<button class="notif-btn reject" data-uid="${request.fromUid}">Reject</button>
+<button class="notif-btn accept" data-uid="${request.fromUid}">Accept</button>
+</div>
+</div>
+`;
+notificationsContent.appendChild(item);
+});
+}
+if(requestCount===0){
+notificationsContent.innerHTML='<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No new updates.</p>';
+}
+notificationsBadge.textContent=requestCount;
+notificationsBadge.classList.toggle('hidden',requestCount===0);
+});
+}
+notificationsContent.addEventListener('click',(e)=>{
+const uid=e.target.dataset.uid;
+if(!uid)return;
+if(e.target.classList.contains('accept')){
+db.ref(`requests/${currentUser.uid}/${uid}`).once('value',snapshot=>{
+if(snapshot.exists()){
+const requestData=snapshot.val();
+acceptRequest(uid,requestData);
+}else{
+console.log("Could not find request data to accept.");
+rejectRequest(uid);
+}
+});
+}else if(e.target.classList.contains('reject')){
+rejectRequest(uid);
+}
+});
+function acceptRequest(senderId,requestData){
 const myUid=currentUser.uid;
 const updates={};
-updates[`contacts/${myUid}/${friendId}`]=true;
-updates[`contacts/${friendId}/${myUid}`]=true;
-
-if(initialMessage){
-const chatId=getChatId(myUid,friendId);
+updates[`contacts/${myUid}/${senderId}`]=true;
+updates[`contacts/${senderId}/${myUid}`]=true;
+updates[`requests/${myUid}/${senderId}`]=null;
+if(requestData&&requestData.initialMessage){
+const chatId=getChatId(myUid,senderId);
 const message={
-text:initialMessage,
-senderId:myUid,
-receiverId:friendId,
-timestamp:firebase.database.ServerValue.TIMESTAMP,
+text:requestData.initialMessage,
+senderId:senderId,
+receiverId:myUid,
+timestamp:requestData.timestamp,
 status:'sent'
 };
 const newMessageKey=db.ref('messages/'+chatId).push().key;
 updates[`messages/${chatId}/${newMessageKey}`]=message;
-updates[`unreadCounts/${friendId}/${myUid}`]=1;
+updates[`unreadCounts/${myUid}/${senderId}`]=1;
 }
-
-db.ref().update(updates).then(()=>{
-showNotification('Friend added successfully!');
-showModal('add-friend-modal',false);
-if(history.state)history.back();
-}).catch(err=>{
-showNotification('Error adding friend: '+err.message, 5000);
-});
-
-}else{
-showNotification('User not found.', 5000);
+db.ref().update(updates)
+.then(()=>{
+console.log('Friend request accepted and message imported.');
+})
+.catch(err=>console.error('Error accepting request:',err));
 }
-});
-});
-
-// --- listenForFriendRequests ফাংশনটি মুছে ফেলা হয়েছে ---
-// --- notificationsContent ইভেন্ট লিসেনার মুছে ফেলা হয়েছে ---
-// --- acceptRequest ফাংশনটি মুছে ফেলা হয়েছে ---
-// --- rejectRequest ফাংশনটি মুছে ফেলা হয়েছে ---
-
+function rejectRequest(senderId){
+db.ref(`requests/${currentUser.uid}/${senderId}`).remove()
+.then(()=>console.log('Friend request rejected.'))
+.catch(err=>console.error('Error rejecting request:',err));
+}
 function sortChatList(){
 const chatItems=Array.from(homeContent.querySelectorAll('.list-item'));
 chatItems.sort((a,b)=>{
@@ -851,8 +924,7 @@ if(itemName)itemName.textContent=contact.name;
 }
 currentUids.forEach(uid=>{
 if(!newUids.has(uid)){
-const itemToRemove = homeContent.querySelector(`.list-item[data-uid="${uid}"]`);
-if(itemToRemove) itemToRemove.remove();
+homeContent.querySelector(`.list-item[data-uid="${uid}"]`).remove();
 if(contactListeners[uid]){
 contactListeners[uid].off();
 delete contactListeners[uid];
@@ -1178,7 +1250,205 @@ menuBtn.click();
 }
 });
 }
-
-// --- সমস্ত কল-সম্পর্কিত ফাংশন (startCall, listenForIncomingCalls, acceptCallBtn, rejectCallBtn, endCall, ইত্যাদি) মুছে ফেলা হয়েছে ---
-
+async function startCall(isVideo){
+if(!currentChatPartner)return;
+const partnerId=currentChatPartner.uid;
+try{
+localStream=await navigator.mediaDevices.getUserMedia({
+video:isVideo,
+audio:true
+});
+localVideo.srcObject=localStream;
+peerConnection=new RTCPeerConnection(rtcConfig);
+addLocalTracksToPC();
+const callRef=db.ref('calls').push();
+activeCallId=callRef.key;
+const offer=await peerConnection.createOffer();
+await peerConnection.setLocalDescription(offer);
+const callData={
+callId:activeCallId,
+from:currentUser.uid,
+to:partnerId,
+offer:offer,
+isVideo:isVideo,
+timestamp:firebase.database.ServerValue.TIMESTAMP
+};
+await db.ref(`calls/${partnerId}/${activeCallId}`).set(callData);
+listenForIceCandidates(activeCallId,'caller',partnerId);
+callRef.on('value',snapshot=>{
+const data=snapshot.val();
+if(data&&data.answer&&peerConnection.signalingState!=='stable'){
+peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer))
+.catch(e=>console.error("Error setting remote description:",e));
+}
+});
+listenForRemoteIceCandidates(activeCallId,'callee');
+setupCallUI(currentChatPartner,isVideo,'Calling...');
+showView(isVideo?'video-call-view':'voice-call-view');
+history.pushState(null,'',window.location.pathname);
+}catch(err){
+console.error('Error starting call:',err);
+showNotification('Could not start call. Check camera/mic permissions.', 5000); // Replaced alert
+cleanupCall();
+}
+}
+function listenForIncomingCalls(){
+if(callListener)callListener.off();
+callListener=db.ref('calls/'+currentUser.uid);
+callListener.on('child_added',snapshot=>{
+const call=snapshot.val();
+if(activeCallId||(currentUserData.blocked&&currentUserData.blocked[call.from])){
+db.ref(`calls/${currentUser.uid}/${snapshot.key}`).remove();
+return;
+}
+incomingCallData=call;
+db.ref('users/'+call.from).once('value',userSnapshot=>{
+const caller=userSnapshot.val();
+incomingCallPicWrapper.innerHTML=getProfilePicHTML(caller,'4.5rem');
+incomingCallName.textContent=caller.name;
+incomingCallType.textContent=`Incoming ${call.isVideo?'video':'voice'} call...`;
+showModal('incoming-call-modal');
+history.pushState(null,'',window.location.pathname);
+ringtone.play();
+});
+});
+callListener.on('child_removed',snapshot=>{
+if(incomingCallData&&incomingCallData.callId===snapshot.key){
+cleanupCall();
+if(history.state){
+history.back();
+}
+}
+});
+}
+acceptCallBtn.addEventListener('click',async()=>{
+if(!incomingCallData)return;
+activeCallId=incomingCallData.callId;
+const isVideo=incomingCallData.isVideo;
+ringtone.pause();
+showModal('incoming-call-modal',false);
+try{
+localStream=await navigator.mediaDevices.getUserMedia({
+video:isVideo,
+audio:true
+});
+localVideo.srcObject=localStream;
+peerConnection=new RTCPeerConnection(rtcConfig);
+addLocalTracksToPC();
+await peerConnection.setRemoteDescription(new RTCSessionDescription(incomingCallData.offer));
+const answer=await peerConnection.createAnswer();
+await peerConnection.setLocalDescription(answer);
+await db.ref(`calls/${incomingCallData.from}/${activeCallId}`).update({
+answer:answer
+});
+listenForIceCandidates(activeCallId,'callee',incomingCallData.from);
+listenForRemoteIceCandidates(activeCallId,'caller');
+db.ref('users/'+incomingCallData.from).once('value',userSnapshot=>{
+setupCallUI(userSnapshot.val(),isVideo,'Connected');
+showView(isVideo?'video-call-view':'voice-call-view');
+history.pushState(null,'',window.location.pathname);
+});
+logCall(incomingCallData.from,isVideo,'answered');
+}catch(err){
+console.error('Error accepting call:',err);
+cleanupCall();
+}
+});
+rejectCallBtn.addEventListener('click',()=>{
+if(!incomingCallData)return;
+db.ref(`calls/${currentUser.uid}/${incomingCallData.callId}`).remove();
+logCall(incomingCallData.from,incomingCallData.isVideo,'rejected');
+cleanupCall();
+if(history.state){
+history.back();
+}
+});
+videoEndCallBtn.addEventListener('click',endCall);
+voiceEndCallBtn.addEventListener('click',endCall);
+function endCall(){
+if(!activeCallId)return cleanupCall();
+let otherUserId=null;
+if(incomingCallData){
+otherUserId=incomingCallData.from;
+}else if(currentChatPartner){
+otherUserId=currentChatPartner.uid;
+}
+if(otherUserId){
+db.ref(`calls/${otherUserId}/${activeCallId}`).remove();
+db.ref(`calls/${currentUser.uid}/${activeCallId}`).remove();
+}
+db.ref(`iceCandidates/${activeCallId}`).remove();
+cleanupCall();
+if(history.state){
+history.back();
+}
+}
+function addLocalTracksToPC(){
+localStream.getTracks().forEach(track=>{
+peerConnection.addTrack(track,localStream);
+});
+peerConnection.ontrack=event=>{
+remoteStream=event.streams[0];
+if(remoteVideo.srcObject!==remoteStream){
+remoteVideo.srcObject=remoteStream;
+remoteAudio.srcObject=remoteStream;
+}
+};
+peerConnection.onconnectionstatechange=()=>{
+if(peerConnection.connectionState==='disconnected'||
+peerConnection.connectionState==='failed'||
+peerConnection.connectionState==='closed'){
+endCall();
+}
+if(peerConnection.connectionState==='connected'){
+voiceCallStatus.textContent='Connected';
+}
+};
+}
+function listenForIceCandidates(callId,role,otherUserId){
+peerConnection.onicecandidate=event=>{
+if(event.candidate){
+db.ref(`iceCandidates/${callId}/${role}`).push(event.candidate.toJSON());
+if(otherUserId){
+db.ref(`iceSignals/${otherUserId}/${callId}`).push(event.candidate.toJSON());
+}
+}
+};
+}
+function listenForRemoteIceCandidates(callId,remoteRole){
+db.ref(`iceCandidates/${callId}/${remoteRole}`).on('child_added',snapshot=>{
+if(snapshot.exists()&&peerConnection){
+peerConnection.addIceCandidate(new RTCSessionDescription(snapshot.val()))
+.catch(e=>console.error('Error adding ICE candidate:',e));
+}
+});
+db.ref(`iceSignals/${currentUser.uid}/${callId}`).on('child_added',snapshot=>{
+if(snapshot.exists()&&peerConnection){
+peerConnection.addIceCandidate(new RTCSessionDescription(snapshot.val()))
+.catch(e=>console.error('Error adding ICE candidate (signal):',e));
+snapshot.ref.remove();
+}
+});
+}
+function setupCallUI(partner,isVideo,status){
+if(isVideo){
+videoCallerPicWrapper.innerHTML=getProfilePicHTML(partner,'4.5rem');
+videoCallerName.textContent=partner.name;
+}else{
+voiceCallerPicWrapper.innerHTML=getProfilePicHTML(partner,'4.5rem');
+voiceCallerName.textContent=partner.name;
+voiceCallStatus.textContent=status;
+}
+}
+function logCall(partnerId,isVideo,type){
+const callLog={
+partnerId:partnerId,
+isVideo:isVideo,
+type:type,
+timestamp:firebase.database.ServerValue.TIMESTAMP
+};
+db.ref(`callLogs/${currentUser.uid}`).push(callLog);
+const partnerLog={...callLog,partnerId:currentUser.uid,type:type==='answered'?'answered':'missed'};
+db.ref(`callLogs/${partnerId}`).push(partnerLog);
+}
 });
