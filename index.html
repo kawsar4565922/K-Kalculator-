@@ -413,8 +413,6 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
     margin-top: 40px;
     font-size: 1rem;
 }
-
-/* --- নতুন ডিলিট বাটন স্টাইল --- */
 .notif-delete-btn {
     position: absolute;
     top: 50%;
@@ -440,6 +438,107 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 }
 .notif-delete-btn:active {
     box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;
+}
+/* --- নতুন সাপোর্ট বাটনের স্টাইল --- */
+#support-fab-btn {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background: #f0f2f5;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff;
+    z-index: 100;
+    transition: transform 0.2s ease;
+}
+#support-fab-btn:active {
+    box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
+    transform: scale(0.95);
+}
+#support-fab-btn svg {
+    width: 30px;
+    height: 30px;
+    fill: #555;
+}
+/* --- নতুন সাপোর্ট পেজের স্টাইল (Neumorphism) --- */
+#support-view {
+    background-color: #f0f2f5;
+    flex-direction: column;
+    z-index: 80;
+}
+#support-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.support-bubble {
+    padding: 12px 18px;
+    border-radius: 15px;
+    max-width: 80%;
+    word-wrap: break-word;
+    color: #555;
+    font-size: 0.95rem;
+    box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
+}
+.support-bubble.sent {
+    align-self: flex-end;
+    background: #f0f2f5;
+    border-bottom-right-radius: 2px;
+}
+.support-bubble.received {
+    align-self: flex-start;
+    background: #e6e6e6; /* সামান্য ভিন্ন শেড */
+    border-bottom-left-radius: 2px;
+}
+#support-input-container {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #f0f2f5;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+}
+#support-input {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    outline: none;
+    background: #f0f2f5;
+    border-radius: 25px;
+    color: #555;
+    font-size: 1rem;
+    box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
+}
+#support-send-btn {
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    background: #f0f2f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
+    transition: all 0.2s;
+}
+#support-send-btn:active {
+    box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;
+}
+#support-send-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: #555;
+    margin-left: 4px; /* আইকন সামান্য ডানে */
 }
 /* --- স্টাইল শেষ --- */
 </style>
@@ -526,6 +625,9 @@ ALL FRIEND
 <div id="calls-content" class="content-panel">
 </div>
 </main>
+<button id="support-fab-btn" title="Support">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
+</button>
 </div>
 <div id="chat-view" class="view hidden">
 <header class="chat-header">
@@ -560,6 +662,22 @@ ALL FRIEND
     </header>
     <main id="notification-list-content">
         </main>
+</div>
+<div id="support-view" class="view hidden">
+    <header class="neumorphism-header">
+        <button id="support-back-btn" class="neumorphism-icon-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <h2>Support</h2>
+    </header>
+    <main id="support-messages">
+        </main>
+    <footer id="support-input-container">
+        <input type="text" id="support-input" placeholder="Type your problem...">
+        <button id="support-send-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+    </footer>
 </div>
 <div id="add-friend-modal" class="modal hidden">
 <div class="modal-content">
@@ -754,7 +872,6 @@ const customConfirmMessage = document.getElementById('custom-confirm-message');
 const customConfirmBtnYes = document.getElementById('custom-confirm-btn-yes');
 const customConfirmBtnNo = document.getElementById('custom-confirm-btn-no');
 
-// --- নতুন নোটিফিকেশন ভেরিয়েবল ---
 const notificationView = document.getElementById('notification-view');
 const notificationBtn = document.getElementById('notification-btn');
 const notificationBadge = document.getElementById('notification-badge');
@@ -762,7 +879,16 @@ const notificationListContent = document.getElementById('notification-list-conte
 const notificationBackBtn = document.getElementById('notification-back-btn');
 let notificationListener = null;
 let unreadNotificationCount = 0;
-// --- পরিবর্তন শেষ ---
+
+// --- নতুন সাপোর্ট ভেরিয়েবল ---
+const supportFabBtn = document.getElementById('support-fab-btn');
+const supportView = document.getElementById('support-view');
+const supportBackBtn = document.getElementById('support-back-btn');
+const supportMessages = document.getElementById('support-messages');
+const supportInput = document.getElementById('support-input');
+const supportSendBtn = document.getElementById('support-send-btn');
+let supportListener = null;
+// --- ভেরিয়েবল শেষ ---
 
 function showNotification(message, duration = 3000, actions = null) {
     const notification = document.createElement('div');
@@ -891,15 +1017,13 @@ hours=hours?hours:12;
 const minutesStr=minutes<10?'0'+minutes:minutes;
 return`${hours}:${minutesStr} ${ampm}`;
 }
-// --- নতুন নোটিফিকেশন টাইমস্ট্যাম্প ফাংশন ---
 function formatFullTimestamp(timestamp) {
     const date = new Date(timestamp);
     const yyyy = date.getFullYear();
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
-    return `${dd}/${mm}/${yyyy} at ${formatTimestamp(timestamp)}`; // পুরনো ফাংশনটি আবার ব্যবহার করা হলো
+    return `${dd}/${mm}/${yyyy} at ${formatTimestamp(timestamp)}`;
 }
-// --- পরিবর্তন শেষ ---
 
 function getProfilePicHTML(user,placeholderSize='2.5rem'){
 if(user.profilePicUrl){
@@ -923,7 +1047,8 @@ function getVerifiedBadgeHTML(user) {
 }
 function cleanupListeners(){
     if(currentChatListener)currentChatListener.off();
-    if(notificationListener) notificationListener.off(); // --- নতুন যোগ করা হয়েছে ---
+    if(notificationListener) notificationListener.off();
+    if(supportListener) supportListener.off(); // --- সাপোর্ট লিসেনার ক্লিনআপ ---
     if(contactListeners.currentUser) contactListeners.currentUser.off();
     Object.values(unreadListeners).forEach(listener=>{
         if(listener&&typeof listener.off==='function'){
@@ -938,7 +1063,8 @@ function cleanupListeners(){
     unreadListeners={};
     contactListeners={};
     currentChatListener=null;
-    notificationListener = null; // --- নতুন যোগ করা হয়েছে ---
+    notificationListener = null;
+    supportListener = null; // --- রিসেট ---
     lastMessageTimestamps={};
     messageElements={};
 }
@@ -984,12 +1110,16 @@ function handleCustomBack(){
         showModal('add-friend-modal',false);
         return true;
     }
-    // --- নতুন নোটিফিকেশন ভিউ চেক ---
     if(!notificationView.classList.contains('hidden')){
         notificationBackBtn.click();
         return true;
     }
-    // --- পরিবর্তন শেষ ---
+    // --- সাপোর্ট ভিউ ব্যাক হ্যান্ডলিং ---
+    if(!supportView.classList.contains('hidden')){
+        supportBackBtn.click();
+        return true;
+    }
+    // --- শেষ ---
     if(!chatView.classList.contains('hidden')){
         chatBackBtn.click();
         return true;
@@ -1136,7 +1266,6 @@ function initializeAuthListener(){
                     if (wasNotInitialized) {
                         listenForBlockedUsers(user.uid);
                         listenForUnreadCounts();
-                        // listenForNotifications() এখানে কল করা হবে না, initializeApp-এ কল করা হবে
                     }
                 } else {
                     currentUserData = null;
@@ -1157,13 +1286,11 @@ function initializeAuthListener(){
                 calcNotificationBadge.classList.add('hidden');
                 calcNotificationBadge.textContent='0';
             }
-            // --- নতুন নোটিফিকেশন ব্যাজও রিসেট করুন ---
             if(notificationBadge){
                 notificationBadge.classList.add('hidden');
                 notificationBadge.textContent='0';
                 unreadNotificationCount = 0;
             }
-            // --- পরিবর্তন শেষ ---
             if(!authStateInitialized){
                 authStateInitialized=true;
                 authStateResolve();
@@ -1368,52 +1495,117 @@ chatHeaderInfo.addEventListener('click',()=>{
     }
 });
 
-// --- নতুন নোটিফিকেশন বাটন লিসেনার ---
 notificationBtn.addEventListener('click', () => {
     showView('notification-view');
     history.pushState(null, '', window.location.pathname);
     
-    // নোটিফিকেশন ভিউ খুললে সব আন-রিড নোটিফিকেশনকে রিড হিসেবে মার্ক করা
     if(unreadNotificationCount > 0 && currentUser) {
         const myUid = currentUser.uid;
         const notifRef = db.ref('notifications/' + myUid);
-        // 'read: false' থাকা আইটেমগুলো খুঁজে বের করা
         notifRef.orderByChild('read').equalTo(false).once('value', snapshot => {
             const updates = {};
             snapshot.forEach(child => {
-                updates[child.key + '/read'] = true; // 'read: true' তে আপডেট করা
+                updates[child.key + '/read'] = true;
             });
             if(Object.keys(updates).length > 0) {
-                notifRef.update(updates); // ব্যাচ আপডেট
+                notifRef.update(updates);
             }
         });
     }
-    unreadNotificationCount = 0; // লোকাল কাউন্ট রিসেট
-    updateNotificationBadge(); // UI আপডেট
+    unreadNotificationCount = 0;
+    updateNotificationBadge();
 });
 
 notificationBackBtn.addEventListener('click', () => {
     showView('main-view');
-    // এখানে history.back() ব্যবহার করা হবে না, popstate ইভেন্ট এটি হ্যান্ডেল করবে
 });
-// --- পরিবর্তন শেষ ---
+
+// --- নতুন সাপোর্ট বাটন লজিক ---
+supportFabBtn.addEventListener('click', () => {
+    showView('support-view');
+    history.pushState(null, '', window.location.pathname);
+    listenForSupportMessages();
+});
+
+supportBackBtn.addEventListener('click', () => {
+    showView('main-view');
+    if(supportListener) supportListener.off();
+    supportListener = null;
+});
+
+supportSendBtn.addEventListener('click', sendSupportMessage);
+supportInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendSupportMessage();
+});
+
+// FIX: মেসেজ এখন দুই জায়গায় পাঠানো হবে (Admin Inbox এবং User History)
+function sendSupportMessage() {
+    const text = supportInput.value.trim();
+    if (!text || !currentUser) return;
+
+    // 1. ইউজারের চ্যাট হিস্ট্রিতে (যাতে ইউজার দেখতে পায়)
+    const chatData = {
+        text: text,
+        sender: 'user', 
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+    };
+    db.ref(`support_chats/${currentUser.uid}`).push(chatData);
+
+    // 2. এডমিন প্যানেলের ইনবক্সে (যাতে এডমিন দেখতে পায়)
+    const requestData = {
+        uid: currentUser.uid,
+        message: text,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+    };
+
+    db.ref('support_requests').push(requestData)
+        .then(() => {
+            supportInput.value = '';
+            supportMessages.scrollTop = supportMessages.scrollHeight;
+        })
+        .catch(err => {
+            showNotification('Error sending message: ' + err.message);
+        });
+}
+
+function listenForSupportMessages() {
+    if (!currentUser) return;
+    if (supportListener) supportListener.off();
+
+    supportMessages.innerHTML = ''; // ক্লিয়ার
+    const chatRef = db.ref(`support_chats/${currentUser.uid}`);
+    
+    supportListener = chatRef.on('child_added', snapshot => {
+        const msg = snapshot.val();
+        renderSupportMessage(msg);
+    });
+}
+
+function renderSupportMessage(msg) {
+    const bubble = document.createElement('div');
+    const isSent = msg.sender === 'user';
+    bubble.className = `support-bubble ${isSent ? 'sent' : 'received'}`;
+    bubble.textContent = msg.text;
+    
+    supportMessages.appendChild(bubble);
+    supportMessages.scrollTop = supportMessages.scrollHeight;
+}
+// --- সাপোর্ট লজিক শেষ ---
 
 
 function initializeApp(){
     showPanel('home-content');
     listenForContacts();
     populateAllFriendsList(); 
-    listenForNotifications(); // --- নতুন ফাংশন কল ---
+    listenForNotifications();
     appInitialized=true;
 }
 
-// ---------- ⚠️ এই ফাংশনটি পরিবর্তন করা হয়েছে ⚠️ ----------
 async function populateAllFriendsList() {
     if (!callsContent || !currentUser || !currentUserData) return;
-    callsContent.innerHTML = ''; // লিস্টটি প্রথমে খালি করা
+    callsContent.innerHTML = '';
     
     try {
-        // ১. প্রথমে /contacts/{myUid} থেকে বন্ধুদের আইডি লিস্ট আনা
         const contactsSnap = await db.ref('contacts/' + currentUser.uid).once('value');
         
         if (!contactsSnap.exists() || !contactsSnap.hasChildren()) {
@@ -1424,18 +1616,15 @@ async function populateAllFriendsList() {
         let friendCount = 0;
         const contactIds = Object.keys(contactsSnap.val());
         
-        // ২. প্রতিটি বন্ধুর আইডি দিয়ে তাদের ইউজার ডাটা (/users/{uid}) আনার জন্য প্রমিস তৈরি করা
         const userFetchPromises = contactIds.map(uid => {
             if (currentUserData.blockedUsers && currentUserData.blockedUsers[uid]) {
-                return null; // ব্লক করা ইউজারদের বাদ দেওয়া
+                return null;
             }
             return db.ref('users/' + uid).once('value');
-        }).filter(p => p !== null); // null গুলো বাদ দেওয়া
+        }).filter(p => p !== null);
 
-        // ৩. সব বন্ধুর ডাটা একসাথে লোড করা
         const userSnapshots = await Promise.all(userFetchPromises);
 
-        // ৪. ইউজার ডাটা প্রসেস করা এবং নাম অনুযায়ী সাজানো
         const friendsData = [];
         userSnapshots.forEach(userSnap => {
             if (userSnap.exists()) {
@@ -1443,12 +1632,10 @@ async function populateAllFriendsList() {
             }
         });
 
-        // নাম অনুযায়ী A-Z সাজানো
         friendsData.sort((a, b) => a.name.localeCompare(b.name));
 
-        // ৫. সাজানো লিস্টটি UI-তে দেখানো
         friendsData.forEach(user => {
-            createOrUpdateContactItem(user, true); // true মানে এটা "ALL FRIEND" লিস্ট
+            createOrUpdateContactItem(user, true);
             friendCount++;
         });
 
@@ -1460,7 +1647,6 @@ async function populateAllFriendsList() {
         callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--call-end-red);">Error loading friends list.</p>';
     }
 }
-// ---------- ⚠️ পরিবর্তন শেষ ⚠️ ----------
 
 addFriendBtn.addEventListener('click',()=>{
 addFriendForm.reset();
@@ -1468,7 +1654,6 @@ showModal('add-friend-modal');
 history.pushState(null,'',window.location.pathname);
 });
 
-// ---------- ⚠️ এই ফাংশনটি পরিবর্তন করা হয়েছে ⚠️ ----------
 addFriendForm.addEventListener('submit',(e)=>{
     e.preventDefault();
     const friendId=friendIdInput.value.trim();
@@ -1490,12 +1675,7 @@ addFriendForm.addEventListener('submit',(e)=>{
                 showNotification('Friend added successfully!');
                 showModal('add-friend-modal', false);
                 if (history.state) history.back();
-                
-                // --- ⚠️ সমাধান এখানে ---
-                // নতুন বন্ধু অ্যাড করার পর "ALL FRIEND" তালিকাটি রিফ্রেশ করা
                 populateAllFriendsList();
-                // --- ⚠️ সমাধান শেষ ---
-
             }).catch(err => {
                 showNotification('Error adding friend: ' + err.message, 5000);
             });
@@ -1504,7 +1684,6 @@ addFriendForm.addEventListener('submit',(e)=>{
         }
     });
 });
-// ---------- ⚠️ পরিবর্তন শেষ ⚠️ ----------
 
 function sortChatList(){
 const chatItems=Array.from(homeContent.querySelectorAll('.list-item'));
@@ -1532,12 +1711,10 @@ noChatsMsg.remove();
 }
 }
 
-// ---------- ⚠️ এই ফাংশনটি পরিবর্তন করা হয়েছে ⚠️ ----------
 function createOrUpdateContactItem(contact, isFriendList = false) {
     const listContainer = isFriendList ? callsContent : homeContent;
     const existingItem = listContainer.querySelector(`.list-item[data-uid="${contact.uid}"]`);
 
-    // চ্যাট লিস্ট হলে এবং ইউজার ব্লকড থাকলে, আইটেমটি রিমুভ করে দেওয়া
     if (!isFriendList && currentUserData.blockedUsers && currentUserData.blockedUsers[contact.uid]) {
         if (existingItem) {
             existingItem.remove();
@@ -1545,13 +1722,11 @@ function createOrUpdateContactItem(contact, isFriendList = false) {
         return;
     }
     
-    // শেষ মেসেজের তথ্য নেওয়া (ডিফল্ট: 'Tap to chat', timestamp: 0)
     const lastMsgData = lastMessageTimestamps[contact.uid] || { text: 'Tap to chat', timestamp: 0 };
     const lastMsgText = lastMsgData.text;
     const timestamp = lastMsgData.timestamp;
 
     if (existingItem) {
-        // যদি আইটেম আগে থেকেই থাকে (যেমন নাম বা ছবি আপডেট হলো)
         existingItem.querySelector('.item-emoji').innerHTML = getProfilePicHTML(contact);
         existingItem.querySelector('.item-name-text').textContent = contact.name;
         const badgeContainer = existingItem.querySelector('.item-name.name-with-badge');
@@ -1560,25 +1735,16 @@ function createOrUpdateContactItem(contact, isFriendList = false) {
         badgeContainer.insertAdjacentHTML('beforeend', getVerifiedBadgeHTML(contact));
         
         if (!isFriendList) {
-            // যদি চ্যাট লিস্ট হয়
             existingItem.querySelector('.item-subtext').textContent = lastMsgText;
-            // --- ⚠️ মূল ফিক্স ⚠️ ---
-            // যদি কোনো মেসেজ না থাকে (timestamp === 0), তাহলে 'hidden' ক্লাস যোগ করা
-            // যদি মেসেজ থাকে, তাহলে 'hidden' ক্লাস রিমুভ করা
             existingItem.classList.toggle('hidden', lastMsgData.timestamp === 0);
-            // --- ⚠️ ফিক্স শেষ ⚠️ ---
         }
     } else {
-        // যদি নতুন আইটেম তৈরি করা হয়
         const item = document.createElement('div');
         item.className = 'list-item';
         
-        // --- ⚠️ মূল ফিক্স ⚠️ ---
-        // যদি এটা চ্যাট লিস্ট হয় এবং কোনো মেসেজ না থাকে, তাহলে ডিফল্টভাবে 'hidden' রাখা
         if (!isFriendList && lastMsgData.timestamp === 0) {
             item.classList.add('hidden');
         }
-        // --- ⚠️ ফিক্স শেষ ⚠️ ---
         
         item.dataset.uid = contact.uid;
         let itemHTML = `
@@ -1590,10 +1756,8 @@ function createOrUpdateContactItem(contact, isFriendList = false) {
                 </div>
         `;
         if (isFriendList) {
-            // "ALL FRIEND" লিস্টে শুধু নাম আর ছবি
             itemHTML += `</div>`;
         } else {
-            // "CHATS" লিস্টে সাব-টেক্সট ও ব্যাজ যোগ করা
             itemHTML += `
                     <div class="item-subtext" id="subtext-${contact.uid}">${lastMsgText}</div>
                 </div>
@@ -1605,7 +1769,6 @@ function createOrUpdateContactItem(contact, isFriendList = false) {
         item.innerHTML = itemHTML + '</div>';
         
         item.addEventListener('click',(e)=>{
-            // আইটেমে ক্লিক করলে চ্যাট ওপেন হবে
             openChat(contact);
         });
 
@@ -1613,11 +1776,9 @@ function createOrUpdateContactItem(contact, isFriendList = false) {
     }
 
     if (!isFriendList) {
-        // শুধুমাত্র চ্যাট লিস্টে আইটেম যোগ/আপডেট হলেই লিস্ট সর্ট করা
         sortChatList();
     }
 }
-// ---------- ⚠️ পরিবর্তন শেষ ⚠️ ----------
 
 function listenForLastMessageUpdates(contactId) {
     if (currentUserData.blockedUsers && currentUserData.blockedUsers[contactId]) {
@@ -1628,7 +1789,6 @@ function listenForLastMessageUpdates(contactId) {
     if (contactListeners[contactId + '_msg']) contactListeners[contactId + '_msg'].off();
     contactListeners[contactId + '_msg'] = messagesRef;
     
-    // যখন নতুন মেসেজ আসে
     messagesRef.on('child_added', snapshot => {
         const msg = snapshot.val();
         if (currentUserData.blockedUsers && currentUserData.blockedUsers[msg.senderId]) {
@@ -1641,22 +1801,17 @@ function listenForLastMessageUpdates(contactId) {
         };
         const item = homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
         if (item) {
-            // যদি আইটেমটি চ্যাট লিস্টে থাকে
             item.querySelector('.item-subtext').textContent = `${sender}${msg.text}`;
-            item.classList.remove('hidden'); // মেসেজ পাওয়ামাত্র 'hidden' ক্লাস রিমুভ করা
-            sortChatList(); // লিস্ট সর্ট করা
+            item.classList.remove('hidden');
+            sortChatList();
         }
-        // যদি item না থাকে, তার মানে listenToContactListeners এখনো চলেনি।
-        // ওটা চললে createOrUpdateContactItem কল হবে এবং সঠিক lastMessageTimestamps পাবে।
     });
     
-    // যখন মেসেজ ডিলিট হয় (যেমন 'Delete Chat' করলে)
     messagesRef.on('child_removed', () => {
          db.ref('messages/' + chatId).limitToLast(1).once('value', snapshot => {
             const item = homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
             if (!item) return;
             if (snapshot.exists()) {
-                // যদি ডিলিটের পরও মেসেজ থাকে (শুধু শেষ মেসেজটি ডিলিট হলে)
                 snapshot.forEach(child => {
                     const msg = child.val();
                     const sender = msg.senderId === currentUser.uid ? 'You: ' : '';
@@ -1664,11 +1819,10 @@ function listenForLastMessageUpdates(contactId) {
                     if (item) item.querySelector('.item-subtext').textContent = `${sender}${msg.text}`;
                 });
             } else {
-                // যদি সব মেসেজ ডিলিট হয়ে যায়
                 lastMessageTimestamps[contactId] = { text: 'Tap to chat', timestamp: 0 };
                 if (item) {
                     item.querySelector('.item-subtext').textContent = 'Tap to chat';
-                    item.classList.add('hidden'); // <-- মেসেজ না থাকলে হাইড করে দেওয়া
+                    item.classList.add('hidden');
                 }
             }
             sortChatList();
@@ -1680,18 +1834,13 @@ function listenToContactListeners(contactId) {
     if (contactListeners[contactId + '_user']) contactListeners[contactId + '_user'].off();
     contactListeners[contactId + '_user'] = userRef;
     
-    // কন্টাক্টের তথ্য (নাম, ছবি) শোনার জন্য
     userRef.on('value', snapshot => {
         if (snapshot.exists()) {
             const contact = snapshot.val();
-            // এই ফাংশনটি কল করা হবে।
-            // যদি মেসেজ না থাকে (timestamp 0), আইটেমটি 'hidden' হিসেবে তৈরি হবে।
-            // যদি মেসেজ থাকে, আইটেমটি দৃশ্যমান হবে।
             createOrUpdateContactItem(contact, false); 
         }
     });
     
-    // শেষ মেসেজ শোনার জন্য
     listenForLastMessageUpdates(contactId);
 }
 function stopListeningToContact(contactId) {
@@ -1713,17 +1862,14 @@ function listenForContacts() {
     const contactsRef = db.ref('contacts/' + currentUser.uid);
     contactListeners.main = contactsRef;
     
-    // যখন নতুন কন্টাক্ট অ্যাড হয়
     contactsRef.on('child_added', snapshot => {
         const contactId = snapshot.key;
         if (currentUserData.blockedUsers && currentUserData.blockedUsers[contactId]) {
             return;
         }
-        // কন্টাক্ট লিসেনার চালু করা
         listenToContactListeners(contactId);
     });
     
-    // যখন কন্টাক্ট রিমুভ হয় (যেমন ব্লক করলে)
     contactsRef.on('child_removed', snapshot => {
         const contactId = snapshot.key;
         stopListeningToContact(contactId);
@@ -1915,17 +2061,12 @@ calcNotificationBadge.classList.toggle('hidden',totalUnread===0);
 unreadListeners.main=unreadRoot;
 }
 
-// --- নতুন নোটিফিকেশন ফাংশন (আপডেট করা) ---
-
-// ব্যাজ আপডেট করার ফাংশন
 function updateNotificationBadge() {
     notificationBadge.textContent = unreadNotificationCount;
     notificationBadge.classList.toggle('hidden', unreadNotificationCount === 0);
 }
 
-// "No notifications" মেসেজ চেক করার হেল্পার ফাংশন
 function checkShowNoNotificationsMsg() {
-    // DOM আপডেট হওয়ার জন্য সামান্য বিলম্ব
     setTimeout(() => {
         const noMsg = notificationListContent.querySelector('#no-notifications-msg');
         const hasItems = notificationListContent.querySelectorAll('.notification-item').length > 0;
@@ -1938,22 +2079,17 @@ function checkShowNoNotificationsMsg() {
     }, 50); 
 }
 
-// নোটিফিকেশন ডিলিট করার ফাংশন
 function deleteNotification(notifId) {
     if (!currentUser || !notifId) return;
     
-    // Firebase থেকে ডিলিট করা
     db.ref(`notifications/${currentUser.uid}/${notifId}`).remove()
         .catch(err => {
             showNotification('Error deleting notification: ' + err.message, 4000);
             console.error("Error deleting notification:", err);
         });
-    // 'child_removed' লিসেনার UI হ্যান্ডেল করবে
 }
 
-// একটি নোটিফিকেশন রেন্ডার করার ফাংশন
 function renderNotification(notifId, notifData) {
-    // যদি আইটেমটি আগে থেকেই থাকে, তবে এটি মুছে ফেলা হবে এবং আবার তৈরি করা হবে
     const existing = document.getElementById(notifId);
     if(existing) existing.remove();
 
@@ -1963,21 +2099,19 @@ function renderNotification(notifId, notifData) {
 
     const text = document.createElement('div');
     text.className = 'notification-item-text';
-    text.textContent = notifData.message; // <-- ⭐⭐⭐ এখানে পরিবর্তন করা হয়েছে (text -> message) ⭐⭐⭐
+    text.textContent = notifData.message;
 
     const time = document.createElement('div');
     time.className = 'notification-item-time';
     time.textContent = formatFullTimestamp(notifData.timestamp);
 
-    // ডিলিট বাটন তৈরি
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'notif-delete-btn';
-    deleteBtn.innerHTML = '&times;'; // '×' চিহ্ন
+    deleteBtn.innerHTML = '&times;';
     deleteBtn.title = 'Delete Notification';
     
     deleteBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); // অন্য কোনো ক্লিক ইভেন্ট যেন না চলে
-        // ডিলিট করার আগে কনফার্মেশন চাওয়া
+        e.stopPropagation();
         customConfirm('Are you sure you want to delete this notification?')
             .then(isConfirmed => {
                 if (isConfirmed) {
@@ -1990,26 +2124,23 @@ function renderNotification(notifId, notifData) {
     item.appendChild(time);
     item.appendChild(deleteBtn);
     
-    // "No notifications" মেসেজ থাকলে তা রিমুভ করা
     const noMsg = notificationListContent.querySelector('#no-notifications-msg');
     if(noMsg) noMsg.remove();
     
-    // নতুন নোটিফিকেশন তালিকার সবার উপরে যোগ করা
     notificationListContent.prepend(item);
 }
 
-// ফায়ারবেস থেকে নোটিফিকেশন শোনার ফাংশন
 function listenForNotifications() {
-    if(notificationListener) notificationListener.off(); // পুরনো লিসেনার বন্ধ করা
+    if(notificationListener) notificationListener.off();
     
-    if (!currentUser || !currentUser.uid) return; // ইউজার লগড ইন না থাকলে রিটার্ন
+    if (!currentUser || !currentUser.uid) return;
     
     const myUid = currentUser.uid;
     const notifRef = db.ref('notifications/' + myUid);
-    notificationListener = notifRef.orderByChild('timestamp').limitToLast(30); // শেষ ৩০টি নোটিফিকেশন
+    notificationListener = notifRef.orderByChild('timestamp').limitToLast(30);
 
-    notificationListContent.innerHTML = ''; // তালিকাটি প্রথমে খালি করা
-    unreadNotificationCount = 0; // কাউন্ট রিসেট
+    notificationListContent.innerHTML = '';
+    unreadNotificationCount = 0;
     let initialLoadComplete = false;
 
     notificationListener.on('child_added', snapshot => {
@@ -2021,39 +2152,32 @@ function listenForNotifications() {
             updateNotificationBadge();
         }
         if (initialLoadComplete) {
-            checkShowNoNotificationsMsg(); // লোড হওয়ার পরে নতুন আইটেম আসলে চেক করা
+            checkShowNoNotificationsMsg();
         }
     });
 
     notificationListener.on('child_changed', snapshot => {
-        // যদি কোনো নোটিফিকেশন পরিবর্তন হয় (যেমন read স্ট্যাটাস)
-        renderNotification(snapshot.key, snapshot.val()); // আইটেমটি রি-রেন্ডার করা
+        renderNotification(snapshot.key, snapshot.val());
         
         const notifData = snapshot.val();
         if(notifData.read === true) {
-            // ভবিষ্যতে প্রয়োজন হলে এখানে লজিক যোগ করা যেতে পারে
         }
     });
     
-    // --- নতুন: child_removed লিসেনার ---
     notificationListener.on('child_removed', snapshot => {
         const notifId = snapshot.key;
         const item = document.getElementById(notifId);
         if (item) {
-            item.remove(); // UI থেকে আইটেমটি মুছে ফেলা
+            item.remove();
         }
-        checkShowNoNotificationsMsg(); // তালিকা খালি হলো কিনা চেক করা
+        checkShowNoNotificationsMsg();
     });
-    // --- পরিবর্তন শেষ ---
     
-    // প্রাথমিক লোড শেষ হলে চেক করা যে কোনো নোটিফিকেশন আছে কিনা
     notificationListener.once('value', snapshot => {
-        initialLoadComplete = true; // প্রাথমিক লোড সম্পন্ন
-        checkShowNoNotificationsMsg(); // সব আইটেম লোড হওয়ার পর চেক করা
+        initialLoadComplete = true;
+        checkShowNoNotificationsMsg();
     });
 }
-// --- পরিবর্তন শেষ ---
-
 
 async function populateBlockedUsersList() {
     if (!blockedUsersListEl) return;
