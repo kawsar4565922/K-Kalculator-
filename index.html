@@ -1407,72 +1407,105 @@ function initializeApp(){
     appInitialized=true;
 }
 
+// ---------- ⚠️ এই ফাংশনটি পরিবর্তন করা হয়েছে ⚠️ ----------
 async function populateAllFriendsList() {
     if (!callsContent || !currentUser || !currentUserData) return;
-    callsContent.innerHTML = ''; 
+    callsContent.innerHTML = ''; // লিস্টটি প্রথমে খালি করা
     
     try {
-        const usersSnap = await db.ref('users').orderByChild('name').once('value');
-        if (!usersSnap.exists()) {
-                callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No users found in the app.</p>';
+        // ১. প্রথমে /contacts/{myUid} থেকে বন্ধুদের আইডি লিস্ট আনা
+        const contactsSnap = await db.ref('contacts/' + currentUser.uid).once('value');
+        
+        if (!contactsSnap.exists() || !contactsSnap.hasChildren()) {
+            callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No friends found. Add friends using their ID.</p>';
             return;
         }
         
         let friendCount = 0;
+        const contactIds = Object.keys(contactsSnap.val());
         
-        usersSnap.forEach(userSnap => { 
-            const user = userSnap.val();
-            
-            if (user.uid === currentUser.uid) return;
-            if (currentUserData.blockedUsers && currentUserData.blockedUsers[user.uid]) return;
-            
-            createOrUpdateContactItem(user, true);
+        // ২. প্রতিটি বন্ধুর আইডি দিয়ে তাদের ইউজার ডাটা (/users/{uid}) আনার জন্য প্রমিস তৈরি করা
+        const userFetchPromises = contactIds.map(uid => {
+            if (currentUserData.blockedUsers && currentUserData.blockedUsers[uid]) {
+                return null; // ব্লক করা ইউজারদের বাদ দেওয়া
+            }
+            return db.ref('users/' + uid).once('value');
+        }).filter(p => p !== null); // null গুলো বাদ দেওয়া
+
+        // ৩. সব বন্ধুর ডাটা একসাথে লোড করা
+        const userSnapshots = await Promise.all(userFetchPromises);
+
+        // ৪. ইউজার ডাটা প্রসেস করা এবং নাম অনুযায়ী সাজানো
+        const friendsData = [];
+        userSnapshots.forEach(userSnap => {
+            if (userSnap.exists()) {
+                friendsData.push(userSnap.val());
+            }
+        });
+
+        // নাম অনুযায়ী A-Z সাজানো
+        friendsData.sort((a, b) => a.name.localeCompare(b.name));
+
+        // ৫. সাজানো লিস্টটি UI-তে দেখানো
+        friendsData.forEach(user => {
+            createOrUpdateContactItem(user, true); // true মানে এটা "ALL FRIEND" লিস্ট
             friendCount++;
         });
 
         if (friendCount === 0) {
-            callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No other users found. Add friends using their ID.</p>';
+             callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No friends found. Add friends using their ID.</p>';
         }
     } catch (err) {
         console.error("Error populating all friends list:", err);
-        callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--call-end-red);">Error loading users.</p>';
+        callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--call-end-red);">Error loading friends list.</p>';
     }
 }
+// ---------- ⚠️ পরিবর্তন শেষ ⚠️ ----------
 
 addFriendBtn.addEventListener('click',()=>{
 addFriendForm.reset();
 showModal('add-friend-modal');
 history.pushState(null,'',window.location.pathname);
 });
+
+// ---------- ⚠️ এই ফাংশনটি পরিবর্তন করা হয়েছে ⚠️ ----------
 addFriendForm.addEventListener('submit',(e)=>{
-e.preventDefault();
-const friendId=friendIdInput.value.trim();
-if(friendId===currentUser.uid){
-showNotification("You can't add yourself as a friend.", 5000);
-return;
-}
-db.ref('users/'+friendId).once('value',snapshot=>{
-if(snapshot.exists()){
-if(currentUserData.blockedUsers && currentUserData.blockedUsers[friendId]){
-    showNotification("This user is in your block list. Unblock them from Settings to add.", 5000);
-    return;
-}
-const myUid = currentUser.uid;
-const updates = {};
-updates[`contacts/${myUid}/${friendId}`] = true;
-updates[`contacts/${friendId}/${myUid}`] = true;
-db.ref().update(updates).then(() => {
-    showNotification('Friend added successfully!');
-    showModal('add-friend-modal', false);
-    if (history.state) history.back();
-}).catch(err => {
-    showNotification('Error adding friend: ' + err.message, 5000);
+    e.preventDefault();
+    const friendId=friendIdInput.value.trim();
+    if(friendId===currentUser.uid){
+        showNotification("You can't add yourself as a friend.", 5000);
+        return;
+    }
+    db.ref('users/'+friendId).once('value',snapshot=>{
+        if(snapshot.exists()){
+            if(currentUserData.blockedUsers && currentUserData.blockedUsers[friendId]){
+                showNotification("This user is in your block list. Unblock them from Settings to add.", 5000);
+                return;
+            }
+            const myUid = currentUser.uid;
+            const updates = {};
+            updates[`contacts/${myUid}/${friendId}`] = true;
+            updates[`contacts/${friendId}/${myUid}`] = true;
+            db.ref().update(updates).then(() => {
+                showNotification('Friend added successfully!');
+                showModal('add-friend-modal', false);
+                if (history.state) history.back();
+                
+                // --- ⚠️ সমাধান এখানে ---
+                // নতুন বন্ধু অ্যাড করার পর "ALL FRIEND" তালিকাটি রিফ্রেশ করা
+                populateAllFriendsList();
+                // --- ⚠️ সমাধান শেষ ---
+
+            }).catch(err => {
+                showNotification('Error adding friend: ' + err.message, 5000);
+            });
+        }else{
+            showNotification('User not found.', 5000);
+        }
+    });
 });
-}else{
-showNotification('User not found.', 5000);
-}
-});
-});
+// ---------- ⚠️ পরিবর্তন শেষ ⚠️ ----------
+
 function sortChatList(){
 const chatItems=Array.from(homeContent.querySelectorAll('.list-item'));
 chatItems.sort((a,b)=>{
@@ -1498,32 +1531,54 @@ homeContent.appendChild(noChatsMsg);
 noChatsMsg.remove();
 }
 }
+
+// ---------- ⚠️ এই ফাংশনটি পরিবর্তন করা হয়েছে ⚠️ ----------
 function createOrUpdateContactItem(contact, isFriendList = false) {
     const listContainer = isFriendList ? callsContent : homeContent;
     const existingItem = listContainer.querySelector(`.list-item[data-uid="${contact.uid}"]`);
+
+    // চ্যাট লিস্ট হলে এবং ইউজার ব্লকড থাকলে, আইটেমটি রিমুভ করে দেওয়া
     if (!isFriendList && currentUserData.blockedUsers && currentUserData.blockedUsers[contact.uid]) {
         if (existingItem) {
             existingItem.remove();
         }
         return;
     }
+    
+    // শেষ মেসেজের তথ্য নেওয়া (ডিফল্ট: 'Tap to chat', timestamp: 0)
     const lastMsgData = lastMessageTimestamps[contact.uid] || { text: 'Tap to chat', timestamp: 0 };
     const lastMsgText = lastMsgData.text;
     const timestamp = lastMsgData.timestamp;
+
     if (existingItem) {
+        // যদি আইটেম আগে থেকেই থাকে (যেমন নাম বা ছবি আপডেট হলো)
         existingItem.querySelector('.item-emoji').innerHTML = getProfilePicHTML(contact);
         existingItem.querySelector('.item-name-text').textContent = contact.name;
         const badgeContainer = existingItem.querySelector('.item-name.name-with-badge');
         const oldBadge = badgeContainer.querySelector('.verified-badge');
         if (oldBadge) oldBadge.remove();
         badgeContainer.insertAdjacentHTML('beforeend', getVerifiedBadgeHTML(contact));
+        
         if (!isFriendList) {
+            // যদি চ্যাট লিস্ট হয়
             existingItem.querySelector('.item-subtext').textContent = lastMsgText;
-            existingItem.classList.remove('hidden');
+            // --- ⚠️ মূল ফিক্স ⚠️ ---
+            // যদি কোনো মেসেজ না থাকে (timestamp === 0), তাহলে 'hidden' ক্লাস যোগ করা
+            // যদি মেসেজ থাকে, তাহলে 'hidden' ক্লাস রিমুভ করা
+            existingItem.classList.toggle('hidden', lastMsgData.timestamp === 0);
+            // --- ⚠️ ফিক্স শেষ ⚠️ ---
         }
     } else {
+        // যদি নতুন আইটেম তৈরি করা হয়
         const item = document.createElement('div');
         item.className = 'list-item';
+        
+        // --- ⚠️ মূল ফিক্স ⚠️ ---
+        // যদি এটা চ্যাট লিস্ট হয় এবং কোনো মেসেজ না থাকে, তাহলে ডিফল্টভাবে 'hidden' রাখা
+        if (!isFriendList && lastMsgData.timestamp === 0) {
+            item.classList.add('hidden');
+        }
+        // --- ⚠️ ফিক্স শেষ ⚠️ ---
         
         item.dataset.uid = contact.uid;
         let itemHTML = `
@@ -1535,8 +1590,10 @@ function createOrUpdateContactItem(contact, isFriendList = false) {
                 </div>
         `;
         if (isFriendList) {
+            // "ALL FRIEND" লিস্টে শুধু নাম আর ছবি
             itemHTML += `</div>`;
         } else {
+            // "CHATS" লিস্টে সাব-টেক্সট ও ব্যাজ যোগ করা
             itemHTML += `
                     <div class="item-subtext" id="subtext-${contact.uid}">${lastMsgText}</div>
                 </div>
@@ -1548,19 +1605,20 @@ function createOrUpdateContactItem(contact, isFriendList = false) {
         item.innerHTML = itemHTML + '</div>';
         
         item.addEventListener('click',(e)=>{
-            if (isFriendList) {
-                openChat(contact);
-                return;
-            }
+            // আইটেমে ক্লিক করলে চ্যাট ওপেন হবে
             openChat(contact);
         });
 
         listContainer.appendChild(item);
     }
+
     if (!isFriendList) {
+        // শুধুমাত্র চ্যাট লিস্টে আইটেম যোগ/আপডেট হলেই লিস্ট সর্ট করা
         sortChatList();
     }
 }
+// ---------- ⚠️ পরিবর্তন শেষ ⚠️ ----------
+
 function listenForLastMessageUpdates(contactId) {
     if (currentUserData.blockedUsers && currentUserData.blockedUsers[contactId]) {
         return;
@@ -1569,6 +1627,8 @@ function listenForLastMessageUpdates(contactId) {
     const messagesRef = db.ref('messages/' + chatId).limitToLast(1);
     if (contactListeners[contactId + '_msg']) contactListeners[contactId + '_msg'].off();
     contactListeners[contactId + '_msg'] = messagesRef;
+    
+    // যখন নতুন মেসেজ আসে
     messagesRef.on('child_added', snapshot => {
         const msg = snapshot.val();
         if (currentUserData.blockedUsers && currentUserData.blockedUsers[msg.senderId]) {
@@ -1581,16 +1641,22 @@ function listenForLastMessageUpdates(contactId) {
         };
         const item = homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
         if (item) {
+            // যদি আইটেমটি চ্যাট লিস্টে থাকে
             item.querySelector('.item-subtext').textContent = `${sender}${msg.text}`;
-            item.classList.remove('hidden');
-            sortChatList();
+            item.classList.remove('hidden'); // মেসেজ পাওয়ামাত্র 'hidden' ক্লাস রিমুভ করা
+            sortChatList(); // লিস্ট সর্ট করা
         }
+        // যদি item না থাকে, তার মানে listenToContactListeners এখনো চলেনি।
+        // ওটা চললে createOrUpdateContactItem কল হবে এবং সঠিক lastMessageTimestamps পাবে।
     });
+    
+    // যখন মেসেজ ডিলিট হয় (যেমন 'Delete Chat' করলে)
     messagesRef.on('child_removed', () => {
          db.ref('messages/' + chatId).limitToLast(1).once('value', snapshot => {
             const item = homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
             if (!item) return;
             if (snapshot.exists()) {
+                // যদি ডিলিটের পরও মেসেজ থাকে (শুধু শেষ মেসেজটি ডিলিট হলে)
                 snapshot.forEach(child => {
                     const msg = child.val();
                     const sender = msg.senderId === currentUser.uid ? 'You: ' : '';
@@ -1598,9 +1664,11 @@ function listenForLastMessageUpdates(contactId) {
                     if (item) item.querySelector('.item-subtext').textContent = `${sender}${msg.text}`;
                 });
             } else {
+                // যদি সব মেসেজ ডিলিট হয়ে যায়
                 lastMessageTimestamps[contactId] = { text: 'Tap to chat', timestamp: 0 };
                 if (item) {
                     item.querySelector('.item-subtext').textContent = 'Tap to chat';
+                    item.classList.add('hidden'); // <-- মেসেজ না থাকলে হাইড করে দেওয়া
                 }
             }
             sortChatList();
@@ -1611,12 +1679,19 @@ function listenToContactListeners(contactId) {
     const userRef = db.ref('users/' + contactId);
     if (contactListeners[contactId + '_user']) contactListeners[contactId + '_user'].off();
     contactListeners[contactId + '_user'] = userRef;
+    
+    // কন্টাক্টের তথ্য (নাম, ছবি) শোনার জন্য
     userRef.on('value', snapshot => {
         if (snapshot.exists()) {
             const contact = snapshot.val();
-            createOrUpdateContactItem(contact, false);
+            // এই ফাংশনটি কল করা হবে।
+            // যদি মেসেজ না থাকে (timestamp 0), আইটেমটি 'hidden' হিসেবে তৈরি হবে।
+            // যদি মেসেজ থাকে, আইটেমটি দৃশ্যমান হবে।
+            createOrUpdateContactItem(contact, false); 
         }
     });
+    
+    // শেষ মেসেজ শোনার জন্য
     listenForLastMessageUpdates(contactId);
 }
 function stopListeningToContact(contactId) {
@@ -1637,13 +1712,18 @@ function listenForContacts() {
     if(contactListeners.main) contactListeners.main.off();
     const contactsRef = db.ref('contacts/' + currentUser.uid);
     contactListeners.main = contactsRef;
+    
+    // যখন নতুন কন্টাক্ট অ্যাড হয়
     contactsRef.on('child_added', snapshot => {
         const contactId = snapshot.key;
         if (currentUserData.blockedUsers && currentUserData.blockedUsers[contactId]) {
             return;
         }
+        // কন্টাক্ট লিসেনার চালু করা
         listenToContactListeners(contactId);
     });
+    
+    // যখন কন্টাক্ট রিমুভ হয় (যেমন ব্লক করলে)
     contactsRef.on('child_removed', snapshot => {
         const contactId = snapshot.key;
         stopListeningToContact(contactId);
