@@ -135,8 +135,28 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 .id-text-wrapper,.email-text-wrapper{display:flex;flex-direction:column;gap:2px;overflow:hidden;}
 .id-text-wrapper p,.email-text-wrapper p{font-size:0.8rem;color:var(--wa-text-secondary);}
 #profile-user-id-text,#profile-user-email-text{font-size:0.95rem;font-weight:500;color:var(--wa-text-primary);word-break:break-all;}
-#profile-copy-id-btn,#profile-copy-email-btn{background:var(--wa-border-color);border-radius:50%;padding:8px;cursor:pointer;flex-shrink:0;margin-left:12px;border:none;}
-#profile-copy-id-btn svg,#profile-copy-email-btn svg{fill:var(--wa-text-secondary);width:20px;height:20px;display:block;}
+
+/* --- আপনার অনুরোধ অনুযায়ী পরিবর্তন --- */
+#profile-copy-id-btn,
+#profile-copy-email-btn {
+    background: #00ffff; /* প্রাথমিক কালার সায়ান */
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: 12px;
+    border: none;
+    transition: background-color 0.3s ease; /* কালার পরিবর্তনে স্মুথ ট্রানজিশন */
+}
+#profile-copy-id-btn svg,
+#profile-copy-email-btn svg {
+    fill: #1c1c1c; /* সায়ান ব্যাকগ্রাউন্ডে স্পষ্ট দেখার জন্য ডার্ক আইকন */
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+/* --- পরিবর্তন শেষ --- */
+
 .profile-blocked-frame{display:flex;flex-direction:column;gap:8px;padding:12px 16px;background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
 .profile-blocked-frame strong{text-align:center;font-size:1.1rem;color:var(--wa-header-bg);}
 #blocked-users-list{max-height:150px;overflow-y:auto;background:#fcfcfc;border-radius:6px;border:1px solid var(--wa-border-color);}
@@ -158,6 +178,63 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.2;
+}
+
+/* --- Neumorphism Modal Style (পরিবর্তন) --- */
+#custom-confirm-modal .neumorphism-modal-content {
+    background: #f0f2f5;
+    border-radius: 20px;
+    padding: 30px 25px;
+    box-shadow: 12px 12px 24px #bebebe, -12px -12px 24px #ffffff;
+    width: 90%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    transform: scale(1);
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+#custom-confirm-modal.hidden .neumorphism-modal-content {
+    transform: scale(0.95);
+    opacity: 0;
+}
+#custom-confirm-message {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #555;
+    line-height: 1.5;
+    font-weight: 500;
+    word-wrap: break-word;
+}
+.neumorphism-button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+.neumorphism-button-group button {
+    flex: 1;
+    padding: 15px;
+    background: #f0f2f5;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
+    transition: all 0.2s ease-in-out;
+}
+.neumorphism-button-group button:hover {
+    box-shadow: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff;
+}
+.neumorphism-button-group button:active {
+    box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
+}
+#custom-confirm-btn-yes {
+    color: var(--call-end-red); /* Destructive action color */
+}
+#custom-confirm-btn-no {
+    color: #555;
 }
 /* --- পরিবর্তন শুরু --- */
 .verified-badge {
@@ -438,6 +515,15 @@ ALL FRIEND
     </div>
 </div>
 </div>
+<div id="custom-confirm-modal" class="modal hidden">
+    <div class="neumorphism-modal-content">
+        <p id="custom-confirm-message">Are you sure?</p>
+        <div class="neumorphism-button-group">
+            <button id="custom-confirm-btn-no">NO</button>
+            <button id="custom-confirm-btn-yes">YES</button>
+        </div>
+    </div>
+</div>
 <div id="notification-container"></div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -465,6 +551,7 @@ let lastMessageTimestamps={};
 let messageElements={};
 let calcDisplayValue='0';
 let customPromptResolver = null;
+let customConfirmResolver = null; // নতুন (পরিবর্তন)
 const appContainer=document.getElementById('app-container');
 const calculatorView=document.getElementById('calculator-view');
 const authView=document.getElementById('auth-view');
@@ -523,6 +610,12 @@ const partnerModalBlockBtn = document.getElementById('partner-modal-block-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const showSignupBtn = document.getElementById('show-signup');
 const showLoginBtn = document.getElementById('show-login');
+// --- নতুন Modal Elements (পরিবর্তন) ---
+const customConfirmModal = document.getElementById('custom-confirm-modal');
+const customConfirmMessage = document.getElementById('custom-confirm-message');
+const customConfirmBtnYes = document.getElementById('custom-confirm-btn-yes');
+const customConfirmBtnNo = document.getElementById('custom-confirm-btn-no');
+// --- পরিবর্তন শেষ ---
 function showNotification(message, duration = 3000, actions = null) {
     const notification = document.createElement('div');
     notification.className = 'custom-notification';
@@ -568,15 +661,37 @@ function hideNotification(notification, timeout) {
         notification.remove();
     }, { once: true });
 }
+
+// --- পরিবর্তিত customConfirm ফাংশন ---
 function customConfirm(message) {
     return new Promise(resolve => {
-        const actions = [
-            { text: 'YES', callback: () => resolve(true) },
-            { text: 'NO', callback: () => resolve(false) }
-        ];
-        showNotification(message, 10000, actions); 
+        customConfirmResolver = resolve;
+        customConfirmMessage.textContent = message;
+        showModal('custom-confirm-modal');
+        history.pushState(null, '', window.location.pathname); // History state management
     });
 }
+
+// --- নতুন Neumorphism Modal বাটন ইভেন্ট (পরিবর্তন) ---
+customConfirmBtnYes.addEventListener('click', () => {
+    if (customConfirmResolver) {
+        customConfirmResolver(true);
+        customConfirmResolver = null;
+    }
+    showModal('custom-confirm-modal', false);
+    if (history.state) history.back();
+});
+
+customConfirmBtnNo.addEventListener('click', () => {
+    if (customConfirmResolver) {
+        customConfirmResolver(false);
+        customConfirmResolver = null;
+    }
+    showModal('custom-confirm-modal', false);
+    if (history.state) history.back();
+});
+// --- পরিবর্তন শেষ ---
+
 function customPrompt(title, defaultValue = '') {
     return new Promise(resolve => {
         customPromptResolver = resolve;
@@ -700,6 +815,12 @@ showNotification('Failed to copy. See console for details.', 5000);
 }
 }
 function handleCustomBack(){
+    // --- নতুন Confirm Modal চেক (পরিবর্তন) ---
+    if(!customConfirmModal.classList.contains('hidden')){ 
+        customConfirmBtnNo.click(); // 'NO' বাটন ক্লিকের মতো কাজ করবে
+        return true;
+    }
+    // --- পরিবর্তন শেষ ---
     if(!partnerProfileModal.classList.contains('hidden')){
         showModal('partner-profile-modal', false);
         return true;
@@ -1048,12 +1169,25 @@ profileViewName.classList.remove('hidden');
 profileEditNameBtn.classList.remove('hidden');
 }
 });
+
+// --- আপনার অনুরোধ অনুযায়ী পরিবর্তন ---
 profileCopyIdBtn.addEventListener('click',()=>{
-copyText(currentUserData.uid,'User ID copied to clipboard!');
+    copyText(currentUserData.uid,'User ID copied to clipboard!');
+    profileCopyIdBtn.style.backgroundColor = '#00ff00'; // সবুজ হবে
+    setTimeout(() => {
+        profileCopyIdBtn.style.backgroundColor = ''; // CSS-এ দেওয়া আসল রঙে ফিরে যাবে
+    }, 1500); // 1.5 সেকেন্ড
 });
+
 profileCopyEmailBtn.addEventListener('click',()=>{
-copyText(currentUserData.email,'Email copied to clipboard!');
+    copyText(currentUserData.email,'Email copied to clipboard!');
+    profileCopyEmailBtn.style.backgroundColor = '#00ff00'; // সবুজ হবে
+    setTimeout(() => {
+        profileCopyEmailBtn.style.backgroundColor = ''; // CSS-এ দেওয়া আসল রঙে ফিরে যাবে
+    }, 1500); // 1.5 সেকেন্ড
 });
+// --- পরিবর্তন শেষ ---
+
 partnerModalCopyIdBtn.addEventListener('click',()=>{
     if(currentChatPartner){
         copyText(currentChatPartner.uid,'Friend ID copied to clipboard!');
