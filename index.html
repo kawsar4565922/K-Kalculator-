@@ -135,28 +135,24 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 .id-text-wrapper,.email-text-wrapper{display:flex;flex-direction:column;gap:2px;overflow:hidden;}
 .id-text-wrapper p,.email-text-wrapper p{font-size:0.8rem;color:var(--wa-text-secondary);}
 #profile-user-id-text,#profile-user-email-text{font-size:0.95rem;font-weight:500;color:var(--wa-text-primary);word-break:break-all;}
-
-/* --- আপনার অনুরোধ অনুযায়ী পরিবর্তন --- */
 #profile-copy-id-btn,
 #profile-copy-email-btn {
-    background: #00ffff; /* প্রাথমিক কালার সায়ান */
+    background: #00ffff;
     border-radius: 50%;
     padding: 8px;
     cursor: pointer;
     flex-shrink: 0;
     margin-left: 12px;
     border: none;
-    transition: background-color 0.3s ease; /* কালার পরিবর্তনে স্মুথ ট্রানজিশন */
+    transition: background-color 0.3s ease;
 }
 #profile-copy-id-btn svg,
 #profile-copy-email-btn svg {
-    fill: #1c1c1c; /* সায়ান ব্যাকগ্রাউন্ডে স্পষ্ট দেখার জন্য ডার্ক আইকন */
+    fill: #1c1c1c;
     width: 20px;
     height: 20px;
     display: block;
 }
-/* --- পরিবর্তন শেষ --- */
-
 .profile-blocked-frame{display:flex;flex-direction:column;gap:8px;padding:12px 16px;background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
 .profile-blocked-frame strong{text-align:center;font-size:1.1rem;color:var(--wa-header-bg);}
 #blocked-users-list{max-height:150px;overflow-y:auto;background:#fcfcfc;border-radius:6px;border:1px solid var(--wa-border-color);}
@@ -179,8 +175,6 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
     text-overflow: ellipsis;
     line-height: 1.2;
 }
-
-/* --- Neumorphism Modal Style (পরিবর্তন) --- */
 #custom-confirm-modal .neumorphism-modal-content {
     background: #f0f2f5;
     border-radius: 20px;
@@ -231,37 +225,33 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
     box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
 }
 #custom-confirm-btn-yes {
-    color: var(--call-end-red); /* Destructive action color */
+    color: var(--call-end-red);
 }
 #custom-confirm-btn-no {
     color: #555;
 }
-/* --- পরিবর্তন শুরু --- */
 .verified-badge {
-    display: inline-flex; /* পরিবর্তিত */
-    align-items: center;  /* নতুন */
-    justify-content: center; /* নতুন */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    width: 0.85em; /* ফন্ট সাইজের ওপর নির্ভরশীল */
+    width: 0.85em;
     height: 0.85em;
     background-color: var(--wa-accent-blue);
     border-radius: 50%;
     margin-left: 5px;
-    /* padding: 0.12em; */ /* মুছে ফেলা হয়েছে */
     box-sizing: border-box;
 }
 .verified-badge svg {
-    width: 70%;  /* পরিবর্তিত */
-    height: 70%; /* পরিবর্তিত */
+    width: 70%;
+    height: 70%;
     fill: white; 
     stroke: none; 
 }
 #profile-view-name .verified-badge {
     width: 0.8em;
     height: 0.8em;
-    /* padding: 0.1em; */ /* মুছে ফেলা হয়েছে */
 }
-/* --- পরিবর্তন শেষ --- */
 #notification-container {
     position: fixed;
     bottom: 20px;
@@ -551,7 +541,7 @@ let lastMessageTimestamps={};
 let messageElements={};
 let calcDisplayValue='0';
 let customPromptResolver = null;
-let customConfirmResolver = null; // নতুন (পরিবর্তন)
+let customConfirmResolver = null;
 const appContainer=document.getElementById('app-container');
 const calculatorView=document.getElementById('calculator-view');
 const authView=document.getElementById('auth-view');
@@ -610,12 +600,10 @@ const partnerModalBlockBtn = document.getElementById('partner-modal-block-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const showSignupBtn = document.getElementById('show-signup');
 const showLoginBtn = document.getElementById('show-login');
-// --- নতুন Modal Elements (পরিবর্তন) ---
 const customConfirmModal = document.getElementById('custom-confirm-modal');
 const customConfirmMessage = document.getElementById('custom-confirm-message');
 const customConfirmBtnYes = document.getElementById('custom-confirm-btn-yes');
 const customConfirmBtnNo = document.getElementById('custom-confirm-btn-no');
-// --- পরিবর্তন শেষ ---
 function showNotification(message, duration = 3000, actions = null) {
     const notification = document.createElement('div');
     notification.className = 'custom-notification';
@@ -661,18 +649,14 @@ function hideNotification(notification, timeout) {
         notification.remove();
     }, { once: true });
 }
-
-// --- পরিবর্তিত customConfirm ফাংশন ---
 function customConfirm(message) {
     return new Promise(resolve => {
         customConfirmResolver = resolve;
         customConfirmMessage.textContent = message;
         showModal('custom-confirm-modal');
-        history.pushState(null, '', window.location.pathname); // History state management
+        history.pushState(null, '', window.location.pathname);
     });
 }
-
-// --- নতুন Neumorphism Modal বাটন ইভেন্ট (পরিবর্তন) ---
 customConfirmBtnYes.addEventListener('click', () => {
     if (customConfirmResolver) {
         customConfirmResolver(true);
@@ -681,7 +665,6 @@ customConfirmBtnYes.addEventListener('click', () => {
     showModal('custom-confirm-modal', false);
     if (history.state) history.back();
 });
-
 customConfirmBtnNo.addEventListener('click', () => {
     if (customConfirmResolver) {
         customConfirmResolver(false);
@@ -690,8 +673,6 @@ customConfirmBtnNo.addEventListener('click', () => {
     showModal('custom-confirm-modal', false);
     if (history.state) history.back();
 });
-// --- পরিবর্তন শেষ ---
-
 function customPrompt(title, defaultValue = '') {
     return new Promise(resolve => {
         customPromptResolver = resolve;
@@ -815,12 +796,10 @@ showNotification('Failed to copy. See console for details.', 5000);
 }
 }
 function handleCustomBack(){
-    // --- নতুন Confirm Modal চেক (পরিবর্তন) ---
     if(!customConfirmModal.classList.contains('hidden')){ 
-        customConfirmBtnNo.click(); // 'NO' বাটন ক্লিকের মতো কাজ করবে
+        customConfirmBtnNo.click();
         return true;
     }
-    // --- পরিবর্তন শেষ ---
     if(!partnerProfileModal.classList.contains('hidden')){
         showModal('partner-profile-modal', false);
         return true;
@@ -1018,6 +997,7 @@ function listenForBlockedUsers(uid) {
         if (!profileViewModal.classList.contains('hidden')) {
             populateBlockedUsersList();
         }
+        populateAllFriendsList(); // <-- আপনার অনুরোধ অনুযায়ী পরিবর্তন
     });
     contactListeners.blocked = blockedRef;
 }
@@ -1031,11 +1011,8 @@ auth.signInWithEmailAndPassword(email,password)
 const user=userCredential.user;
 db.ref('users/'+user.uid).once('value',snapshot=>{
 if(snapshot.exists()){
-    // <<< --- পরিবর্তন শুরু --- >>>
-    // লগইন সফল হলে, অ্যাপের প্রধান ভিউ দেখানোর জন্য
-    // ক্যালকুলেটরের কোডটি এখানে যোগ করা হলো
     authReadyPromise.then(()=>{
-        if(currentUser){ // currentUser এখন সেট করা উচিত
+        if(currentUser){
             showView('main-view');
             history.pushState(null,'',window.location.pathname);
             userDataReadyPromise.then(() => {
@@ -1044,19 +1021,16 @@ if(snapshot.exists()){
                         initializeApp();
                     }
                 } else {
-                    // এটি ঘটার কথা নয়, কিন্তু ঘটলে সাইন আউট করে দিন
                     loginError.textContent="Profile data load failed. Please log in again.";
                     auth.signOut();
                     showView('auth-view');
                 }
             });
         }else{
-            // এটিও ঘটার কথা নয়
             loginError.textContent="Auth state error. Please try again.";
             showView('auth-view');
         }
     });
-    // <<< --- পরিবর্তন শেষ --- >>>
 }else{
 loginError.textContent="Profile data not found. Please contact support.";
 auth.signOut();
@@ -1169,25 +1143,20 @@ profileViewName.classList.remove('hidden');
 profileEditNameBtn.classList.remove('hidden');
 }
 });
-
-// --- আপনার অনুরোধ অনুযায়ী পরিবর্তন ---
 profileCopyIdBtn.addEventListener('click',()=>{
     copyText(currentUserData.uid,'User ID copied to clipboard!');
-    profileCopyIdBtn.style.backgroundColor = '#00ff00'; // সবুজ হবে
+    profileCopyIdBtn.style.backgroundColor = '#00ff00';
     setTimeout(() => {
-        profileCopyIdBtn.style.backgroundColor = ''; // CSS-এ দেওয়া আসল রঙে ফিরে যাবে
-    }, 1500); // 1.5 সেকেন্ড
+        profileCopyIdBtn.style.backgroundColor = '';
+    }, 1500);
 });
-
 profileCopyEmailBtn.addEventListener('click',()=>{
     copyText(currentUserData.email,'Email copied to clipboard!');
-    profileCopyEmailBtn.style.backgroundColor = '#00ff00'; // সবুজ হবে
+    profileCopyEmailBtn.style.backgroundColor = '#00ff00';
     setTimeout(() => {
-        profileCopyEmailBtn.style.backgroundColor = ''; // CSS-এ দেওয়া আসল রঙে ফিরে যাবে
-    }, 1500); // 1.5 সেকেন্ড
+        profileCopyEmailBtn.style.backgroundColor = '';
+    }, 1500);
 });
-// --- পরিবর্তন শেষ ---
-
 partnerModalCopyIdBtn.addEventListener('click',()=>{
     if(currentChatPartner){
         copyText(currentChatPartner.uid,'Friend ID copied to clipboard!');
@@ -1215,8 +1184,47 @@ chatHeaderInfo.addEventListener('click',()=>{
 function initializeApp(){
     showPanel('home-content');
     listenForContacts();
+    populateAllFriendsList(); // <-- আপনার অনুরোধ অনুযায়ী পরিবর্তন
     appInitialized=true;
 }
+
+// --- আপনার অনুরোধ অনুযায়ী নতুন ফাংশন ---
+async function populateAllFriendsList() {
+    if (!callsContent || !currentUser || !currentUserData) return;
+    callsContent.innerHTML = ''; // তালিকাটি প্রথমে পরিষ্কার করুন
+    
+    try {
+        // নাম অনুযায়ী সাজিয়ে সব ইউজার আনা হচ্ছে
+        const usersSnap = await db.ref('users').orderByChild('name').once('value');
+        if (!usersSnap.exists()) {
+                callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No users found in the app.</p>';
+            return;
+        }
+        
+        let friendCount = 0;
+        
+        usersSnap.forEach(userSnap => { // সাজানো তালিকা পেতে forEach ব্যবহার করা হচ্ছে
+            const user = userSnap.val();
+            
+            // নিজেকে এবং ব্লক করা ইউজারদের বাদ দিন
+            if (user.uid === currentUser.uid) return;
+            if (currentUserData.blockedUsers && currentUserData.blockedUsers[user.uid]) return;
+            
+            // 'ALL FRIEND' তালিকার জন্য আইটেম তৈরি করুন (isFriendList = true)
+            createOrUpdateContactItem(user, true);
+            friendCount++;
+        });
+
+        if (friendCount === 0) {
+            callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No other users found. Add friends using their ID.</p>';
+        }
+    } catch (err) {
+        console.error("Error populating all friends list:", err);
+        callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--call-end-red);">Error loading users.</p>';
+    }
+}
+// --- নতুন ফাংশন শেষ ---
+
 addFriendBtn.addEventListener('click',()=>{
 addFriendForm.reset();
 showModal('add-friend-modal');
@@ -1279,7 +1287,7 @@ noChatsMsg.remove();
 function createOrUpdateContactItem(contact, isFriendList = false) {
     const listContainer = isFriendList ? callsContent : homeContent;
     const existingItem = listContainer.querySelector(`.list-item[data-uid="${contact.uid}"]`);
-    if (currentUserData.blockedUsers && currentUserData.blockedUsers[contact.uid]) {
+    if (!isFriendList && currentUserData.blockedUsers && currentUserData.blockedUsers[contact.uid]) {
         if (existingItem) {
             existingItem.remove();
         }
@@ -1297,14 +1305,12 @@ function createOrUpdateContactItem(contact, isFriendList = false) {
         badgeContainer.insertAdjacentHTML('beforeend', getVerifiedBadgeHTML(contact));
         if (!isFriendList) {
             existingItem.querySelector('.item-subtext').textContent = lastMsgText;
-            existingItem.classList.toggle('hidden', timestamp === 0);
+            existingItem.classList.remove('hidden');
         }
     } else {
         const item = document.createElement('div');
         item.className = 'list-item';
-        if (!isFriendList && timestamp === 0) {
-             item.classList.add('hidden');
-        }
+        
         item.dataset.uid = contact.uid;
         let itemHTML = `
             <div class="item-emoji">${getProfilePicHTML(contact)}</div>
@@ -1365,7 +1371,7 @@ function createOrUpdateContactItem(contact, isFriendList = false) {
             item.addEventListener('touchcancel',()=>clearTimeout(timer));
             item.querySelector('.delete-button').addEventListener('click',async(e)=>{
                 e.stopPropagation();
-                const isConfirmed = await customConfirm('Are you sure you want to delete this chat history?');
+                const isConfirmed = await customConfirm('Are you sure you want to delete this chat and remove from chat list?'); // বার্তা পরিবর্তন করা হয়েছে
                 if(isConfirmed) {
                     deleteChatHistory(contact.uid);
                 } else {
@@ -1423,7 +1429,6 @@ function listenForLastMessageUpdates(contactId) {
                 lastMessageTimestamps[contactId] = { text: 'Tap to chat', timestamp: 0 };
                 if (item) {
                     item.querySelector('.item-subtext').textContent = 'Tap to chat';
-                    item.classList.add('hidden');
                 }
             }
             sortChatList();
@@ -1438,7 +1443,7 @@ function listenToContactListeners(contactId) {
         if (snapshot.exists()) {
             const contact = snapshot.val();
             createOrUpdateContactItem(contact, false);
-            createOrUpdateContactItem(contact, true);
+            // createOrUpdateContactItem(contact, true); // <-- আপনার অনুরোধ অনুযায়ী পরিবর্তন (মুছে ফেলা হয়েছে)
         }
     });
     listenForLastMessageUpdates(contactId);
@@ -1454,8 +1459,11 @@ function stopListeningToContact(contactId) {
     }
     const chatItem = homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
     if (chatItem) chatItem.remove();
-    const friendItem = callsContent.querySelector(`.list-item[data-uid="${contactId}"]`);
-    if (friendItem) friendItem.remove();
+    
+    // নিচের লাইনটি মুছে ফেলা হয়েছে কারণ 'ALL FRIEND' তালিকা এখন ভিন্নভাবে লোড হয়
+    // const friendItem = callsContent.querySelector(`.list-item[data-uid="${contactId}"]`);
+    // if (friendItem) friendItem.remove(); 
+    
     delete lastMessageTimestamps[contactId];
 }
 function listenForContacts() {
@@ -1482,10 +1490,13 @@ const chatId=getChatId(myUid,partnerId);
 updates[`messages/${chatId}`]=null;
 updates[`unreadCounts/${myUid}/${partnerId}`]=null;
 updates[`unreadCounts/${partnerId}/${myUid}`]=null;
+// --- আপনার অনুরোধ অনুযায়ী পরিবর্তন ---
+updates[`contacts/${myUid}/${partnerId}`] = null; // কন্টাক্ট লিস্ট থেকেও মুছে ফেলা হবে
+// --- পরিবর্তন শেষ ---
 db.ref().update(updates)
 .then(()=>{
-console.log('Chat history deleted.');
-showNotification('Chat history deleted.');
+console.log('Chat history and contact deleted.');
+showNotification('Chat history removed.'); // বার্তা পরিবর্তন করা হয়েছে
 })
 .catch(err=>{
 showNotification(`Error deleting chat: ${err.message}`, 5000);
@@ -1500,6 +1511,18 @@ history.pushState(null,'',window.location.pathname);
 });
 });
 function openChat(partner){
+// --- আপনার অনুরোধ অনুযায়ী পরিবর্তন ---
+// ALL FRIEND তালিকা থেকে চ্যাট খুললে তাকে আবার কন্টাক্ট লিস্টে যোগ করা হবে
+const myUid = currentUser.uid;
+const partnerId = partner.uid;
+if(myUid && partnerId && myUid !== partnerId) {
+    const updates = {};
+    updates[`contacts/${myUid}/${partnerId}`] = true;
+    updates[`contacts/${partnerId}/${myUid}`] = true;
+    db.ref().update(updates);
+}
+// --- পরিবর্তন শেষ ---
+
 currentChatPartner=partner;
 chatHeaderPicWrapper.innerHTML=getProfilePicHTML(partner,'1.8rem');
 chatHeaderName.innerHTML = `<span class="item-name-text">${partner.name}</span>${getVerifiedBadgeHTML(partner)}`;
