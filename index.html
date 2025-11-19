@@ -1,13 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Calculator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Messaging App</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--wa-header-bg:#53051D;--wa-accent-blue:#34B7F1;--wa-message-out-bg:#e1f6fb;--wa-message-in-bg:#ffffff;--wa-app-bg:#FFF2C3;--wa-chat-bg:#e5ddd5;--wa-icon-color:#f0f2f5;--wa-text-primary:#111b21;--wa-text-secondary:#667781;--wa-border-color:#e9edef;--wa-active-tab-indicator:var(--wa-accent-blue);--wa-button-color:#008069;--wa-link-color:#00a8e8;--wa-shadow:rgba(17,27,33,0.15);--call-end-red:#e91e63;--call-accept-green:#4CAF50;--modal-bg:#f7f7f7;--modal-border-radius:12px;--modal-shadow:0 8px 25px rgba(0,0,0,0.3);--calc-bg:#1c1c1c;--calc-display-bg:#1c1c1c;--calc-btn-bg:#505050;--calc-btn-op-bg:#FF9500;--calc-btn-other-bg:#D4D4D2;--calc-text-primary:#FFFFFF;--calc-text-op:#FFFFFF;--calc-text-other:#1c1c1c;}
+:root{
+    --wa-header-bg:#53051D;
+    --wa-accent-blue:#34B7F1;
+    --wa-message-out-bg:#e1f6fb;
+    --wa-message-in-bg:#ffffff;
+    --wa-app-bg:#FFF2C3;
+    --wa-chat-bg:#e5ddd5;
+    --wa-icon-color:#f0f2f5;
+    --wa-text-primary:#111b21;
+    --wa-text-secondary:#667781;
+    --wa-border-color:#e9edef;
+    --wa-active-tab-indicator:var(--wa-accent-blue);
+    --wa-button-color:#008069;
+    --wa-link-color:#00a8e8;
+    --wa-shadow:rgba(17,27,33,0.15);
+    --call-end-red:#e91e63;
+    --modal-bg:#f0f2f5;
+    --modal-border-radius:20px;
+    --modal-shadow:12px 12px 24px #bebebe, -12px -12px 24px #ffffff;
+}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;}
 html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;display:flex;align-items:center;justify-content:center;color:var(--wa-text-primary);}
 .hidden{display:none!important;}
@@ -19,24 +39,10 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 .view{width:100%;height:100%;display:flex;flex-direction:column;background-color:var(--wa-app-bg);position:absolute;top:0;left:0;transition:transform 0.3s ease,opacity 0.3s ease;}
 .view.hidden{transform:translateX(100%);opacity:0;pointer-events:none;}
 #auth-view.hidden{transform:scale(0.9);opacity:0;}
-#calculator-view.hidden{transform:scale(1.1);opacity:0;pointer-events:none;}
 .view:not(.hidden){transform:translateX(0);opacity:1;}
-#calculator-view:not(.hidden){transform:scale(1);opacity:1;}
 .icon-btn{background:none;border:none;cursor:pointer;padding:8px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;}
 .icon-btn svg{width:24px;height:24px;fill:var(--wa-icon-color);}
 .icon-btn:hover{background-color:rgba(255,255,255,0.1);}
-#calculator-view{background-color:var(--calc-bg);padding:20px;justify-content:flex-end;flex-direction:column;gap:20px;z-index:100;position:relative;}
-#calc-notification-badge{position:absolute;top:20px;left:50%;transform:translateX(-50%);background-color:var(--wa-accent-blue);color:white;border-radius:50%;min-width:24px;height:24px;font-size:0.85rem;font-weight:500;display:flex;align-items:center;justify-content:center;z-index:110;padding:2px;box-shadow:0 2px 4px rgba(0,0,0,0.2);transition:transform 0.3s ease,opacity 0.3s ease;box-sizing:border-box;}
-#calc-notification-badge.hidden{display:flex!important;transform:translateX(-50%) scale(0.5);opacity:0;pointer-events:none;}
-#calc-display-wrapper{background-color:var(--calc-display-bg);padding:20px;text-align:right;flex-grow:1;display:flex;flex-direction:column;justify-content:flex-end;}
-#calc-display{font-size:4.5rem;font-weight:300;color:var(--calc-text-primary);word-wrap:break-word;word-break:break-all;min-height:1.2em;line-height:1.3;transition:font-size 0.2s;}
-#calc-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
-.calc-btn{background-color:var(--calc-btn-bg);border:none;border-radius:50%;font-size:2.2rem;color:var(--calc-text-primary);cursor:pointer;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;transition:filter 0.2s,transform 0.1s;}
-.calc-btn:active{transform:scale(0.95);filter:brightness(1.2);}
-.calc-btn.span-2-rows{grid-row:span 2;aspect-ratio:1/2.15;border-radius:40px;}
-.calc-btn.span-2-cols{grid-column:span 2;aspect-ratio:2.15/1;border-radius:40px;justify-content:flex-start;padding-left:30px;}
-.calc-btn.op{background-color:var(--calc-btn-op-bg);color:var(--calc-text-op);}
-.calc-btn.other{background-color:var(--calc-btn-other-bg);color:var(--calc-text-other);font-weight:500;}
 #auth-view{justify-content:center;align-items:center;padding:20px;gap:20px;background:#f0f2f5;z-index:50;}
 .auth-form-container{width:100%;max-width:380px;background:#f0f2f5;padding:30px;border-radius:20px;box-shadow:12px 12px 24px #bebebe,-12px -12px 24px #ffffff;}
 #auth-view h1{color:#444;font-size:2rem;font-weight:700;text-align:center;margin-bottom:8px;}
@@ -49,7 +55,7 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 .auth-btn:active{box-shadow:inset 6px 6px 12px #bebebe,inset -6px -6px 12px #ffffff;color:#333;}
 .auth-link{color:#555;text-decoration:none;font-size:0.9rem;text-align:center;cursor:pointer;margin-top:10px;}
 .auth-link:hover{text-decoration:underline;}
-.error-message{color:var(--call-end-red);font-size:0.9rem;text-align:center;min-height:1.2em;}
+.error-message{color:var(--call-end-red);font-size:0.9rem;text-align:center;min-height:1.2em;display:none;}
 #main-view{z-index:10;}
 .main-header{background-color:var(--wa-header-bg);color:var(--wa-icon-color);flex-shrink:0;}
 .header-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;}
@@ -92,7 +98,7 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 .chat-contact-details .item-subtext{color:rgba(240,242,245,0.8);font-size:0.8rem;}
 .chat-header-icons{display:flex;}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px;background-image:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23bdbdbd' fill-opacity='0.15' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");}
-.message-bubble{padding:8px 12px;border-radius:12px;max-width:75%;word-wrap:break-word;box-shadow:0 1px 1px var(--wa-shadow);position:relative;}
+.message-bubble{padding:8px 12px;border-radius:12px;max-width:75%;word-wrap:break-word;box-shadow:0 1px 1px var(--wa-shadow);position:relative; user-select: none; -webkit-user-select: none;}
 .message-sent{align-self:flex-end;background-color:var(--wa-message-out-bg);border-top-right-radius:4px;}
 .message-received{align-self:flex-start;background-color:var(--wa-message-in-bg);border-top-left-radius:4px;}
 .message-content-wrapper{display:flex;align-items:flex-end;}
@@ -107,480 +113,120 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 #chat-send-btn:hover{background-color:#006652;}
 #chat-send-btn svg{fill:white;width:20px;height:20px;}
 .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;max-width:450px;max-height:950px;margin:auto;}
-.modal-content{background:var(--modal-bg);padding:24px;border-radius:var(--modal-border-radius);width:90%;max-width:380px;box-shadow:var(--modal-shadow);display:flex;flex-direction:column;gap:16px;transform:scale(1);transition:transform 0.3s ease-out;}
-.modal.hidden{}
+.modal-content{background:var(--modal-bg);padding:30px;border-radius:var(--modal-border-radius);width:90%;max-width:380px;box-shadow:var(--modal-shadow);display:flex;flex-direction:column;gap:20px;transform:scale(1);transition:transform 0.3s ease-out;color:#555;border:none;}
 .modal.hidden .modal-content{transform:scale(0.95);opacity:0;}
-.modal-content h2{font-size:1.6rem;color:var(--wa-header-bg);text-align:center;font-weight:700;}
-.modal-content form{display:flex;flex-direction:column;gap:12px;}
-.modal-content input{padding:12px;border:1px solid #ccc;border-radius:8px;font-size:1rem;}
-.modal-content button{padding:12px;background-color:var(--wa-button-color);color:white;border:none;border-radius:8px;font-size:1rem;cursor:pointer;transition:background-color 0.2s;}
-.modal-content button:hover{background-color:#006652;}
-.modal-content .close-modal-btn{background-color:#f0f0f0;color:var(--wa-text-primary);}
-.modal-content .close-modal-btn:hover{background-color:#e0e0e0;}
-.modal-content p{font-size:1rem;color:var(--wa-text-secondary);text-align:center;}
-#profile-view-content{gap:15px;}
-.profile-info-frame{display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px;background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
-#profile-pic-wrapper{font-size:4.5rem;width:110px;height:110px;margin:0;cursor:pointer;color:var(--wa-text-primary);}
+.modal-content h2{font-size:1.6rem;color:#444;text-align:center;font-weight:700;margin-bottom:10px;}
+.modal-content form{display:flex;flex-direction:column;gap:20px;}
+.modal-content input{padding:15px 20px;border:none;outline:none;background:#f0f2f5;border-radius:10px;font-size:1rem;color:#555;box-shadow:inset 6px 6px 12px #bebebe,inset -6px -6px 12px #ffffff;}
+.modal-content input:focus{box-shadow:inset 4px 4px 8px #bebebe,inset -4px -4px 8px #ffffff;}
+.modal-content button{padding:15px;background:#f0f2f5;color:#555;border:none;outline:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:6px 6px 12px #bebebe,-6px -6px 12px #ffffff;transition:all 0.2s ease-in-out;}
+.modal-content button:hover{box-shadow:8px 8px 16px #bebebe,-8px -8px 16px #ffffff;}
+.modal-content button:active{box-shadow:inset 6px 6px 12px #bebebe,inset -6px -6px 12px #ffffff;color:#333;}
+.modal-content button[type="submit"], #profile-save-name-btn{color:var(--wa-button-color);}
+.modal-content .close-modal-btn{color:#555;}
+#logout-btn, #partner-modal-delete-chat-btn, #partner-modal-block-btn{color:var(--call-end-red);}
+.modal-content p{font-size:1rem;color:#666;text-align:center;}
+#profile-view-content{gap:25px;}
+.profile-info-frame, .profile-id-frame, .profile-blocked-frame{display:flex;flex-direction:column;align-items:center;gap:15px;padding:20px;background:#f0f2f5;border-radius:15px;box-shadow:8px 8px 16px #bebebe, -8px -8px 16px #ffffff;width:100%;}
+.profile-id-frame{align-items:stretch;}
+#profile-pic-wrapper{font-size:4.5rem;width:110px;height:110px;margin:0;cursor:pointer;color:var(--wa-text-primary);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:6px 6px 12px #bebebe, -6px -6px 12px #ffffff;}
+#profile-pic-wrapper:active{box-shadow:inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;}
 #profile-pic-wrapper span{font-size:4.5rem;}
 .profile-name-wrapper{display:flex;align-items:center;gap:10px;}
-#profile-view-name{font-size:1.8rem;font-weight:700;word-break:break-all;display:flex;align-items:center;}
-#profile-edit-name-btn{background:#eee;padding:6px;border-radius:50%;border:none;cursor:pointer;display:flex;}
-#profile-edit-name-btn:hover{background:#ddd;}
+#profile-view-name{font-size:1.8rem;font-weight:700;word-break:break-all;display:flex;align-items:center;color:#444;}
+#profile-edit-name-btn{background:#f0f2f5;padding:8px;border-radius:50%;border:none;cursor:pointer;display:flex;box-shadow:5px 5px 10px #bebebe, -5px -5px 10px #ffffff;color:#555;}
+#profile-edit-name-btn:active{box-shadow:inset 3px 3px 6px #bebebe, inset -3px -3px 6px #ffffff;}
+#profile-edit-name-btn svg{fill:#555;width:16px;height:16px;}
 #profile-edit-name-form{display:flex;gap:8px;margin-top:5px;width:100%;}
-#profile-name-input{flex:1;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:1rem;}
-#profile-save-name-btn{padding:8px 12px;font-size:0.9rem;}
-#profile-view-email{font-size:1rem;color:var(--wa-text-secondary);}
-.profile-id-frame{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.05);flex-direction:column;gap:10px;}
-.id-wrapper,.email-wrapper{display:flex;align-items:center;justify-content:space-between;width:100%;}
+#profile-name-input{flex:1;padding:10px;border:none;border-radius:8px;font-size:1rem;}
+#profile-save-name-btn{padding:8px 15px;font-size:0.9rem;}
+#profile-view-email{font-size:1rem;color:#777;}
+.id-wrapper,.email-wrapper{display:flex;align-items:center;justify-content:space-between;width:100%;padding:5px 0;}
 .id-text-wrapper,.email-text-wrapper{display:flex;flex-direction:column;gap:2px;overflow:hidden;}
-.id-text-wrapper p,.email-text-wrapper p{font-size:0.8rem;color:var(--wa-text-secondary);}
-#profile-user-id-text,#profile-user-email-text{font-size:0.95rem;font-weight:500;color:var(--wa-text-primary);word-break:break-all;}
-#profile-copy-id-btn,
-#profile-copy-email-btn {
-    background: #00ffff;
-    border-radius: 50%;
-    padding: 8px;
-    cursor: pointer;
-    flex-shrink: 0;
-    margin-left: 12px;
-    border: none;
-    transition: background-color 0.3s ease;
-}
-#profile-copy-id-btn svg,
-#profile-copy-email-btn svg {
-    fill: #1c1c1c;
-    width: 20px;
-    height: 20px;
-    display: block;
-}
-.profile-blocked-frame{display:flex;flex-direction:column;gap:8px;padding:12px 16px;background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
-.profile-blocked-frame strong{text-align:center;font-size:1.1rem;color:var(--wa-header-bg);}
-#blocked-users-list{max-height:150px;overflow-y:auto;background:#fcfcfc;border-radius:6px;border:1px solid var(--wa-border-color);}
-.blocked-user-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--wa-border-color);}
-.unblock-btn{font-size:0.8rem;padding:4px 10px;background:var(--wa-link-color);border-radius:6px;color:white;border:none;cursor:pointer;}
-.unblock-btn:hover{background:#0088c4;}
-.profile-button-group{display:flex;flex-direction:column;gap:10px;margin-top:5px;}
-#logout-btn{background-color:var(--call-end-red);}
-#logout-btn:hover{background-color:#c91652;}
-#partner-modal-delete-chat-btn,
-#partner-modal-block-btn { 
-    background-color: var(--call-end-red); 
-}
-#partner-modal-delete-chat-btn:hover,
-#partner-modal-block-btn:hover { 
-    background-color: #c91652; 
-}
-.name-with-badge {
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-}
-.item-name-text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.2;
-}
-#custom-confirm-modal .neumorphism-modal-content {
-    background: #f0f2f5;
-    border-radius: 20px;
-    padding: 30px 25px;
-    box-shadow: 12px 12px 24px #bebebe, -12px -12px 24px #ffffff;
-    width: 90%;
-    max-width: 360px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    transform: scale(1);
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-}
-#custom-confirm-modal.hidden .neumorphism-modal-content {
-    transform: scale(0.95);
-    opacity: 0;
-}
-#custom-confirm-message {
-    font-size: 1.1rem;
-    text-align: center;
-    color: #555;
-    line-height: 1.5;
-    font-weight: 500;
-    word-wrap: break-word;
-}
-.neumorphism-button-group {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-}
-.neumorphism-button-group button {
-    flex: 1;
-    padding: 15px;
-    background: #f0f2f5;
-    border: none;
-    outline: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
-    transition: all 0.2s ease-in-out;
-}
-.neumorphism-button-group button:hover {
-    box-shadow: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff;
-}
-.neumorphism-button-group button:active {
-    box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
-}
-#custom-confirm-btn-yes {
-    color: var(--call-end-red);
-}
-#custom-confirm-btn-no {
-    color: #555;
-}
-.verified-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 0.85em;
-    height: 0.85em;
-    background-color: var(--wa-accent-blue);
-    border-radius: 50%;
-    margin-left: 5px;
-    box-sizing: border-box;
-}
-.verified-badge svg {
-    width: 70%;
-    height: 70%;
-    fill: white; 
-    stroke: none; 
-}
-#profile-view-name .verified-badge {
-    width: 0.8em;
-    height: 0.8em;
-}
-#notification-container {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    pointer-events: none;
-    max-width: 90%;
-}
-.custom-notification {
-    background-color: rgba(17, 27, 33, 0.9);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 20px;
-    margin-top: 10px;
-    font-size: 0.95rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    transform: translateY(100%);
-    text-align: center;
-    pointer-events: all;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.custom-notification.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-.notification-action-buttons {
-    display: flex;
-    gap: 8px;
-    margin-left: 10px;
-}
-.notification-action-buttons button {
-    background: none;
-    border: 1px solid white;
-    color: white;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    pointer-events: all;
-}
-.notification-action-buttons button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-#custom-prompt-modal {
-    background: rgba(0, 0, 0, 0.6);
-}
-#custom-prompt-modal .modal-content {
-    background: var(--modal-bg);
-}
-
-/* --- নতুন নোটিফিকেশন পেজের স্টাইল --- */
-#notification-btn {
-    position: relative; /* ব্যাজের জন্য */
-}
-#notification-badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 18px;
-    height: 18px;
-    font-size: 0.7rem;
-    line-height: 18px;
-    padding: 0;
-    padding-top: 1px;
-}
-
-#notification-view {
-    background-color: #f0f2f5;
-    flex-direction: column;
-    justify-content: flex-start;
-    z-index: 70; /* চ্যাট ভিউ এর উপরে কিন্তু মডালের নিচে */
-}
-.neumorphism-header {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    background-color: #f0f2f5;
-    flex-shrink: 0;
-    box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
-    position: relative;
-    color: #555;
-}
-.neumorphism-header h2 {
-    flex: 1;
-    text-align: center;
-    font-weight: 700;
-    font-size: 1.25rem;
-    margin-left: -44px; /* ব্যাক বাটনের জায়গা রাখার জন্য */
-}
-.neumorphism-icon-btn {
-    background: #f0f2f5;
-    border: none;
-    border-radius: 50%;
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
-    transition: all 0.2s ease-in-out;
-    z-index: 10;
-}
-.neumorphism-icon-btn:active {
-    box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
-}
-.neumorphism-icon-btn svg {
-    width: 24px;
-    height: 24px;
-    fill: #555;
-}
-#notification-list-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-.notification-item {
-    background: #f0f2f5;
-    border-radius: 15px;
-    padding: 18px 22px;
-    box-shadow: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff;
-    color: #555;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    position: relative; /* ডিলিট বাটনের জন্য */
-    padding-right: 50px; /* ডিলিট বাটনের জন্য জায়গা */
-}
-.notification-item-text {
-    font-size: 1rem;
-    line-height: 1.4;
-    word-wrap: break-word; /* এটি লেখা সম্পূর্ণ দেখাবে */
-}
-.notification-item-time {
-    font-size: 0.8rem;
-    color: #888;
-    text-align: right;
-}
-#no-notifications-msg {
-    text-align: center;
-    color: var(--wa-text-secondary);
-    margin-top: 40px;
-    font-size: 1rem;
-}
-.notif-delete-btn {
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
-    background: #f0f2f5;
-    border: none;
-    border-radius: 50%;
-    font-size: 1.4rem;
-    color: #999;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 4px 4px 8px #bebebe, -4px -4px 8px #ffffff;
-    transition: all 0.2s ease-in-out;
-    line-height: 1;
-}
-.notif-delete-btn:hover {
-    color: var(--call-end-red);
-}
-.notif-delete-btn:active {
-    box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;
-}
-/* --- নতুন সাপোর্ট বাটনের স্টাইল --- */
-#support-fab-btn {
-    position: absolute;
-    bottom: 25px;
-    right: 25px;
-    width: 60px;
-    height: 60px;
-    background: #f0f2f5;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff;
-    z-index: 100;
-    transition: transform 0.2s ease;
-}
-#support-fab-btn:active {
-    box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
-    transform: scale(0.95);
-}
-#support-fab-btn svg {
-    width: 30px;
-    height: 30px;
-    fill: #555;
-}
-/* --- নতুন সাপোর্ট পেজের স্টাইল (Neumorphism) --- */
-#support-view {
-    background-color: #f0f2f5;
-    flex-direction: column;
-    z-index: 80;
-}
-#support-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-.support-bubble {
-    padding: 12px 18px;
-    border-radius: 15px;
-    max-width: 80%;
-    word-wrap: break-word;
-    color: #555;
-    font-size: 0.95rem;
-    box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
-}
-.support-bubble.sent {
-    align-self: flex-end;
-    background: #f0f2f5;
-    border-bottom-right-radius: 2px;
-}
-.support-bubble.received {
-    align-self: flex-start;
-    background: #e6e6e6; /* সামান্য ভিন্ন শেড */
-    border-bottom-left-radius: 2px;
-}
-#support-input-container {
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background: #f0f2f5;
-    box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
-}
-#support-input {
-    flex: 1;
-    padding: 15px;
-    border: none;
-    outline: none;
-    background: #f0f2f5;
-    border-radius: 25px;
-    color: #555;
-    font-size: 1rem;
-    box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
-}
-#support-send-btn {
-    width: 50px;
-    height: 50px;
-    border: none;
-    border-radius: 50%;
-    background: #f0f2f5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
-    transition: all 0.2s;
-}
-#support-send-btn:active {
-    box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;
-}
-#support-send-btn svg {
-    width: 24px;
-    height: 24px;
-    fill: #555;
-    margin-left: 4px; /* আইকন সামান্য ডানে */
-}
-/* --- স্টাইল শেষ --- */
+.id-text-wrapper p,.email-text-wrapper p{font-size:0.8rem;color:#777;text-align:left;}
+#profile-user-id-text,#profile-user-email-text{font-size:0.95rem;font-weight:500;color:#444;word-break:break-all;}
+#profile-copy-id-btn, #profile-copy-email-btn, #partner-modal-copy-id-btn{background:#f0f2f5;border-radius:50%;padding:10px;cursor:pointer;flex-shrink:0;margin-left:12px;border:none;transition:all 0.2s ease;box-shadow:5px 5px 10px #bebebe, -5px -5px 10px #ffffff;}
+#profile-copy-id-btn:active, #profile-copy-email-btn:active, #partner-modal-copy-id-btn:active{box-shadow:inset 3px 3px 6px #bebebe, inset -3px -3px 6px #ffffff;}
+#profile-copy-id-btn svg, #profile-copy-email-btn svg, #partner-modal-copy-id-btn svg{fill:#555;width:20px;height:20px;display:block;}
+.profile-blocked-frame strong{text-align:center;font-size:1.1rem;color:#444;margin-bottom:10px;display:block;}
+#blocked-users-list{max-height:150px;overflow-y:auto;background:#f0f2f5;border-radius:10px;border:none;width:100%;box-shadow:inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;padding:5px;}
+.blocked-user-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #e0e0e0;}
+.unblock-btn{font-size:0.8rem;padding:6px 12px;background:#f0f2f5;border-radius:8px;color:var(--wa-link-color);border:none;cursor:pointer;box-shadow:3px 3px 6px #bebebe, -3px -3px 6px #ffffff;}
+.unblock-btn:active{box-shadow:inset 2px 2px 4px #bebebe, inset -2px -2px 4px #ffffff;}
+.profile-button-group{display:flex;flex-direction:column;gap:15px;margin-top:10px;width:100%;}
+.name-with-badge{display:flex;align-items:center;overflow:hidden;}
+.item-name-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;}
+#custom-confirm-modal .neumorphism-modal-content, #custom-alert-modal .neumorphism-modal-content, #verified-info-modal .neumorphism-modal-content, #message-options-modal .neumorphism-modal-content{background:#f0f2f5;border-radius:20px;padding:30px 25px;box-shadow:12px 12px 24px #bebebe, -12px -12px 24px #ffffff;width:90%;max-width:360px;display:flex;flex-direction:column;gap:25px;transform:scale(1);transition:transform 0.3s ease-out, opacity 0.3s ease-out;}
+#custom-confirm-modal.hidden .neumorphism-modal-content, #custom-alert-modal.hidden .neumorphism-modal-content, #verified-info-modal.hidden .neumorphism-modal-content, #message-options-modal.hidden .neumorphism-modal-content{transform:scale(0.95);opacity:0;}
+#custom-confirm-message, #custom-alert-message{font-size:1.1rem;text-align:center;color:#555;line-height:1.5;font-weight:500;word-wrap:break-word;}
+#custom-alert-message{color:var(--call-end-red);}
+.neumorphism-button-group{display:flex;justify-content:space-between;gap:20px;}
+.neumorphism-button-group.vertical{flex-direction:column;gap:15px;}
+.neumorphism-button-group button{flex:1;padding:15px;background:#f0f2f5;border:none;outline:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:6px 6px 12px #bebebe, -6px -6px 12px #ffffff;transition:all 0.2s ease-in-out;}
+.neumorphism-button-group button:hover{box-shadow:8px 8px 16px #bebebe, -8px -8px 16px #ffffff;}
+.neumorphism-button-group button:active{box-shadow:inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;}
+#custom-confirm-btn-yes{color:var(--call-end-red);}
+#custom-confirm-btn-no{color:#555;}
+#custom-alert-btn-ok, #verified-info-btn-ok{color:#555;}
+#msg-opt-delete-everyone{color:var(--call-end-red);}
+#msg-opt-delete-me{color:#555;}
+#msg-opt-copy{color:var(--wa-button-color);}
+#msg-opt-cancel{color:#888;}
+.verified-badge{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:0.85em;height:0.85em;background-color:var(--wa-accent-blue);border-radius:50%;margin-left:5px;box-sizing:border-box;cursor:pointer;z-index:20;}
+.verified-badge svg{width:70%;height:70%;fill:white;stroke:none;}
+#profile-view-name .verified-badge{width:0.8em;height:0.8em;}
+#notification-container{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10000;display:flex;flex-direction:column;align-items:center;pointer-events:none;max-width:90%;}
+.custom-notification{background-color:rgba(17, 27, 33, 0.9);color:white;padding:12px 20px;border-radius:20px;margin-top:10px;font-size:0.95rem;box-shadow:0 4px 10px rgba(0, 0, 0, 0.2);opacity:0;transition:opacity 0.3s ease-in-out, transform 0.3s ease-in-out;transform:translateY(100%);text-align:center;pointer-events:all;display:flex;align-items:center;gap:10px;}
+.custom-notification.show{opacity:1;transform:translateY(0);}
+.notification-action-buttons{display:flex;gap:8px;margin-left:10px;}
+.notification-action-buttons button{background:none;border:1px solid white;color:white;padding:4px 10px;border-radius:12px;font-size:0.85rem;cursor:pointer;pointer-events:all;}
+.notification-action-buttons button:hover{background-color:rgba(255, 255, 255, 0.2);}
+#custom-prompt-modal{background:rgba(0, 0, 0, 0.6);}
+#custom-prompt-modal .modal-content{background:#f0f2f5;}
+#notification-btn{position:relative;}
+#notification-badge{position:absolute;top:6px;right:6px;width:18px;height:18px;font-size:0.7rem;line-height:18px;padding:0;padding-top:1px;}
+#notification-view{background-color:#f0f2f5;flex-direction:column;justify-content:flex-start;z-index:70;}
+.neumorphism-header{display:flex;align-items:center;padding:12px 16px;background-color:#f0f2f5;flex-shrink:0;box-shadow:6px 6px 12px #bebebe, -6px -6px 12px #ffffff;position:relative;color:#555;}
+.neumorphism-header h2{flex:1;text-align:center;font-weight:700;font-size:1.25rem;margin-left:-44px;}
+.neumorphism-icon-btn{background:#f0f2f5;border:none;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:6px 6px 12px #bebebe, -6px -6px 12px #ffffff;transition:all 0.2s ease-in-out;z-index:10;}
+.neumorphism-icon-btn:active{box-shadow:inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;}
+.neumorphism-icon-btn svg{width:24px;height:24px;fill:#555;}
+#notification-list-content{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:20px;}
+.notification-item{background:#f0f2f5;border-radius:15px;padding:18px 22px;box-shadow:8px 8px 16px #bebebe, -8px -8px 16px #ffffff;color:#555;display:flex;flex-direction:column;gap:8px;position:relative;padding-right:50px;}
+.notification-item-text{font-size:1rem;line-height:1.4;word-wrap:break-word;}
+.notification-item-time{font-size:0.8rem;color:#888;text-align:right;}
+#no-notifications-msg{text-align:center;color:var(--wa-text-secondary);margin-top:40px;font-size:1rem;}
+.notif-delete-btn{position:absolute;top:50%;right:15px;transform:translateY(-50%);width:32px;height:32px;background:#f0f2f5;border:none;border-radius:50%;font-size:1.4rem;color:#999;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:4px 4px 8px #bebebe, -4px -4px 8px #ffffff;transition:all 0.2s ease-in-out;line-height:1;}
+.notif-delete-btn:hover{color:var(--call-end-red);}
+.notif-delete-btn:active{box-shadow:inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;}
+#support-fab-btn{position:absolute;bottom:25px;right:25px;width:60px;height:60px;background:#f0f2f5;border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:8px 8px 16px #bebebe, -8px -8px 16px #ffffff;z-index:100;transition:transform 0.2s ease;}
+#support-fab-btn:active{box-shadow:inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;transform:scale(0.95);}
+#support-fab-btn svg{width:30px;height:30px;fill:#555;}
+#support-view{background-color:#f0f2f5;flex-direction:column;z-index:80;}
+#support-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:15px;}
+.support-bubble{padding:12px 18px;border-radius:15px;max-width:80%;word-wrap:break-word;color:#555;font-size:0.95rem;box-shadow:6px 6px 12px #bebebe, -6px -6px 12px #ffffff;}
+.support-bubble.sent{align-self:flex-end;background:#f0f2f5;border-bottom-right-radius:2px;}
+.support-bubble.received{align-self:flex-start;background:#e6e6e6;border-bottom-left-radius:2px;}
+#support-input-container{padding:15px 20px;display:flex;align-items:center;gap:15px;background:#f0f2f5;box-shadow:0 -4px 12px rgba(0,0,0,0.05);}
+#support-input{flex:1;padding:15px;border:none;outline:none;background:#f0f2f5;border-radius:25px;color:#555;box-shadow:inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;}
+#support-send-btn{width:50px;height:50px;border:none;border-radius:50%;background:#f0f2f5;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:6px 6px 12px #bebebe, -6px -6px 12px #ffffff;transition:all 0.2s;}
+#support-send-btn:active{box-shadow:inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;}
+#support-send-btn svg{width:24px;height:24px;fill:#555;margin-left:4px;}
 </style>
 </head>
 <body>
 <div id="app-container">
-<div id="calculator-view" class="view">
-<div id="calc-notification-badge" class="hidden">0</div>
-<div id="calc-display-wrapper">
-<div id="calc-display">0</div>
-</div>
-<div id="calc-buttons">
-<button class="calc-btn other" data-key="clear">C</button>
-<button class="calc-btn other" data-key="backspace">⌫</button>
-<button class="calc-btn op" data-key="/">÷</button>
-<button class="calc-btn op" data-key="*">×</button>
-<button class="calc-btn" data-key="7">7</button>
-<button class="calc-btn" data-key="8">8</button>
-<button class="calc-btn" data-key="9">9</button>
-<button class="calc-btn op" data-key="-">−</button>
-<button class="calc-btn" data-key="4">4</button>
-<button class="calc-btn" data-key="5">5</button>
-<button class="calc-btn" data-key="6">6</button>
-<button class="calc-btn op" data-key="+">+</button>
-<button class="calc-btn" data-key="1">1</button>
-<button class="calc-btn" data-key="2">2</button>
-<button class="calc-btn" data-key="3">3</button>
-<button class="calc-btn op span-2-rows" data-key="equals">=</button> <button class="calc-btn span-2-cols" data-key="0">0</button> <button class="calc-btn" data-key=".">.</button> </div>
-</div>
-<div id="auth-view" class="view hidden">
+<div id="auth-view" class="view">
 <div class="auth-form-container">
 <h1>SECRET MESSAGING</h1>
 <p class="auth-developer-subtitle">𝐃𝐄𝐕𝐀𝐋𝐎𝐏𝐄𝐑 𝐊𝐀𝐖𝐒𝐀𝐑</p>
 <form id="login-form" class="auth-form">
-<div id="login-error" class="error-message"></div>
 <input type="email" id="login-email" placeholder="Email" required>
 <input type="password" id="login-password" placeholder="Password" required>
 <button type="submit" class="auth-btn">LOGIN</button>
 <a id="show-signup" class="auth-link">SIGN UP</a>
 </form>
 <form id="signup-form" class="auth-form hidden">
-<div id="signup-error" class="error-message"></div>
 <input type="email" id="signup-email" placeholder="Email" required>
 <input type="password" id="signup-password" placeholder="Password" required>
 <button type="submit" class="auth-btn">SIGN UP</button>
@@ -626,7 +272,7 @@ ALL FRIEND
 </div>
 </main>
 <button id="support-fab-btn" title="Support">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
 </button>
 </div>
 <div id="chat-view" class="view hidden">
@@ -654,30 +300,30 @@ ALL FRIEND
 </footer>
 </div>
 <div id="notification-view" class="view hidden">
-    <header class="neumorphism-header">
-        <button id="notification-back-btn" class="neumorphism-icon-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-        </button>
-        <h2>Notifications</h2>
-    </header>
-    <main id="notification-list-content">
-        </main>
+<header class="neumorphism-header">
+<button id="notification-back-btn" class="neumorphism-icon-btn">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+</button>
+<h2>Notifications</h2>
+</header>
+<main id="notification-list-content">
+</main>
 </div>
 <div id="support-view" class="view hidden">
-    <header class="neumorphism-header">
-        <button id="support-back-btn" class="neumorphism-icon-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-        </button>
-        <h2>Support</h2>
-    </header>
-    <main id="support-messages">
-        </main>
-    <footer id="support-input-container">
-        <input type="text" id="support-input" placeholder="Type your problem...">
-        <button id="support-send-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-        </button>
-    </footer>
+<header class="neumorphism-header">
+<button id="support-back-btn" class="neumorphism-icon-btn">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+</button>
+<h2>Support</h2>
+</header>
+<main id="support-messages">
+</main>
+<footer id="support-input-container">
+<input type="text" id="support-input" placeholder="Type your problem...">
+<button id="support-send-btn">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+</button>
+</footer>
 </div>
 <div id="add-friend-modal" class="modal hidden">
 <div class="modal-content">
@@ -685,7 +331,7 @@ ALL FRIEND
 <p>ENTER YOUR FRIEND ID</p>
 <form id="add-friend-form">
 <input type="text" id="friend-id-input" placeholder="Friend ID" required>
-<button type="submit" class="auth-btn">ADD FRIEND</button>
+<button type="submit">ADD FRIEND</button>
 <button type="button" class="close-modal-btn">CANCEL</button>
 </form>
 </div>
@@ -698,15 +344,15 @@ ALL FRIEND
 </div>
 <div class="profile-name-wrapper">
 <h3 id="profile-view-name">YOUR NAME</h3>
-<button id="profile-edit-name-btn" class="icon-btn" title="Edit Name">
+<button id="profile-edit-name-btn" title="Edit Name">
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>
 </button>
 </div>
 <div id="profile-edit-name-form" class="hidden">
 <input type="text" id="profile-name-input" placeholder="New Name">
-<button id="profile-save-name-btn" class="auth-btn">Save</button>
+<button id="profile-save-name-btn">Save</button>
 </div>
-<p id="profile-view-email" class="item-subtext"></p>
+<p id="profile-view-email"></p>
 </div>
 <div class="profile-id-frame">
 <div class="id-wrapper">
@@ -714,74 +360,107 @@ ALL FRIEND
 <p>YOUR ID</p>
 <span id="profile-user-id-text"></span>
 </div>
-<button id="profile-copy-id-btn" class="icon-btn" title="Copy ID">
+<button id="profile-copy-id-btn" title="Copy ID">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0 -1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
 </button>
 </div>
-<div class="id-wrapper" style="margin-top: 10px; border-top: 1px solid var(--wa-border-color); padding-top: 10px;">
+<div class="id-wrapper" style="margin-top: 10px; border-top: 1px solid #d1d1d1; padding-top: 10px;">
 <div class="id-text-wrapper">
 <p>EMAIL</p>
 <span id="profile-user-email-text"></span>
 </div>
-<button id="profile-copy-email-btn" class="icon-btn" title="Copy Email">
+<button id="profile-copy-email-btn" title="Copy Email">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0 -1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
 </button>
 </div>
 </div>
 <div class="profile-blocked-frame">
-    <strong>Blocked Users</strong>
-    <div id="blocked-users-list">
-        </div>
+<strong>Blocked Users</strong>
+<div id="blocked-users-list">
+</div>
 </div>
 <div class="profile-button-group">
-<button id="logout-btn" class="auth-btn">Log Out</button>
+<button id="logout-btn">Log Out</button>
 <button type="button" class="close-modal-btn">Close</button>
 </div>
 </div>
 </div>
 <div id="custom-prompt-modal" class="modal hidden">
-    <div class="modal-content">
-        <h2 id="prompt-modal-title">Enter Value</h2>
-        <form id="custom-prompt-form">
-            <input type="text" id="prompt-input" placeholder="Value" required>
-            <button type="submit" class="auth-btn">SUBMIT</button>
-            <button type="button" class="close-modal-btn">CANCEL</button>
-        </form>
-    </div>
+<div class="modal-content">
+<h2 id="prompt-modal-title">Enter Value</h2>
+<form id="custom-prompt-form">
+<input type="text" id="prompt-input" placeholder="Value" required>
+<button type="submit">SUBMIT</button>
+<button type="button" class="close-modal-btn">CANCEL</button>
+</form>
+</div>
 </div>
 <div id="partner-profile-modal" class="modal hidden">
-    <div class="modal-content">
-        <h2 id="partner-modal-name" class="name-with-badge" style="justify-content: center; font-size: 1.6rem;">Friend's Profile</h2>
-        <div class="profile-id-frame">
-            <div class="id-wrapper">
-                <div class="id-text-wrapper">
-                    <p>USER ID</p>
-                    <span id="partner-modal-id-text"></span>
-                </div>
-                <button id="partner-modal-copy-id-btn" class="icon-btn" title="Copy ID">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0 -1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                </button>
-            </div>
-        </div>
-        <div class="profile-button-group">
-            <button type="button" id="partner-modal-delete-chat-btn" class="auth-btn">Delete Chat</button>
-            <button type="button" id="partner-modal-block-btn" class="auth-btn">Block User</button>
-            <button type="button" class="close-modal-btn">Close</button>
-        </div>
-    </div>
+<div class="modal-content">
+<h2 id="partner-modal-name" class="name-with-badge" style="justify-content: center; font-size: 1.6rem;">Friend's Profile</h2>
+<div class="profile-id-frame">
+<div class="id-wrapper">
+<div class="id-text-wrapper">
+<p>USER ID</p>
+<span id="partner-modal-id-text"></span>
+</div>
+<button id="partner-modal-copy-id-btn" title="Copy ID">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0 -1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+</button>
+</div>
+</div>
+<div class="profile-button-group">
+<button type="button" id="partner-modal-delete-chat-btn">Delete Chat</button>
+<button type="button" id="partner-modal-block-btn">Block User</button>
+<button type="button" class="close-modal-btn">Close</button>
+</div>
+</div>
 </div>
 </div>
 <div id="custom-confirm-modal" class="modal hidden">
-    <div class="neumorphism-modal-content">
-        <p id="custom-confirm-message">Are you sure?</p>
-        <div class="neumorphism-button-group">
-            <button id="custom-confirm-btn-no">NO</button>
-            <button id="custom-confirm-btn-yes">YES</button>
-        </div>
-    </div>
+<div class="neumorphism-modal-content">
+<p id="custom-confirm-message">Are you sure?</p>
+<div class="neumorphism-button-group">
+<button id="custom-confirm-btn-no">NO</button>
+<button id="custom-confirm-btn-yes">YES</button>
+</div>
+</div>
+</div>
+<div id="custom-alert-modal" class="modal hidden">
+<div class="neumorphism-modal-content">
+<p id="custom-alert-message"></p>
+<div class="neumorphism-button-group">
+<button id="custom-alert-btn-ok">ঠিক আছে</button>
+</div>
+</div>
+</div>
+<div id="verified-info-modal" class="modal hidden">
+<div class="neumorphism-modal-content">
+<div style="text-align: center; margin-bottom: 10px;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" style="width: 50px; height: 50px; fill: var(--wa-accent-blue);">
+<path d="M6.75 12.13l-3.48-3.48c-.3-.3-.78-.3-1.06 0s-.3.78 0 1.06l4 4c.3.3.78.3 1.06 0l8.5-8.5c.3-.3.3-.78 0-1.06s-.78-.3-1.06 0L6.75 12.13z"/>
+</svg>
+</div>
+<p id="verified-info-message" style="text-align: center; color: #555;">
+ভেরিফাই ব্যাচটি বিশ্বস্ত ব্যক্তিদের অ্যাকাউন্টে যাচাই করে দেওয়া হয়
+</p>
+<div class="neumorphism-button-group">
+<button id="verified-info-btn-ok">ঠিক আছে</button>
+</div>
+</div>
+</div>
+<div id="message-options-modal" class="modal hidden">
+<div class="neumorphism-modal-content">
+<h3 style="text-align:center; color:#555; margin-bottom:10px;">Message Options</h3>
+<div class="neumorphism-button-group vertical">
+<button id="msg-opt-copy">Copy Text</button>
+<button id="msg-opt-delete-me">Delete only me</button>
+<button id="msg-opt-delete-everyone" class="hidden">Delete everyone</button>
+<button id="msg-opt-cancel">Cancel</button>
+</div>
+</div>
 </div>
 <div id="notification-container"></div>
-
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -797,19 +476,18 @@ let appInitialized=false;
 let authStateInitialized=false;
 let authStateResolve=null;
 const authReadyPromise=new Promise(resolve=>{authStateResolve=resolve;});
-let userDataResolve = null;
-const userDataReadyPromise = new Promise(resolve => { userDataResolve = resolve; });
+let userDataResolve=null;
+const userDataReadyPromise=new Promise(resolve=>{userDataResolve=resolve;});
 let currentChatPartner=null;
 let currentChatListener=null;
 let unreadListeners={};
 let contactListeners={};
 let lastMessageTimestamps={};
 let messageElements={};
-let calcDisplayValue='0';
-let customPromptResolver = null;
-let customConfirmResolver = null;
+let customPromptResolver=null;
+let customConfirmResolver=null;
+let customAlertResolver=null;
 const appContainer=document.getElementById('app-container');
-const calculatorView=document.getElementById('calculator-view');
 const authView=document.getElementById('auth-view');
 const mainView=document.getElementById('main-view');
 const chatView=document.getElementById('chat-view');
@@ -820,13 +498,8 @@ const customPromptModal=document.getElementById('custom-prompt-modal');
 const customPromptForm=document.getElementById('custom-prompt-form');
 const promptInput=document.getElementById('prompt-input');
 const allModals=document.querySelectorAll('.modal');
-const calcDisplay=document.getElementById('calc-display');
-const calcButtons=document.getElementById('calc-buttons');
-const calcNotificationBadge=document.getElementById('calc-notification-badge');
 const loginForm=document.getElementById('login-form');
 const signupForm=document.getElementById('signup-form');
-const loginError=document.getElementById('login-error');
-const signupError=document.getElementById('signup-error');
 const addFriendBtn=document.getElementById('add-friend-btn');
 const menuBtn=document.getElementById('menu-btn');
 const navHome=document.getElementById('nav-home');
@@ -856,134 +529,190 @@ const profileUserIdText=document.getElementById('profile-user-id-text');
 const profileUserEmailText=document.getElementById('profile-user-email-text');
 const profileCopyIdBtn=document.getElementById('profile-copy-id-btn');
 const profileCopyEmailBtn=document.getElementById('profile-copy-email-btn');
-const notificationContainer = document.getElementById('notification-container');
-const partnerProfileModal = document.getElementById('partner-profile-modal');
-const partnerModalName = document.getElementById('partner-modal-name');
-const partnerModalIdText = document.getElementById('partner-modal-id-text');
-const partnerModalCopyIdBtn = document.getElementById('partner-modal-copy-id-btn');
-const blockedUsersListEl = document.getElementById('blocked-users-list');
-const partnerModalBlockBtn = document.getElementById('partner-modal-block-btn');
-const partnerModalDeleteChatBtn = document.getElementById('partner-modal-delete-chat-btn');
-const logoutBtn = document.getElementById('logout-btn');
-const showSignupBtn = document.getElementById('show-signup');
-const showLoginBtn = document.getElementById('show-login');
-const customConfirmModal = document.getElementById('custom-confirm-modal');
-const customConfirmMessage = document.getElementById('custom-confirm-message');
-const customConfirmBtnYes = document.getElementById('custom-confirm-btn-yes');
-const customConfirmBtnNo = document.getElementById('custom-confirm-btn-no');
-
-const notificationView = document.getElementById('notification-view');
-const notificationBtn = document.getElementById('notification-btn');
-const notificationBadge = document.getElementById('notification-badge');
-const notificationListContent = document.getElementById('notification-list-content');
-const notificationBackBtn = document.getElementById('notification-back-btn');
-let notificationListener = null;
-let unreadNotificationCount = 0;
-
-// --- নতুন সাপোর্ট ভেরিয়েবল ---
-const supportFabBtn = document.getElementById('support-fab-btn');
-const supportView = document.getElementById('support-view');
-const supportBackBtn = document.getElementById('support-back-btn');
-const supportMessages = document.getElementById('support-messages');
-const supportInput = document.getElementById('support-input');
-const supportSendBtn = document.getElementById('support-send-btn');
-let supportListener = null;
-// --- ভেরিয়েবল শেষ ---
-
-function showNotification(message, duration = 3000, actions = null) {
-    const notification = document.createElement('div');
-    notification.className = 'custom-notification';
-    const textSpan = document.createElement('span');
-    textSpan.textContent = message;
-    notification.appendChild(textSpan);
-    let notificationTimeout;
-    if (actions) {
-        const actionWrapper = document.createElement('div');
-        actionWrapper.className = 'notification-action-buttons';
-        actions.forEach(action => {
-            const btn = document.createElement('button');
-            btn.textContent = action.text;
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                action.callback();
-                hideNotification(notification, notificationTimeout);
-            });
-            actionWrapper.appendChild(btn);
-        });
-        notification.appendChild(actionWrapper);
-        if (!duration) duration = 30000;
-    }
-    notificationContainer.appendChild(notification);
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 10);
-    if (duration > 0) {
-        notificationTimeout = setTimeout(() => {
-            hideNotification(notification);
-        }, duration);
-    }
-    return {
-        hide: () => hideNotification(notification, notificationTimeout),
-        element: notification,
-        timeout: notificationTimeout
-    };
-}
-function hideNotification(notification, timeout) {
-    clearTimeout(timeout);
-    notification.classList.remove('show');
-    notification.addEventListener('transitionend', () => {
-        notification.remove();
-    }, { once: true });
-}
-function customConfirm(message) {
-    return new Promise(resolve => {
-        customConfirmResolver = resolve;
-        customConfirmMessage.textContent = message;
-        showModal('custom-confirm-modal');
-        history.pushState(null, '', window.location.pathname);
-    });
-}
-customConfirmBtnYes.addEventListener('click', () => {
-    if (customConfirmResolver) {
-        customConfirmResolver(true);
-        customConfirmResolver = null;
-    }
-    showModal('custom-confirm-modal', false);
-    if (history.state) history.back();
+const notificationContainer=document.getElementById('notification-container');
+const partnerProfileModal=document.getElementById('partner-profile-modal');
+const partnerModalName=document.getElementById('partner-modal-name');
+const partnerModalIdText=document.getElementById('partner-modal-id-text');
+const partnerModalCopyIdBtn=document.getElementById('partner-modal-copy-id-btn');
+const blockedUsersListEl=document.getElementById('blocked-users-list');
+const partnerModalBlockBtn=document.getElementById('partner-modal-block-btn');
+const partnerModalDeleteChatBtn=document.getElementById('partner-modal-delete-chat-btn');
+const logoutBtn=document.getElementById('logout-btn');
+const showSignupBtn=document.getElementById('show-signup');
+const showLoginBtn=document.getElementById('show-login');
+const customConfirmModal=document.getElementById('custom-confirm-modal');
+const customConfirmMessage=document.getElementById('custom-confirm-message');
+const customConfirmBtnYes=document.getElementById('custom-confirm-btn-yes');
+const customConfirmBtnNo=document.getElementById('custom-confirm-btn-no');
+const customAlertModal=document.getElementById('custom-alert-modal');
+const customAlertMessage=document.getElementById('custom-alert-message');
+const customAlertBtnOk=document.getElementById('custom-alert-btn-ok');
+const verifiedInfoModal=document.getElementById('verified-info-modal');
+const verifiedInfoBtnOk=document.getElementById('verified-info-btn-ok');
+const messageOptionsModal=document.getElementById('message-options-modal');
+const msgOptCopy=document.getElementById('msg-opt-copy');
+const msgOptDeleteMe=document.getElementById('msg-opt-delete-me');
+const msgOptDeleteEveryone=document.getElementById('msg-opt-delete-everyone');
+const msgOptCancel=document.getElementById('msg-opt-cancel');
+let currentSelectedMsgId=null;
+let currentSelectedMsgText=null;
+let currentSelectedMsgIsSender=false;
+const notificationView=document.getElementById('notification-view');
+const notificationBtn=document.getElementById('notification-btn');
+const notificationBadge=document.getElementById('notification-badge');
+const notificationListContent=document.getElementById('notification-list-content');
+const notificationBackBtn=document.getElementById('notification-back-btn');
+let notificationListener=null;
+let unreadNotificationCount=0;
+const supportFabBtn=document.getElementById('support-fab-btn');
+const supportView=document.getElementById('support-view');
+const supportBackBtn=document.getElementById('support-back-btn');
+const supportMessages=document.getElementById('support-messages');
+const supportInput=document.getElementById('support-input');
+const supportSendBtn=document.getElementById('support-send-btn');
+let supportListener=null;
+function showNotification(message,duration=3000,actions=null){
+const notification=document.createElement('div');
+notification.className='custom-notification';
+const textSpan=document.createElement('span');
+textSpan.textContent=message;
+notification.appendChild(textSpan);
+let notificationTimeout;
+if(actions){
+const actionWrapper=document.createElement('div');
+actionWrapper.className='notification-action-buttons';
+actions.forEach(action=>{
+const btn=document.createElement('button');
+btn.textContent=action.text;
+btn.addEventListener('click',(e)=>{
+e.stopPropagation();
+action.callback();
+hideNotification(notification,notificationTimeout);
 });
-customConfirmBtnNo.addEventListener('click', () => {
-    if (customConfirmResolver) {
-        customConfirmResolver(false);
-        customConfirmResolver = null;
-    }
-    showModal('custom-confirm-modal', false);
-    if (history.state) history.back();
+actionWrapper.appendChild(btn);
 });
-function customPrompt(title, defaultValue = '') {
-    return new Promise(resolve => {
-        customPromptResolver = resolve;
-        document.getElementById('prompt-modal-title').textContent = title;
-        promptInput.value = defaultValue;
-        showModal('custom-prompt-modal');
-        history.pushState(null, '', window.location.pathname);
-    });
+notification.appendChild(actionWrapper);
+if(!duration)duration=30000;
 }
-customPromptForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (customPromptResolver) {
-        customPromptResolver(promptInput.value);
-        customPromptResolver = null;
-    }
-    showModal('custom-prompt-modal', false);
-    if (history.state) history.back();
+notificationContainer.appendChild(notification);
+setTimeout(()=>{
+notification.classList.add('show');
+},10);
+if(duration>0){
+notificationTimeout=setTimeout(()=>{
+hideNotification(notification);
+},duration);
+}
+return{
+hide:()=>hideNotification(notification,notificationTimeout),
+element:notification,
+timeout:notificationTimeout
+};
+}
+function hideNotification(notification,timeout){
+clearTimeout(timeout);
+notification.classList.remove('show');
+notification.addEventListener('transitionend',()=>{
+notification.remove();
+},{once:true});
+}
+function customConfirm(message){
+return new Promise(resolve=>{
+customConfirmResolver=resolve;
+customConfirmMessage.textContent=message;
+showModal('custom-confirm-modal');
+history.pushState(null,'',window.location.pathname);
 });
-customPromptModal.querySelector('.close-modal-btn').addEventListener('click', () => {
-    if (customPromptResolver) {
-        customPromptResolver(null);
-        customPromptResolver = null;
-    }
-    showModal('custom-prompt-modal', false);
-    if (history.state) history.back();
+}
+customConfirmBtnYes.addEventListener('click',()=>{
+if(customConfirmResolver){
+customConfirmResolver(true);
+customConfirmResolver=null;
+}
+showModal('custom-confirm-modal',false);
+if(history.state)history.back();
+});
+customConfirmBtnNo.addEventListener('click',()=>{
+if(customConfirmResolver){
+customConfirmResolver(false);
+customConfirmResolver=null;
+}
+showModal('custom-confirm-modal',false);
+if(history.state)history.back();
+});
+function showCustomAlert(message){
+return new Promise(resolve=>{
+customAlertResolver=resolve;
+customAlertMessage.textContent=message;
+showModal('custom-alert-modal');
+history.pushState(null,'',window.location.pathname);
+});
+}
+customAlertBtnOk.addEventListener('click',()=>{
+if(customAlertResolver){
+customAlertResolver();
+customAlertResolver=null;
+}
+showModal('custom-alert-modal',false);
+if(history.state)history.back();
+});
+verifiedInfoBtnOk.addEventListener('click',()=>{
+showModal('verified-info-modal',false);
+if(history.state)history.back();
+});
+document.addEventListener('click',(e)=>{
+const badge=e.target.closest('.verified-badge');
+if(badge){
+e.stopPropagation();
+showModal('verified-info-modal');
+history.pushState(null,'',window.location.pathname);
+}
+});
+function getBengaliErrorMessage(errorCode){
+switch(errorCode){
+case 'auth/email-already-in-use':
+return "এই ইমেইলটি ইতিমধ্যে ব্যবহার করা হয়েছে। অন্য ইমেইল চেষ্টা করুন।";
+case 'auth/invalid-email':
+return "ইমেইল ঠিকানাটি সঠিক নয়। দয়া করে সঠিক ইমেইল দিন।";
+case 'auth/weak-password':
+return "পাসওয়ার্ড খুব দুর্বল। অন্তত ৬ অক্ষরের পাসওয়ার্ড দিন।";
+case 'auth/user-not-found':
+return "এই ইমেইলে কোনো অ্যাকাউন্ট পাওয়া যায়নি। দয়া করে সাইন আপ করুন।";
+case 'auth/wrong-password':
+return "পাসওয়ার্ডটি ভুল। দয়া করে সঠিক পাসওয়ার্ড দিন।";
+case 'auth/network-request-failed':
+return "ইন্টারনেট সংযোগে সমস্যা। আপনার নেটওয়ার্ক চেক করুন।";
+case 'auth/too-many-requests':
+return "অনেকবার ভুল চেষ্টা করা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।";
+default:
+return "সমস্যা হয়েছে: "+errorCode;
+}
+}
+function customPrompt(title,defaultValue=''){
+return new Promise(resolve=>{
+customPromptResolver=resolve;
+document.getElementById('prompt-modal-title').textContent=title;
+promptInput.value=defaultValue;
+showModal('custom-prompt-modal');
+history.pushState(null,'',window.location.pathname);
+});
+}
+customPromptForm.addEventListener('submit',(e)=>{
+e.preventDefault();
+if(customPromptResolver){
+customPromptResolver(promptInput.value);
+customPromptResolver=null;
+}
+showModal('custom-prompt-modal',false);
+if(history.state)history.back();
+});
+customPromptModal.querySelector('.close-modal-btn').addEventListener('click',()=>{
+if(customPromptResolver){
+customPromptResolver(null);
+customPromptResolver=null;
+}
+showModal('custom-prompt-modal',false);
+if(history.state)history.back();
 });
 function showView(viewId){
 allViews.forEach(view=>{
@@ -1017,14 +746,13 @@ hours=hours?hours:12;
 const minutesStr=minutes<10?'0'+minutes:minutes;
 return`${hours}:${minutesStr} ${ampm}`;
 }
-function formatFullTimestamp(timestamp) {
-    const date = new Date(timestamp);
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
-    return `${dd}/${mm}/${yyyy} at ${formatTimestamp(timestamp)}`;
+function formatFullTimestamp(timestamp){
+const date=new Date(timestamp);
+const yyyy=date.getFullYear();
+const mm=String(date.getMonth()+1).padStart(2,'0');
+const dd=String(date.getDate()).padStart(2,'0');
+return`${dd}/${mm}/${yyyy} at ${formatTimestamp(timestamp)}`;
 }
-
 function getProfilePicHTML(user,placeholderSize='2.5rem'){
 if(user.profilePicUrl){
 return`<img src="${user.profilePicUrl}" alt="Pic">`;
@@ -1034,39 +762,39 @@ const placeholder=name?name.charAt(0).toUpperCase():'?';
 return`<span style="font-size: ${placeholderSize}; line-height: 1; user-select: none;">${placeholder}</span>`;
 }
 }
-function getVerifiedBadgeHTML(user) {
-    if (user && user.isVerified === true) {
-        return `
-        <span class="verified-badge" title="Verified">
-            <svg viewBox="0 0 16 16">
-                <path d="M6.75 12.13l-3.48-3.48c-.3-.3-.78-.3-1.06 0s-.3.78 0 1.06l4 4c.3.3.78.3 1.06 0l8.5-8.5c.3-.3.3-.78 0-1.06s-.78-.3-1.06 0L6.75 12.13z"/>
-            </svg>
-        </span>`;
-    }
-    return '';
+function getVerifiedBadgeHTML(user){
+if(user&&user.isVerified===true){
+return`
+<span class="verified-badge" title="Verified">
+<svg viewBox="0 0 16 16">
+<path d="M6.75 12.13l-3.48-3.48c-.3-.3-.78-.3-1.06 0s-.3.78 0 1.06l4 4c.3.3.78.3 1.06 0l8.5-8.5c.3-.3.3-.78 0-1.06s-.78-.3-1.06 0L6.75 12.13z"/>
+</svg>
+</span>`;
+}
+return'';
 }
 function cleanupListeners(){
-    if(currentChatListener)currentChatListener.off();
-    if(notificationListener) notificationListener.off();
-    if(supportListener) supportListener.off(); // --- সাপোর্ট লিসেনার ক্লিনআপ ---
-    if(contactListeners.currentUser) contactListeners.currentUser.off();
-    Object.values(unreadListeners).forEach(listener=>{
-        if(listener&&typeof listener.off==='function'){
-            listener.off();
-        }
-    });
-    Object.values(contactListeners).forEach(listener=>{
-        if(listener&&typeof listener.off==='function'){
-            listener.off();
-        }
-    });
-    unreadListeners={};
-    contactListeners={};
-    currentChatListener=null;
-    notificationListener = null;
-    supportListener = null; // --- রিসেট ---
-    lastMessageTimestamps={};
-    messageElements={};
+if(currentChatListener)currentChatListener.off();
+if(notificationListener)notificationListener.off();
+if(supportListener)supportListener.off();
+if(contactListeners.currentUser)contactListeners.currentUser.off();
+Object.values(unreadListeners).forEach(listener=>{
+if(listener&&typeof listener.off==='function'){
+listener.off();
+}
+});
+Object.values(contactListeners).forEach(listener=>{
+if(listener&&typeof listener.off==='function'){
+listener.off();
+}
+});
+unreadListeners={};
+contactListeners={};
+currentChatListener=null;
+notificationListener=null;
+supportListener=null;
+lastMessageTimestamps={};
+messageElements={};
 }
 function copyText(text,message){
 if(!text)return;
@@ -1089,58 +817,62 @@ document.getSelection().addRange(selected);
 }
 showNotification(message);
 }catch(err){
-console.error('Failed to copy text: ',err);
-showNotification('Failed to copy. See console for details.', 5000);
+showNotification('Failed to copy.',5000);
 }
 }
 function handleCustomBack(){
-    if(!customConfirmModal.classList.contains('hidden')){ 
-        customConfirmBtnNo.click();
-        return true;
-    }
-    if(!partnerProfileModal.classList.contains('hidden')){
-        showModal('partner-profile-modal', false);
-        return true;
-    }
-    if(!profileViewModal.classList.contains('hidden')){
-        showModal('profile-view-modal',false);
-        return true;
-    }
-    if(!addFriendModal.classList.contains('hidden')){
-        showModal('add-friend-modal',false);
-        return true;
-    }
-    if(!notificationView.classList.contains('hidden')){
-        notificationBackBtn.click();
-        return true;
-    }
-    // --- সাপোর্ট ভিউ ব্যাক হ্যান্ডলিং ---
-    if(!supportView.classList.contains('hidden')){
-        supportBackBtn.click();
-        return true;
-    }
-    // --- শেষ ---
-    if(!chatView.classList.contains('hidden')){
-        chatBackBtn.click();
-        return true;
-    }
-    if(!authView.classList.contains('hidden')){
-        showView('calculator-view');
-        return true;
-    }
-    if(!mainView.classList.contains('hidden')){
-        if(!homeContent.classList.contains('active')){
-            showPanel('home-content');
-            return true;
-        }else{
-            showView('calculator-view');
-            return true;
-        }
-    }
-    if(!calculatorView.classList.contains('hidden')){
-        return false;
-    }
-    return false;
+if(!verifiedInfoModal.classList.contains('hidden')){
+verifiedInfoBtnOk.click();
+return true;
+}
+if(!messageOptionsModal.classList.contains('hidden')){
+showModal('message-options-modal',false);
+return true;
+}
+if(!customAlertModal.classList.contains('hidden')){
+customAlertBtnOk.click();
+return true;
+}
+if(!customConfirmModal.classList.contains('hidden')){
+customConfirmBtnNo.click();
+return true;
+}
+if(!partnerProfileModal.classList.contains('hidden')){
+showModal('partner-profile-modal',false);
+return true;
+}
+if(!profileViewModal.classList.contains('hidden')){
+showModal('profile-view-modal',false);
+return true;
+}
+if(!addFriendModal.classList.contains('hidden')){
+showModal('add-friend-modal',false);
+return true;
+}
+if(!notificationView.classList.contains('hidden')){
+notificationBackBtn.click();
+return true;
+}
+if(!supportView.classList.contains('hidden')){
+supportBackBtn.click();
+return true;
+}
+if(!chatView.classList.contains('hidden')){
+chatBackBtn.click();
+return true;
+}
+if(!authView.classList.contains('hidden')){
+return false;
+}
+if(!mainView.classList.contains('hidden')){
+if(!homeContent.classList.contains('active')){
+showPanel('home-content');
+return true;
+}else{
+return false;
+}
+}
+return false;
 }
 window.addEventListener('popstate',(event)=>{
 const handled=handleCustomBack();
@@ -1149,174 +881,89 @@ history.pushState(null,'',window.location.pathname);
 }
 });
 history.pushState(null,'',window.location.pathname);
-function updateCalcDisplay(){
-if(calcDisplayValue.length>9){
-calcDisplay.style.fontSize='2.5rem';
-}else if(calcDisplayValue.length>6){
-calcDisplay.style.fontSize='3.5rem';
-}else{
-calcDisplay.style.fontSize='4.5rem';
-}
-calcDisplay.textContent=calcDisplayValue;
-}
-calcButtons.addEventListener('click',(e)=>{
-const button=e.target.closest('.calc-btn');
-if(!button)return;
-const key=button.dataset.key;
-const lastChar=calcDisplayValue[calcDisplayValue.length-1];
-const operators=['/','*','-','+'];
-if(key==='clear'){
-calcDisplayValue='0';
-}else if(key==='backspace'){
-if(calcDisplayValue.length>1){
-calcDisplayValue=calcDisplayValue.slice(0,-1);
-}else{
-calcDisplayValue='0';
-}
-}else if(key==='.'){
-if(lastChar!=='.'){
-calcDisplayValue+=key;
-}
-}else if(key==='equals'){
-if(calcDisplayValue==='59+59'){
-calcDisplayValue='0';
-updateCalcDisplay();
-authReadyPromise.then(()=>{
-    if(currentUser){
-        showView('main-view');
-        history.pushState(null,'',window.location.pathname);
-        userDataReadyPromise.then(() => {
-            if(currentUserData){
-                if(!appInitialized){
-                    initializeApp();
-                }
-            } else {
-                auth.signOut();
-                showView('auth-view');
-            }
-        });
-    }else{
-        showView('auth-view');
-        history.pushState(null,'',window.location.pathname);
-    }
-});
-}else{
-try{
-let expression=calcDisplayValue
-.replace(/×/g,'*')
-.replace(/÷/g,'/')
-.replace(/−/g,'-');
-if(operators.includes(expression[expression.length-1])){
-expression=expression.slice(0,-1);
-}
-const result=new Function('return '+expression)();
-calcDisplayValue=String(Number(result.toFixed(4)));
-}catch(err){
-calcDisplayValue='Error';
-}
-}
-}else if(operators.includes(key)){
-if(operators.includes(lastChar)){
-calcDisplayValue=calcDisplayValue.slice(0,-1)+key;
-}else{
-calcDisplayValue+=key;
-}
-}else{
-if(calcDisplayValue==='0'||calcDisplayValue==='Error'){
-calcDisplayValue=key;
-}else{
-calcDisplayValue+=key;
-}
-}
-updateCalcDisplay();
-});
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 .then(()=>{
 initializeAuthListener();
 })
 .catch((error)=>{
-console.error("Error setting auth persistence: ",error);
 initializeAuthListener();
 });
 function initializeAuthListener(){
-    auth.onAuthStateChanged(user=>{
-        cleanupListeners();
-        if(user){
-            currentUser=user;
-            if(!authStateInitialized){
-                authStateInitialized=true;
-                authStateResolve();
-            }
-            const userRef = db.ref('users/'+user.uid);
-            if(contactListeners.currentUser) contactListeners.currentUser.off();
-            contactListeners.currentUser = userRef; 
-            userRef.on('value', snapshot => {
-                const wasNotInitialized = !currentUserData; 
-                if(snapshot.exists()){
-                    currentUserData = snapshot.val();
-                    if (!currentUserData.blockedUsers) {
-                        currentUserData.blockedUsers = {};
-                    }
-                    if (!profileViewModal.classList.contains('hidden')) {
-                        profilePicWrapper.innerHTML = getProfilePicHTML(currentUserData, '4.5rem');
-                        profileViewName.innerHTML = `${currentUserData.name}${getVerifiedBadgeHTML(currentUserData)}`;
-                        profileViewEmail.textContent = currentUserData.email;
-                        profileUserEmailText.textContent = currentUserData.email;
-                    }
-                    if (wasNotInitialized) {
-                        listenForBlockedUsers(user.uid);
-                        listenForUnreadCounts();
-                    }
-                } else {
-                    currentUserData = null;
-                }
-                if (userDataResolve) {
-                    userDataResolve();
-                    userDataResolve = null; 
-                }
-            });
-        }else{
-            currentUser=null;
-            currentUserData=null;
-            appInitialized=false;
-            if(authStateInitialized){
-                showView('calculator-view');
-            }
-            if(calcNotificationBadge){
-                calcNotificationBadge.classList.add('hidden');
-                calcNotificationBadge.textContent='0';
-            }
-            if(notificationBadge){
-                notificationBadge.classList.add('hidden');
-                notificationBadge.textContent='0';
-                unreadNotificationCount = 0;
-            }
-            if(!authStateInitialized){
-                authStateInitialized=true;
-                authStateResolve();
-            }
-            if (userDataResolve) {
-                userDataResolve();
-                userDataResolve = null;
-            }
-        }
-    });
+auth.onAuthStateChanged(user=>{
+cleanupListeners();
+if(user){
+currentUser=user;
+showView('main-view');
+if(!authStateInitialized){
+authStateInitialized=true;
+authStateResolve();
 }
-function listenForBlockedUsers(uid) {
-    const blockedRef = db.ref('blockedUsers/' + uid);
-    if(contactListeners.blocked) contactListeners.blocked.off();
-    blockedRef.on('value', snapshot => {
-        currentUserData.blockedUsers = snapshot.val() || {};
-        if (!profileViewModal.classList.contains('hidden')) {
-            populateBlockedUsersList();
-        }
-        populateAllFriendsList(); 
-    });
-    contactListeners.blocked = blockedRef;
+const userRef=db.ref('users/'+user.uid);
+if(contactListeners.currentUser)contactListeners.currentUser.off();
+contactListeners.currentUser=userRef;
+userRef.on('value',snapshot=>{
+const wasNotInitialized=!currentUserData;
+if(snapshot.exists()){
+currentUserData=snapshot.val();
+if(!currentUserData.blockedUsers){
+currentUserData.blockedUsers={};
+}
+if(!profileViewModal.classList.contains('hidden')){
+profilePicWrapper.innerHTML=getProfilePicHTML(currentUserData,'4.5rem');
+profileViewName.innerHTML=`${currentUserData.name}${getVerifiedBadgeHTML(currentUserData)}`;
+profileViewEmail.textContent=currentUserData.email;
+profileUserEmailText.textContent=currentUserData.email;
+}
+if(wasNotInitialized){
+if(!appInitialized){
+initializeApp();
+}
+listenForBlockedUsers(user.uid);
+listenForUnreadCounts();
+}
+}else{
+currentUserData=null;
+}
+if(userDataResolve){
+userDataResolve();
+userDataResolve=null;
+}
+});
+}else{
+currentUser=null;
+currentUserData=null;
+appInitialized=false;
+showView('auth-view');
+if(notificationBadge){
+notificationBadge.classList.add('hidden');
+notificationBadge.textContent='0';
+unreadNotificationCount=0;
+}
+if(!authStateInitialized){
+authStateInitialized=true;
+authStateResolve();
+}
+if(userDataResolve){
+userDataResolve();
+userDataResolve=null;
+}
+}
+});
+}
+function listenForBlockedUsers(uid){
+const blockedRef=db.ref('blockedUsers/'+uid);
+if(contactListeners.blocked)contactListeners.blocked.off();
+blockedRef.on('value',snapshot=>{
+currentUserData.blockedUsers=snapshot.val()||{};
+if(!profileViewModal.classList.contains('hidden')){
+populateBlockedUsersList();
+}
+populateAllFriendsList();
+});
+contactListeners.blocked=blockedRef;
 }
 loginForm.addEventListener('submit',(e)=>{
 e.preventDefault();
-loginError.textContent='';
 const email=loginForm['login-email'].value;
 const password=loginForm['login-password'].value;
 auth.signInWithEmailAndPassword(email,password)
@@ -1324,39 +971,18 @@ auth.signInWithEmailAndPassword(email,password)
 const user=userCredential.user;
 db.ref('users/'+user.uid).once('value',snapshot=>{
 if(snapshot.exists()){
-    authReadyPromise.then(()=>{
-        if(currentUser){
-            showView('main-view');
-            history.pushState(null,'',window.location.pathname);
-            userDataReadyPromise.then(() => {
-                if(currentUserData){
-                    if(!appInitialized){
-                        initializeApp();
-                    }
-                } else {
-                    loginError.textContent="Profile data load failed. Please log in again.";
-                    auth.signOut();
-                    showView('auth-view');
-                }
-            });
-        }else{
-            loginError.textContent="Auth state error. Please try again.";
-            showView('auth-view');
-        }
-    });
 }else{
-loginError.textContent="Profile data not found. Please contact support.";
+showCustomAlert("প্রোফাইল ডাটা পাওয়া যায়নি। সাপোর্টে যোগাযোগ করুন।");
 auth.signOut();
 }
 });
 })
 .catch(error=>{
-loginError.textContent=error.message;
+showCustomAlert(getBengaliErrorMessage(error.code));
 });
 });
 signupForm.addEventListener('submit',(e)=>{
 e.preventDefault();
-signupError.textContent='';
 const email=signupForm['signup-email'].value;
 const password=signupForm['signup-password'].value;
 auth.createUserWithEmailAndPassword(email,password)
@@ -1367,7 +993,7 @@ uid:user.uid,
 email:user.email,
 name:user.uid,
 profilePicUrl:"",
-isVerified: false
+isVerified:false
 };
 db.ref('users/'+user.uid).set(defaultProfile)
 .then(()=>{
@@ -1376,11 +1002,11 @@ signupForm.classList.add('hidden');
 showNotification('Signup successful! Please log in.');
 })
 .catch(error=>{
-signupError.textContent="Signup OK, but failed to create profile: "+error.message;
+showCustomAlert("সাইন আপ হয়েছে, কিন্তু প্রোফাইল তৈরি হয়নি: "+error.message);
 });
 })
 .catch(error=>{
-signupError.textContent=error.message;
+showCustomAlert(getBengaliErrorMessage(error.code));
 });
 });
 logoutBtn.addEventListener('click',()=>{
@@ -1399,7 +1025,7 @@ signupForm.classList.add('hidden');
 menuBtn.addEventListener('click',()=>{
 if(!currentUserData)return;
 profilePicWrapper.innerHTML=getProfilePicHTML(currentUserData,'4.5rem');
-profileViewName.innerHTML = `${currentUserData.name}${getVerifiedBadgeHTML(currentUserData)}`;
+profileViewName.innerHTML=`${currentUserData.name}${getVerifiedBadgeHTML(currentUserData)}`;
 profileViewEmail.textContent=currentUserData.email;
 profileUserIdText.textContent=currentUserData.uid;
 profileUserEmailText.textContent=currentUserData.email;
@@ -1422,7 +1048,7 @@ showNotification('Profile picture updated!');
 })
 .catch(err=>showNotification('Error: '+err.message));
 }else{
-showNotification('Invalid URL. Must start with http:// or https://, or be empty.', 5000);
+showNotification('Invalid URL. Must start with http:// or https://, or be empty.',5000);
 }
 }
 });
@@ -1438,7 +1064,7 @@ if(newName&&newName!==currentUserData.name){
 db.ref(`users/${currentUser.uid}/name`).set(newName)
 .then(()=>{
 currentUserData.name=newName;
-profileViewName.innerHTML = `${newName}${getVerifiedBadgeHTML(currentUserData)}`;
+profileViewName.innerHTML=`${newName}${getVerifiedBadgeHTML(currentUserData)}`;
 showNotification('Name updated!');
 if(!currentUserData.profilePicUrl){
 profilePicWrapper.innerHTML=getProfilePicHTML(currentUserData,'4.5rem');
@@ -1457,23 +1083,23 @@ profileEditNameBtn.classList.remove('hidden');
 }
 });
 profileCopyIdBtn.addEventListener('click',()=>{
-    copyText(currentUserData.uid,'User ID copied to clipboard!');
-    profileCopyIdBtn.style.backgroundColor = '#00ff00';
-    setTimeout(() => {
-        profileCopyIdBtn.style.backgroundColor = '';
-    }, 1500);
+copyText(currentUserData.uid,'User ID copied to clipboard!');
+profileCopyIdBtn.style.boxShadow='inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff';
+setTimeout(()=>{
+profileCopyIdBtn.style.boxShadow='';
+},200);
 });
 profileCopyEmailBtn.addEventListener('click',()=>{
-    copyText(currentUserData.email,'Email copied to clipboard!');
-    profileCopyEmailBtn.style.backgroundColor = '#00ff00';
-    setTimeout(() => {
-        profileCopyEmailBtn.style.backgroundColor = '';
-    }, 1500);
+copyText(currentUserData.email,'Email copied to clipboard!');
+profileCopyEmailBtn.style.boxShadow='inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff';
+setTimeout(()=>{
+profileCopyEmailBtn.style.boxShadow='';
+},200);
 });
 partnerModalCopyIdBtn.addEventListener('click',()=>{
-    if(currentChatPartner){
-        copyText(currentChatPartner.uid,'Friend ID copied to clipboard!');
-    }
+if(currentChatPartner){
+copyText(currentChatPartner.uid,'Friend ID copied to clipboard!');
+}
 });
 document.querySelectorAll('.close-modal-btn').forEach(btn=>{
 btn.addEventListener('click',(e)=>{
@@ -1486,212 +1112,178 @@ history.back();
 }
 });
 });
-chatHeaderInfo.addEventListener('click',()=>{
-    if(currentChatPartner){
-        partnerModalName.innerHTML = `${currentChatPartner.name}${getVerifiedBadgeHTML(currentChatPartner)}`;
-        partnerModalIdText.textContent = currentChatPartner.uid;
-        showModal('partner-profile-modal');
-        history.pushState(null,'',window.location.pathname);
-    }
-});
-
-notificationBtn.addEventListener('click', () => {
-    showView('notification-view');
-    history.pushState(null, '', window.location.pathname);
-    
-    if(unreadNotificationCount > 0 && currentUser) {
-        const myUid = currentUser.uid;
-        const notifRef = db.ref('notifications/' + myUid);
-        notifRef.orderByChild('read').equalTo(false).once('value', snapshot => {
-            const updates = {};
-            snapshot.forEach(child => {
-                updates[child.key + '/read'] = true;
-            });
-            if(Object.keys(updates).length > 0) {
-                notifRef.update(updates);
-            }
-        });
-    }
-    unreadNotificationCount = 0;
-    updateNotificationBadge();
-});
-
-notificationBackBtn.addEventListener('click', () => {
-    showView('main-view');
-});
-
-// --- নতুন সাপোর্ট বাটন লজিক ---
-supportFabBtn.addEventListener('click', () => {
-    showView('support-view');
-    history.pushState(null, '', window.location.pathname);
-    listenForSupportMessages();
-});
-
-supportBackBtn.addEventListener('click', () => {
-    showView('main-view');
-    if(supportListener) supportListener.off();
-    supportListener = null;
-});
-
-supportSendBtn.addEventListener('click', sendSupportMessage);
-supportInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendSupportMessage();
-});
-
-// FIX: মেসেজ এখন দুই জায়গায় পাঠানো হবে (Admin Inbox এবং User History)
-function sendSupportMessage() {
-    const text = supportInput.value.trim();
-    if (!text || !currentUser) return;
-
-    // 1. ইউজারের চ্যাট হিস্ট্রিতে (যাতে ইউজার দেখতে পায়)
-    const chatData = {
-        text: text,
-        sender: 'user', 
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-    };
-    db.ref(`support_chats/${currentUser.uid}`).push(chatData);
-
-    // 2. এডমিন প্যানেলের ইনবক্সে (যাতে এডমিন দেখতে পায়)
-    const requestData = {
-        uid: currentUser.uid,
-        message: text,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-    };
-
-    db.ref('support_requests').push(requestData)
-        .then(() => {
-            supportInput.value = '';
-            supportMessages.scrollTop = supportMessages.scrollHeight;
-        })
-        .catch(err => {
-            showNotification('Error sending message: ' + err.message);
-        });
+chatHeaderInfo.addEventListener('click',(e)=>{
+if(e.target.closest('.verified-badge'))return;
+if(currentChatPartner){
+partnerModalName.innerHTML=`${currentChatPartner.name}${getVerifiedBadgeHTML(currentChatPartner)}`;
+partnerModalIdText.textContent=currentChatPartner.uid;
+showModal('partner-profile-modal');
+history.pushState(null,'',window.location.pathname);
 }
-
-function listenForSupportMessages() {
-    if (!currentUser) return;
-    if (supportListener) supportListener.off();
-
-    supportMessages.innerHTML = ''; // ক্লিয়ার
-    const chatRef = db.ref(`support_chats/${currentUser.uid}`);
-    
-    supportListener = chatRef.on('child_added', snapshot => {
-        const msg = snapshot.val();
-        renderSupportMessage(msg);
-    });
+});
+notificationBtn.addEventListener('click',()=>{
+showView('notification-view');
+history.pushState(null,'',window.location.pathname);
+if(unreadNotificationCount>0&&currentUser){
+const myUid=currentUser.uid;
+const notifRef=db.ref('notifications/'+myUid);
+notifRef.orderByChild('read').equalTo(false).once('value',snapshot=>{
+const updates={};
+snapshot.forEach(child=>{
+updates[child.key+'/read']=true;
+});
+if(Object.keys(updates).length>0){
+notifRef.update(updates);
 }
-
-function renderSupportMessage(msg) {
-    const bubble = document.createElement('div');
-    const isSent = msg.sender === 'user';
-    bubble.className = `support-bubble ${isSent ? 'sent' : 'received'}`;
-    bubble.textContent = msg.text;
-    
-    supportMessages.appendChild(bubble);
-    supportMessages.scrollTop = supportMessages.scrollHeight;
+});
 }
-// --- সাপোর্ট লজিক শেষ ---
-
-
+unreadNotificationCount=0;
+updateNotificationBadge();
+});
+notificationBackBtn.addEventListener('click',()=>{
+showView('main-view');
+});
+supportFabBtn.addEventListener('click',()=>{
+showView('support-view');
+history.pushState(null,'',window.location.pathname);
+listenForSupportMessages();
+});
+supportBackBtn.addEventListener('click',()=>{
+showView('main-view');
+if(supportListener)supportListener.off();
+supportListener=null;
+});
+supportSendBtn.addEventListener('click',sendSupportMessage);
+supportInput.addEventListener('keypress',(e)=>{
+if(e.key==='Enter')sendSupportMessage();
+});
+function sendSupportMessage(){
+const text=supportInput.value.trim();
+if(!text||!currentUser)return;
+const chatData={
+text:text,
+sender:'user',
+timestamp:firebase.database.ServerValue.TIMESTAMP
+};
+db.ref(`support_chats/${currentUser.uid}`).push(chatData);
+const requestData={
+uid:currentUser.uid,
+message:text,
+timestamp:firebase.database.ServerValue.TIMESTAMP
+};
+db.ref('support_requests').push(requestData)
+.then(()=>{
+supportInput.value='';
+supportMessages.scrollTop=supportMessages.scrollHeight;
+})
+.catch(err=>{
+showNotification('Error sending message: '+err.message);
+});
+}
+function listenForSupportMessages(){
+if(!currentUser)return;
+if(supportListener)supportListener.off();
+supportMessages.innerHTML='';
+const chatRef=db.ref(`support_chats/${currentUser.uid}`);
+supportListener=chatRef.on('child_added',snapshot=>{
+const msg=snapshot.val();
+renderSupportMessage(msg);
+});
+}
+function renderSupportMessage(msg){
+const bubble=document.createElement('div');
+const isSent=msg.sender==='user';
+bubble.className=`support-bubble ${isSent?'sent':'received'}`;
+bubble.textContent=msg.text;
+supportMessages.appendChild(bubble);
+supportMessages.scrollTop=supportMessages.scrollHeight;
+}
 function initializeApp(){
-    showPanel('home-content');
-    listenForContacts();
-    populateAllFriendsList(); 
-    listenForNotifications();
-    appInitialized=true;
+showPanel('home-content');
+listenForContacts();
+populateAllFriendsList();
+listenForNotifications();
+appInitialized=true;
 }
-
-async function populateAllFriendsList() {
-    if (!callsContent || !currentUser || !currentUserData) return;
-    callsContent.innerHTML = '';
-    
-    try {
-        const contactsSnap = await db.ref('contacts/' + currentUser.uid).once('value');
-        
-        if (!contactsSnap.exists() || !contactsSnap.hasChildren()) {
-            callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No friends found. Add friends using their ID.</p>';
-            return;
-        }
-        
-        let friendCount = 0;
-        const contactIds = Object.keys(contactsSnap.val());
-        
-        const userFetchPromises = contactIds.map(uid => {
-            if (currentUserData.blockedUsers && currentUserData.blockedUsers[uid]) {
-                return null;
-            }
-            return db.ref('users/' + uid).once('value');
-        }).filter(p => p !== null);
-
-        const userSnapshots = await Promise.all(userFetchPromises);
-
-        const friendsData = [];
-        userSnapshots.forEach(userSnap => {
-            if (userSnap.exists()) {
-                friendsData.push(userSnap.val());
-            }
-        });
-
-        friendsData.sort((a, b) => a.name.localeCompare(b.name));
-
-        friendsData.forEach(user => {
-            createOrUpdateContactItem(user, true);
-            friendCount++;
-        });
-
-        if (friendCount === 0) {
-             callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No friends found. Add friends using their ID.</p>';
-        }
-    } catch (err) {
-        console.error("Error populating all friends list:", err);
-        callsContent.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--call-end-red);">Error loading friends list.</p>';
-    }
+async function populateAllFriendsList(){
+if(!callsContent||!currentUser||!currentUserData)return;
+callsContent.innerHTML='';
+try{
+// STRICTLY fetch only from contacts
+const contactsSnap=await db.ref('contacts/'+currentUser.uid).once('value');
+if(!contactsSnap.exists()||!contactsSnap.hasChildren()){
+callsContent.innerHTML='<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No friends found. Add friends using their ID.</p>';
+return;
 }
-
+let friendCount=0;
+const contactIds=Object.keys(contactsSnap.val());
+const userFetchPromises=contactIds.map(uid=>{
+if(currentUserData.blockedUsers&&currentUserData.blockedUsers[uid]){
+return null;
+}
+return db.ref('users/'+uid).once('value');
+}).filter(p=>p!==null);
+const userSnapshots=await Promise.all(userFetchPromises);
+const friendsData=[];
+userSnapshots.forEach(userSnap=>{
+if(userSnap.exists()){
+friendsData.push(userSnap.val());
+}
+});
+friendsData.sort((a,b)=>a.name.localeCompare(b.name));
+friendsData.forEach(user=>{
+createOrUpdateContactItem(user,true);
+friendCount++;
+});
+if(friendCount===0){
+callsContent.innerHTML='<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No friends found. Add friends using their ID.</p>';
+}
+}catch(err){
+callsContent.innerHTML='<p style="padding: 20px; text-align: center; color: var(--call-end-red);">Error loading friends list.</p>';
+}
+}
 addFriendBtn.addEventListener('click',()=>{
 addFriendForm.reset();
 showModal('add-friend-modal');
 history.pushState(null,'',window.location.pathname);
 });
-
 addFriendForm.addEventListener('submit',(e)=>{
-    e.preventDefault();
-    const friendId=friendIdInput.value.trim();
-    if(friendId===currentUser.uid){
-        showNotification("You can't add yourself as a friend.", 5000);
-        return;
-    }
-    db.ref('users/'+friendId).once('value',snapshot=>{
-        if(snapshot.exists()){
-            if(currentUserData.blockedUsers && currentUserData.blockedUsers[friendId]){
-                showNotification("This user is in your block list. Unblock them from Settings to add.", 5000);
-                return;
-            }
-            const myUid = currentUser.uid;
-            const updates = {};
-            updates[`contacts/${myUid}/${friendId}`] = true;
-            updates[`contacts/${friendId}/${myUid}`] = true;
-            db.ref().update(updates).then(() => {
-                showNotification('Friend added successfully!');
-                showModal('add-friend-modal', false);
-                if (history.state) history.back();
-                populateAllFriendsList();
-            }).catch(err => {
-                showNotification('Error adding friend: ' + err.message, 5000);
-            });
-        }else{
-            showNotification('User not found.', 5000);
-        }
-    });
+e.preventDefault();
+const friendId=friendIdInput.value.trim();
+if(friendId===currentUser.uid){
+showNotification("You can't add yourself as a friend.",5000);
+return;
+}
+db.ref('users/'+friendId).once('value',snapshot=>{
+if(snapshot.exists()){
+if(currentUserData.blockedUsers&&currentUserData.blockedUsers[friendId]){
+showNotification("This user is in your block list. Unblock them from Settings to add.",5000);
+return;
+}
+const myUid=currentUser.uid;
+const updates={};
+updates[`contacts/${myUid}/${friendId}`]=true;
+updates[`contacts/${friendId}/${myUid}`]=true;
+db.ref().update(updates).then(()=>{
+showNotification('Friend added successfully!');
+showModal('add-friend-modal',false);
+if(history.state)history.back();
+populateAllFriendsList();
+}).catch(err=>{
+showNotification('Error adding friend: '+err.message,5000);
 });
-
+}else{
+showNotification('User not found.',5000);
+}
+});
+});
 function sortChatList(){
 const chatItems=Array.from(homeContent.querySelectorAll('.list-item'));
 chatItems.sort((a,b)=>{
 const uidA=a.dataset.uid;
 const uidB=b.dataset.uid;
-const timeA=(lastMessageTimestamps[uidA] || {}).timestamp || 0;
-const timeB=(lastMessageTimestamps[uidB] || {}).timestamp || 0;
+const timeA=(lastMessageTimestamps[uidA]||{}).timestamp||0;
+const timeB=(lastMessageTimestamps[uidB]||{}).timestamp||0;
 return timeB-timeA;
 });
 chatItems.forEach(item=>homeContent.appendChild(item));
@@ -1710,171 +1302,154 @@ homeContent.appendChild(noChatsMsg);
 noChatsMsg.remove();
 }
 }
-
-function createOrUpdateContactItem(contact, isFriendList = false) {
-    const listContainer = isFriendList ? callsContent : homeContent;
-    const existingItem = listContainer.querySelector(`.list-item[data-uid="${contact.uid}"]`);
-
-    if (!isFriendList && currentUserData.blockedUsers && currentUserData.blockedUsers[contact.uid]) {
-        if (existingItem) {
-            existingItem.remove();
-        }
-        return;
-    }
-    
-    const lastMsgData = lastMessageTimestamps[contact.uid] || { text: 'Tap to chat', timestamp: 0 };
-    const lastMsgText = lastMsgData.text;
-    const timestamp = lastMsgData.timestamp;
-
-    if (existingItem) {
-        existingItem.querySelector('.item-emoji').innerHTML = getProfilePicHTML(contact);
-        existingItem.querySelector('.item-name-text').textContent = contact.name;
-        const badgeContainer = existingItem.querySelector('.item-name.name-with-badge');
-        const oldBadge = badgeContainer.querySelector('.verified-badge');
-        if (oldBadge) oldBadge.remove();
-        badgeContainer.insertAdjacentHTML('beforeend', getVerifiedBadgeHTML(contact));
-        
-        if (!isFriendList) {
-            existingItem.querySelector('.item-subtext').textContent = lastMsgText;
-            existingItem.classList.toggle('hidden', lastMsgData.timestamp === 0);
-        }
-    } else {
-        const item = document.createElement('div');
-        item.className = 'list-item';
-        
-        if (!isFriendList && lastMsgData.timestamp === 0) {
-            item.classList.add('hidden');
-        }
-        
-        item.dataset.uid = contact.uid;
-        let itemHTML = `
-            <div class="item-emoji">${getProfilePicHTML(contact)}</div>
-            <div class="item-details">
-                <div class="item-name name-with-badge">
-                    <span class="item-name-text">${contact.name}</span>
-                    ${getVerifiedBadgeHTML(contact)}
-                </div>
-        `;
-        if (isFriendList) {
-            itemHTML += `</div>`;
-        } else {
-            itemHTML += `
-                    <div class="item-subtext" id="subtext-${contact.uid}">${lastMsgText}</div>
-                </div>
-                <div class="item-actions">
-                    <span class="badge hidden" id="badge-${contact.uid}"></span>
-                </div>
-            `;
-        }
-        item.innerHTML = itemHTML + '</div>';
-        
-        item.addEventListener('click',(e)=>{
-            openChat(contact);
-        });
-
-        listContainer.appendChild(item);
-    }
-
-    if (!isFriendList) {
-        sortChatList();
-    }
+function createOrUpdateContactItem(contact,isFriendList=false){
+const listContainer=isFriendList?callsContent:homeContent;
+const existingItem=listContainer.querySelector(`.list-item[data-uid="${contact.uid}"]`);
+if(!isFriendList&&currentUserData.blockedUsers&&currentUserData.blockedUsers[contact.uid]){
+if(existingItem){
+existingItem.remove();
 }
-
-function listenForLastMessageUpdates(contactId) {
-    if (currentUserData.blockedUsers && currentUserData.blockedUsers[contactId]) {
-        return;
-    }
-    const chatId = getChatId(currentUser.uid, contactId);
-    const messagesRef = db.ref('messages/' + chatId).limitToLast(1);
-    if (contactListeners[contactId + '_msg']) contactListeners[contactId + '_msg'].off();
-    contactListeners[contactId + '_msg'] = messagesRef;
-    
-    messagesRef.on('child_added', snapshot => {
-        const msg = snapshot.val();
-        if (currentUserData.blockedUsers && currentUserData.blockedUsers[msg.senderId]) {
-            return;
-        }
-        const sender = msg.senderId === currentUser.uid ? 'You: ' : '';
-        lastMessageTimestamps[contactId] = {
-            text: `${sender}${msg.text}`,
-            timestamp: msg.timestamp
-        };
-        const item = homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
-        if (item) {
-            item.querySelector('.item-subtext').textContent = `${sender}${msg.text}`;
-            item.classList.remove('hidden');
-            sortChatList();
-        }
-    });
-    
-    messagesRef.on('child_removed', () => {
-         db.ref('messages/' + chatId).limitToLast(1).once('value', snapshot => {
-            const item = homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
-            if (!item) return;
-            if (snapshot.exists()) {
-                snapshot.forEach(child => {
-                    const msg = child.val();
-                    const sender = msg.senderId === currentUser.uid ? 'You: ' : '';
-                    lastMessageTimestamps[contactId] = { text: `${sender}${msg.text}`, timestamp: msg.timestamp };
-                    if (item) item.querySelector('.item-subtext').textContent = `${sender}${msg.text}`;
-                });
-            } else {
-                lastMessageTimestamps[contactId] = { text: 'Tap to chat', timestamp: 0 };
-                if (item) {
-                    item.querySelector('.item-subtext').textContent = 'Tap to chat';
-                    item.classList.add('hidden');
-                }
-            }
-            sortChatList();
-         });
-    });
+return;
 }
-function listenToContactListeners(contactId) {
-    const userRef = db.ref('users/' + contactId);
-    if (contactListeners[contactId + '_user']) contactListeners[contactId + '_user'].off();
-    contactListeners[contactId + '_user'] = userRef;
-    
-    userRef.on('value', snapshot => {
-        if (snapshot.exists()) {
-            const contact = snapshot.val();
-            createOrUpdateContactItem(contact, false); 
-        }
-    });
-    
-    listenForLastMessageUpdates(contactId);
+const lastMsgData=lastMessageTimestamps[contact.uid]||{text:'Tap to chat',timestamp:0};
+const lastMsgText=lastMsgData.text;
+const timestamp=lastMsgData.timestamp;
+if(existingItem){
+existingItem.querySelector('.item-emoji').innerHTML=getProfilePicHTML(contact);
+existingItem.querySelector('.item-name-text').textContent=contact.name;
+const badgeContainer=existingItem.querySelector('.item-name.name-with-badge');
+const oldBadge=badgeContainer.querySelector('.verified-badge');
+if(oldBadge)oldBadge.remove();
+badgeContainer.insertAdjacentHTML('beforeend',getVerifiedBadgeHTML(contact));
+if(!isFriendList){
+existingItem.querySelector('.item-subtext').textContent=lastMsgText;
+existingItem.classList.toggle('hidden',lastMsgData.timestamp===0);
 }
-function stopListeningToContact(contactId) {
-    if (contactListeners[contactId + '_user']) {
-        contactListeners[contactId + '_user'].off();
-        delete contactListeners[contactId + '_user'];
-    }
-    if (contactListeners[contactId + '_msg']) {
-        contactListeners[contactId + '_msg'].off();
-        delete contactListeners[contactId + '_msg'];
-    }
-    const chatItem = homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
-    if (chatItem) chatItem.remove();
-    
-    delete lastMessageTimestamps[contactId];
+}else{
+const item=document.createElement('div');
+item.className='list-item';
+if(!isFriendList&&lastMsgData.timestamp===0){
+item.classList.add('hidden');
 }
-function listenForContacts() {
-    if(contactListeners.main) contactListeners.main.off();
-    const contactsRef = db.ref('contacts/' + currentUser.uid);
-    contactListeners.main = contactsRef;
-    
-    contactsRef.on('child_added', snapshot => {
-        const contactId = snapshot.key;
-        if (currentUserData.blockedUsers && currentUserData.blockedUsers[contactId]) {
-            return;
-        }
-        listenToContactListeners(contactId);
-    });
-    
-    contactsRef.on('child_removed', snapshot => {
-        const contactId = snapshot.key;
-        stopListeningToContact(contactId);
-        sortChatList();
-    });
+item.dataset.uid=contact.uid;
+let itemHTML=`
+<div class="item-emoji">${getProfilePicHTML(contact)}</div>
+<div class="item-details">
+<div class="item-name name-with-badge">
+<span class="item-name-text">${contact.name}</span>
+${getVerifiedBadgeHTML(contact)}
+</div>
+`;
+if(isFriendList){
+itemHTML+=`</div>`;
+}else{
+itemHTML+=`
+<div class="item-subtext" id="subtext-${contact.uid}">${lastMsgText}</div>
+</div>
+<div class="item-actions">
+<span class="badge hidden" id="badge-${contact.uid}"></span>
+</div>
+`;
+}
+item.innerHTML=itemHTML+'</div>';
+item.addEventListener('click',(e)=>{
+if(e.target.closest('.verified-badge'))return;
+openChat(contact);
+});
+listContainer.appendChild(item);
+}
+if(!isFriendList){
+sortChatList();
+}
+}
+function listenForLastMessageUpdates(contactId){
+if(currentUserData.blockedUsers&&currentUserData.blockedUsers[contactId]){
+return;
+}
+const chatId=getChatId(currentUser.uid,contactId);
+const messagesRef=db.ref('messages/'+chatId).limitToLast(1);
+if(contactListeners[contactId+'_msg'])contactListeners[contactId+'_msg'].off();
+contactListeners[contactId+'_msg']=messagesRef;
+messagesRef.on('child_added',snapshot=>{
+const msg=snapshot.val();
+if(currentUserData.blockedUsers&&currentUserData.blockedUsers[msg.senderId]){
+return;
+}
+const sender=msg.senderId===currentUser.uid?'You: ':'';
+lastMessageTimestamps[contactId]={
+text:`${sender}${msg.text}`,
+timestamp:msg.timestamp
+};
+const item=homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
+if(item){
+item.querySelector('.item-subtext').textContent=`${sender}${msg.text}`;
+item.classList.remove('hidden');
+sortChatList();
+}
+});
+messagesRef.on('child_removed',()=>{
+db.ref('messages/'+chatId).limitToLast(1).once('value',snapshot=>{
+const item=homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
+if(!item)return;
+if(snapshot.exists()){
+snapshot.forEach(child=>{
+const msg=child.val();
+const sender=msg.senderId===currentUser.uid?'You: ':'';
+lastMessageTimestamps[contactId]={text:`${sender}${msg.text}`,timestamp:msg.timestamp};
+if(item)item.querySelector('.item-subtext').textContent=`${sender}${msg.text}`;
+});
+}else{
+lastMessageTimestamps[contactId]={text:'Tap to chat',timestamp:0};
+if(item){
+item.querySelector('.item-subtext').textContent='Tap to chat';
+item.classList.add('hidden');
+}
+}
+sortChatList();
+});
+});
+}
+function listenToContactListeners(contactId){
+const userRef=db.ref('users/'+contactId);
+if(contactListeners[contactId+'_user'])contactListeners[contactId+'_user'].off();
+contactListeners[contactId+'_user']=userRef;
+userRef.on('value',snapshot=>{
+if(snapshot.exists()){
+const contact=snapshot.val();
+createOrUpdateContactItem(contact,false);
+}
+});
+listenForLastMessageUpdates(contactId);
+}
+function stopListeningToContact(contactId){
+if(contactListeners[contactId+'_user']){
+contactListeners[contactId+'_user'].off();
+delete contactListeners[contactId+'_user'];
+}
+if(contactListeners[contactId+'_msg']){
+contactListeners[contactId+'_msg'].off();
+delete contactListeners[contactId+'_msg'];
+}
+const chatItem=homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
+if(chatItem)chatItem.remove();
+delete lastMessageTimestamps[contactId];
+}
+function listenForContacts(){
+if(contactListeners.main)contactListeners.main.off();
+const contactsRef=db.ref('contacts/'+currentUser.uid);
+contactListeners.main=contactsRef;
+contactsRef.on('child_added',snapshot=>{
+const contactId=snapshot.key;
+if(currentUserData.blockedUsers&&currentUserData.blockedUsers[contactId]){
+return;
+}
+listenToContactListeners(contactId);
+});
+contactsRef.on('child_removed',snapshot=>{
+const contactId=snapshot.key;
+stopListeningToContact(contactId);
+sortChatList();
+});
 }
 function deleteChatHistory(partnerId){
 const myUid=currentUser.uid;
@@ -1883,15 +1458,13 @@ const chatId=getChatId(myUid,partnerId);
 updates[`messages/${chatId}`]=null;
 updates[`unreadCounts/${myUid}/${partnerId}`]=null;
 updates[`unreadCounts/${partnerId}/${myUid}`]=null;
-updates[`contacts/${myUid}/${partnerId}`] = null; 
+updates[`contacts/${myUid}/${partnerId}`]=null;
 db.ref().update(updates)
 .then(()=>{
-console.log('Chat history and contact deleted.');
-showNotification('Chat history removed.'); 
+showNotification('Chat history removed.');
 })
 .catch(err=>{
-showNotification(`Error deleting chat: ${err.message}`, 5000);
-console.error('Error deleting chat history:',err);
+showNotification(`Error deleting chat: ${err.message}`,5000);
 });
 }
 allNavTabs.forEach(tab=>{
@@ -1902,18 +1475,12 @@ history.pushState(null,'',window.location.pathname);
 });
 });
 function openChat(partner){
-const myUid = currentUser.uid;
-const partnerId = partner.uid;
-if(myUid && partnerId && myUid !== partnerId) {
-    const updates = {};
-    updates[`contacts/${myUid}/${partnerId}`] = true;
-    updates[`contacts/${partnerId}/${myUid}`] = true;
-    db.ref().update(updates);
-}
-
+const myUid=currentUser.uid;
+const partnerId=partner.uid;
+// REMOVED AUTO-ADD CONTACT LOGIC HERE TO ENSURE MANUAL ADDS ONLY
 currentChatPartner=partner;
 chatHeaderPicWrapper.innerHTML=getProfilePicHTML(partner,'1.8rem');
-chatHeaderName.innerHTML = `<span class="item-name-text">${partner.name}</span>${getVerifiedBadgeHTML(partner)}`;
+chatHeaderName.innerHTML=`<span class="item-name-text">${partner.name}</span>${getVerifiedBadgeHTML(partner)}`;
 chatMessages.innerHTML='';
 messageElements={};
 showView('chat-view');
@@ -1927,18 +1494,25 @@ const messagesRef=db.ref('messages/'+chatId);
 currentChatListener=messagesRef.limitToLast(50);
 currentChatListener.on('child_added',snapshot=>{
 const msg=snapshot.val();
-if (currentUserData.blockedUsers && currentUserData.blockedUsers[msg.senderId]) {
-    return;
+if(currentUserData.blockedUsers&&currentUserData.blockedUsers[msg.senderId]){
+return;
 }
 renderMessage(snapshot.key,msg);
 if(msg.receiverId===currentUser.uid&&msg.status!=='seen'){
 messagesRef.child(snapshot.key).update({status:'seen'});
 }
 });
-messagesRef.on('child_changed',snapshot=>{
+currentChatListener.on('child_changed',snapshot=>{
 const msg=snapshot.val();
 if(msg.senderId===currentUser.uid&&msg.receiverId===partner.uid&&messageElements[snapshot.key]){
 updateMessageStatus(snapshot.key,msg.status);
+}
+});
+currentChatListener.on('child_removed',snapshot=>{
+const msgId=snapshot.key;
+if(messageElements[msgId]){
+messageElements[msgId].remove();
+delete messageElements[msgId];
 }
 });
 }
@@ -1957,10 +1531,28 @@ return`
 }
 function renderMessage(msgId,msg){
 const isSent=msg.senderId===currentUser.uid;
+const deletedForMe=JSON.parse(localStorage.getItem(`hidden_msgs_${currentUser.uid}`))||[];
+if(deletedForMe.includes(msgId))return;
 if(messageElements[msgId])return;
 const bubble=document.createElement('div');
 bubble.className=`message-bubble ${isSent?'message-sent':'message-received'}`;
 bubble.id=`msg-${msgId}`;
+bubble.oncontextmenu=function(){return false;};
+let pressTimer;
+const startPress=(e)=>{
+pressTimer=setTimeout(()=>{
+openMessageOptions(msgId,msg.text,isSent);
+},600);
+};
+const cancelPress=(e)=>{
+clearTimeout(pressTimer);
+};
+bubble.addEventListener('mousedown',startPress);
+bubble.addEventListener('mouseup',cancelPress);
+bubble.addEventListener('mouseleave',cancelPress);
+bubble.addEventListener('touchstart',startPress);
+bubble.addEventListener('touchend',cancelPress);
+bubble.addEventListener('touchmove',cancelPress);
 const contentWrapper=document.createElement('div');
 contentWrapper.className='message-content-wrapper';
 const textSpan=document.createElement('span');
@@ -2025,6 +1617,53 @@ currentChatListener=null;
 if(history.state){
 }
 });
+function openMessageOptions(msgId,text,isSender){
+currentSelectedMsgId=msgId;
+currentSelectedMsgText=text;
+currentSelectedMsgIsSender=isSender;
+if(isSender){
+msgOptDeleteEveryone.classList.remove('hidden');
+}else{
+msgOptDeleteEveryone.classList.add('hidden');
+}
+showModal('message-options-modal');
+history.pushState(null,'',window.location.pathname);
+}
+msgOptCopy.addEventListener('click',()=>{
+copyText(currentSelectedMsgText,'Message copied');
+showModal('message-options-modal',false);
+if(history.state)history.back();
+});
+msgOptCancel.addEventListener('click',()=>{
+showModal('message-options-modal',false);
+if(history.state)history.back();
+});
+msgOptDeleteMe.addEventListener('click',()=>{
+if(!currentSelectedMsgId||!currentUser)return;
+const key=`hidden_msgs_${currentUser.uid}`;
+const hiddenMsgs=JSON.parse(localStorage.getItem(key))||[];
+hiddenMsgs.push(currentSelectedMsgId);
+localStorage.setItem(key,JSON.stringify(hiddenMsgs));
+const bubble=document.getElementById(`msg-${currentSelectedMsgId}`);
+if(bubble)bubble.remove();
+delete messageElements[currentSelectedMsgId];
+showNotification('Message deleted for you');
+showModal('message-options-modal',false);
+if(history.state)history.back();
+});
+msgOptDeleteEveryone.addEventListener('click',()=>{
+if(!currentSelectedMsgId||!currentChatPartner||!currentSelectedMsgIsSender)return;
+const chatId=getChatId(currentUser.uid,currentChatPartner.uid);
+db.ref(`messages/${chatId}/${currentSelectedMsgId}`).remove()
+.then(()=>{
+showNotification('Message deleted for everyone');
+})
+.catch(err=>{
+showNotification('Error deleting: '+err.message);
+});
+showModal('message-options-modal',false);
+if(history.state)history.back();
+});
 function listenForUnreadCounts(){
 const myUid=currentUser.uid;
 if(unreadListeners.main)unreadListeners.main.off();
@@ -2032,12 +1671,12 @@ const unreadRoot=db.ref('unreadCounts/'+myUid);
 unreadRoot.on('value',snapshot=>{
 let totalUnread=0;
 const counts=snapshot.val()||{};
-const blockedUids = currentUserData.blockedUsers || {};
-const filteredCounts = {};
-for (const uid in counts) {
-    if (!blockedUids[uid]) {
-        filteredCounts[uid] = counts[uid];
-    }
+const blockedUids=currentUserData.blockedUsers||{};
+const filteredCounts={};
+for(const uid in counts){
+if(!blockedUids[uid]){
+filteredCounts[uid]=counts[uid];
+}
 }
 document.querySelectorAll('.list-item').forEach(item=>{
 const uid=item.dataset.uid;
@@ -2053,236 +1692,202 @@ badge.classList.toggle('hidden',count===0);
 totalUnread=Object.values(filteredCounts).reduce((sum,count)=>sum+count,0);
 chatsBadge.textContent=totalUnread;
 chatsBadge.classList.toggle('hidden',totalUnread===0);
-if(calcNotificationBadge){
-calcNotificationBadge.textContent=totalUnread;
-calcNotificationBadge.classList.toggle('hidden',totalUnread===0);
-}
 });
 unreadListeners.main=unreadRoot;
 }
-
-function updateNotificationBadge() {
-    notificationBadge.textContent = unreadNotificationCount;
-    notificationBadge.classList.toggle('hidden', unreadNotificationCount === 0);
+function updateNotificationBadge(){
+notificationBadge.textContent=unreadNotificationCount;
+notificationBadge.classList.toggle('hidden',unreadNotificationCount===0);
 }
-
-function checkShowNoNotificationsMsg() {
-    setTimeout(() => {
-        const noMsg = notificationListContent.querySelector('#no-notifications-msg');
-        const hasItems = notificationListContent.querySelectorAll('.notification-item').length > 0;
-        
-        if (!hasItems && !noMsg) {
-            notificationListContent.innerHTML = '<p id="no-notifications-msg">You have no notifications.</p>';
-        } else if (hasItems && noMsg) {
-            noMsg.remove();
-        }
-    }, 50); 
+function checkShowNoNotificationsMsg(){
+setTimeout(()=>{
+const noMsg=notificationListContent.querySelector('#no-notifications-msg');
+const hasItems=notificationListContent.querySelectorAll('.notification-item').length>0;
+if(!hasItems&&!noMsg){
+notificationListContent.innerHTML='<p id="no-notifications-msg">You have no notifications.</p>';
+}else if(hasItems&&noMsg){
+noMsg.remove();
 }
-
-function deleteNotification(notifId) {
-    if (!currentUser || !notifId) return;
-    
-    db.ref(`notifications/${currentUser.uid}/${notifId}`).remove()
-        .catch(err => {
-            showNotification('Error deleting notification: ' + err.message, 4000);
-            console.error("Error deleting notification:", err);
-        });
+},50);
 }
-
-function renderNotification(notifId, notifData) {
-    const existing = document.getElementById(notifId);
-    if(existing) existing.remove();
-
-    const item = document.createElement('div');
-    item.className = 'notification-item';
-    item.id = notifId;
-
-    const text = document.createElement('div');
-    text.className = 'notification-item-text';
-    text.textContent = notifData.message;
-
-    const time = document.createElement('div');
-    time.className = 'notification-item-time';
-    time.textContent = formatFullTimestamp(notifData.timestamp);
-
-    const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'notif-delete-btn';
-    deleteBtn.innerHTML = '&times;';
-    deleteBtn.title = 'Delete Notification';
-    
-    deleteBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        customConfirm('Are you sure you want to delete this notification?')
-            .then(isConfirmed => {
-                if (isConfirmed) {
-                    deleteNotification(notifId);
-                }
-            });
-    });
-
-    item.appendChild(text);
-    item.appendChild(time);
-    item.appendChild(deleteBtn);
-    
-    const noMsg = notificationListContent.querySelector('#no-notifications-msg');
-    if(noMsg) noMsg.remove();
-    
-    notificationListContent.prepend(item);
-}
-
-function listenForNotifications() {
-    if(notificationListener) notificationListener.off();
-    
-    if (!currentUser || !currentUser.uid) return;
-    
-    const myUid = currentUser.uid;
-    const notifRef = db.ref('notifications/' + myUid);
-    notificationListener = notifRef.orderByChild('timestamp').limitToLast(30);
-
-    notificationListContent.innerHTML = '';
-    unreadNotificationCount = 0;
-    let initialLoadComplete = false;
-
-    notificationListener.on('child_added', snapshot => {
-        const notifData = snapshot.val();
-        renderNotification(snapshot.key, notifData);
-        
-        if(notifData.read === false) { 
-            unreadNotificationCount++;
-            updateNotificationBadge();
-        }
-        if (initialLoadComplete) {
-            checkShowNoNotificationsMsg();
-        }
-    });
-
-    notificationListener.on('child_changed', snapshot => {
-        renderNotification(snapshot.key, snapshot.val());
-        
-        const notifData = snapshot.val();
-        if(notifData.read === true) {
-        }
-    });
-    
-    notificationListener.on('child_removed', snapshot => {
-        const notifId = snapshot.key;
-        const item = document.getElementById(notifId);
-        if (item) {
-            item.remove();
-        }
-        checkShowNoNotificationsMsg();
-    });
-    
-    notificationListener.once('value', snapshot => {
-        initialLoadComplete = true;
-        checkShowNoNotificationsMsg();
-    });
-}
-
-async function populateBlockedUsersList() {
-    if (!blockedUsersListEl) return;
-    blockedUsersListEl.innerHTML = '<p style="padding: 8px 12px; color: #666;">Loading...</p>';
-    const blockedIds = Object.keys(currentUserData.blockedUsers || {});
-    if (blockedIds.length === 0) {
-        blockedUsersListEl.innerHTML = '<p style="padding: 8px 12px; color: #666;">No users blocked.</p>';
-        return;
-    }
-    blockedUsersListEl.innerHTML = '';
-    for (const uid of blockedIds) {
-        const userSnap = await db.ref('users/' + uid).once('value');
-        if (userSnap.exists()) {
-            const user = userSnap.val();
-            const item = document.createElement('div');
-            item.className = 'blocked-user-item';
-            item.innerHTML = `
-                <span class="name-with-badge">
-                    <span class="item-name-text">${user.name || uid}</span>
-                    ${getVerifiedBadgeHTML(user)}
-                </span>
-                <button class="unblock-btn" data-uid="${uid}">Unblock</button>
-            `;
-            blockedUsersListEl.appendChild(item);
-        } else {
-            const item = document.createElement('div');
-            item.className = 'blocked-user-item';
-            item.innerHTML = `
-                <span class="name-with-badge">
-                    <span class="item-name-text">${uid} (Unknown)</span>
-                </span>
-                <button class="unblock-btn" data-uid="${uid}">Unblock</button>
-            `;
-            blockedUsersListEl.appendChild(item);
-        }
-    }
-}
-function unblockUser(uid) {
-    const myUid = currentUser.uid;
-    const updates = {};
-    updates[`blockedUsers/${myUid}/${uid}`] = null;
-    updates[`contacts/${myUid}/${uid}`] = true;
-    updates[`contacts/${uid}/${myUid}`] = true;
-    db.ref().update(updates)
-        .then(() => {
-            showNotification('User unblocked and re-added to friends.');
-        })
-        .catch(err => {
-            showNotification('Error unblocking user: ' + err.message, 5000);
-        });
-}
-async function blockUser(uid) {
-    if (uid === currentUser.uid) {
-        showNotification("You cannot block yourself.", 5000);
-        return;
-    }
-    const isConfirmed = await customConfirm(`Block this user? You will be removed from each other's contact lists and chats.`);
-    if (!isConfirmed) return;
-    const myUid = currentUser.uid;
-    const updates = {};
-    updates[`blockedUsers/${myUid}/${uid}`] = true;
-    updates[`contacts/${myUid}/${uid}`] = null;
-    updates[`contacts/${uid}/${myUid}`] = null;
-    const chatId = getChatId(myUid, uid);
-    updates[`messages/${chatId}`] = null;
-    updates[`unreadCounts/${myUid}/${uid}`] = null;
-    updates[`unreadCounts/${uid}/${myUid}`] = null;
-    db.ref().update(updates)
-        .then(() => {
-            showNotification('User blocked and removed from friends.');
-            showModal('partner-profile-modal', false);
-            chatBackBtn.click();
-            if (history.state) history.back();
-        })
-        .catch(err => {
-            showNotification('Error blocking user: ' + err.message, 5000);
-        });
-}
-blockedUsersListEl.addEventListener('click', e => {
-    if (e.target.classList.contains('unblock-btn')) {
-        const uidToUnblock = e.target.dataset.uid;
-        if (uidToUnblock) {
-            unblockUser(uidToUnblock);
-        }
-    }
+function deleteNotification(notifId){
+if(!currentUser||!notifId)return;
+db.ref(`notifications/${currentUser.uid}/${notifId}`).remove()
+.catch(err=>{
+showNotification('Error deleting notification: '+err.message,4000);
 });
-
-partnerModalDeleteChatBtn.addEventListener('click', async () => {
-    if (currentChatPartner) {
-        const isConfirmed = await customConfirm('Are you sure you want to delete this chat and remove from chat list?');
-        if (isConfirmed) {
-            deleteChatHistory(currentChatPartner.uid); 
-            
-            showModal('partner-profile-modal', false);
-            if (history.state) history.back(); 
-            
-            chatBackBtn.click(); 
-        }
-    }
+}
+function renderNotification(notifId,notifData){
+const existing=document.getElementById(notifId);
+if(existing)existing.remove();
+const item=document.createElement('div');
+item.className='notification-item';
+item.id=notifId;
+const text=document.createElement('div');
+text.className='notification-item-text';
+text.textContent=notifData.message;
+const time=document.createElement('div');
+time.className='notification-item-time';
+time.textContent=formatFullTimestamp(notifData.timestamp);
+const deleteBtn=document.createElement('button');
+deleteBtn.className='notif-delete-btn';
+deleteBtn.innerHTML='&times;';
+deleteBtn.title='Delete Notification';
+deleteBtn.addEventListener('click',(e)=>{
+e.stopPropagation();
+customConfirm('Are you sure you want to delete this notification?')
+.then(isConfirmed=>{
+if(isConfirmed){
+deleteNotification(notifId);
+}
 });
-
-partnerModalBlockBtn.addEventListener('click', () => {
-    if (currentChatPartner) {
-        blockUser(currentChatPartner.uid);
-    }
+});
+item.appendChild(text);
+item.appendChild(time);
+item.appendChild(deleteBtn);
+const noMsg=notificationListContent.querySelector('#no-notifications-msg');
+if(noMsg)noMsg.remove();
+notificationListContent.prepend(item);
+}
+function listenForNotifications(){
+if(notificationListener)notificationListener.off();
+if(!currentUser||!currentUser.uid)return;
+const myUid=currentUser.uid;
+const notifRef=db.ref('notifications/'+myUid);
+notificationListener=notifRef.orderByChild('timestamp').limitToLast(30);
+notificationListContent.innerHTML='';
+unreadNotificationCount=0;
+let initialLoadComplete=false;
+notificationListener.on('child_added',snapshot=>{
+const notifData=snapshot.val();
+renderNotification(snapshot.key,notifData);
+if(notifData.read===false){
+unreadNotificationCount++;
+updateNotificationBadge();
+}
+if(initialLoadComplete){
+checkShowNoNotificationsMsg();
+}
+});
+notificationListener.on('child_changed',snapshot=>{
+renderNotification(snapshot.key,snapshot.val());
+const notifData=snapshot.val();
+if(notifData.read===true){
+}
+});
+notificationListener.on('child_removed',snapshot=>{
+const notifId=snapshot.key;
+const item=document.getElementById(notifId);
+if(item){
+item.remove();
+}
+checkShowNoNotificationsMsg();
+});
+notificationListener.once('value',snapshot=>{
+initialLoadComplete=true;
+checkShowNoNotificationsMsg();
+});
+}
+async function populateBlockedUsersList(){
+if(!blockedUsersListEl)return;
+blockedUsersListEl.innerHTML='<p style="padding: 8px 12px; color: #666;">Loading...</p>';
+const blockedIds=Object.keys(currentUserData.blockedUsers||{});
+if(blockedIds.length===0){
+blockedUsersListEl.innerHTML='<p style="padding: 8px 12px; color: #666;">No users blocked.</p>';
+return;
+}
+blockedUsersListEl.innerHTML='';
+for(const uid of blockedIds){
+const userSnap=await db.ref('users/'+uid).once('value');
+if(userSnap.exists()){
+const user=userSnap.val();
+const item=document.createElement('div');
+item.className='blocked-user-item';
+item.innerHTML=`
+<span class="name-with-badge">
+<span class="item-name-text">${user.name||uid}</span>
+${getVerifiedBadgeHTML(user)}
+</span>
+<button class="unblock-btn" data-uid="${uid}">Unblock</button>
+`;
+blockedUsersListEl.appendChild(item);
+}else{
+const item=document.createElement('div');
+item.className='blocked-user-item';
+item.innerHTML=`
+<span class="name-with-badge">
+<span class="item-name-text">${uid} (Unknown)</span>
+</span>
+<button class="unblock-btn" data-uid="${uid}">Unblock</button>
+`;
+blockedUsersListEl.appendChild(item);
+}
+}
+}
+function unblockUser(uid){
+const myUid=currentUser.uid;
+const updates={};
+updates[`blockedUsers/${myUid}/${uid}`]=null;
+updates[`contacts/${myUid}/${uid}`]=true;
+updates[`contacts/${uid}/${myUid}`]=true;
+db.ref().update(updates)
+.then(()=>{
+showNotification('User unblocked and re-added to friends.');
+})
+.catch(err=>{
+showNotification('Error unblocking user: '+err.message,5000);
+});
+}
+async function blockUser(uid){
+if(uid===currentUser.uid){
+showNotification("You cannot block yourself.",5000);
+return;
+}
+const isConfirmed=await customConfirm(`Block this user? You will be removed from each other's contact lists and chats.`);
+if(!isConfirmed)return;
+const myUid=currentUser.uid;
+const updates={};
+updates[`blockedUsers/${myUid}/${uid}`]=true;
+updates[`contacts/${myUid}/${uid}`]=null;
+updates[`contacts/${uid}/${myUid}`]=null;
+const chatId=getChatId(myUid,uid);
+updates[`messages/${chatId}`]=null;
+updates[`unreadCounts/${myUid}/${uid}`]=null;
+updates[`unreadCounts/${uid}/${myUid}`]=null;
+db.ref().update(updates)
+.then(()=>{
+showNotification('User blocked and removed from friends.');
+showModal('partner-profile-modal',false);
+chatBackBtn.click();
+if(history.state)history.back();
+})
+.catch(err=>{
+showNotification('Error blocking user: '+err.message,5000);
+});
+}
+blockedUsersListEl.addEventListener('click',e=>{
+if(e.target.classList.contains('unblock-btn')){
+const uidToUnblock=e.target.dataset.uid;
+if(uidToUnblock){
+unblockUser(uidToUnblock);
+}
+}
+});
+partnerModalDeleteChatBtn.addEventListener('click',async()=>{
+if(currentChatPartner){
+const isConfirmed=await customConfirm('Are you sure you want to delete this chat and remove from chat list?');
+if(isConfirmed){
+deleteChatHistory(currentChatPartner.uid);
+showModal('partner-profile-modal',false);
+if(history.state)history.back();
+chatBackBtn.click();
+}
+}
+});
+partnerModalBlockBtn.addEventListener('click',()=>{
+if(currentChatPartner){
+blockUser(currentChatPartner.uid);
+}
 });
 });
 </script>
