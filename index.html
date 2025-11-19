@@ -1458,10 +1458,22 @@ const chatId=getChatId(myUid,partnerId);
 updates[`messages/${chatId}`]=null;
 updates[`unreadCounts/${myUid}/${partnerId}`]=null;
 updates[`unreadCounts/${partnerId}/${myUid}`]=null;
-updates[`contacts/${myUid}/${partnerId}`]=null;
+// updates[`contacts/${myUid}/${partnerId}`]=null; // <--- এই লাইনটি এবং নিচের লাইনটি মুছে দেওয়া হয়েছে
+// updates[`contacts/${partnerId}/${myUid}`]=null; // <--- এই লাইনটি মুছে দেওয়া হয়েছে
+
 db.ref().update(updates)
 .then(()=>{
 showNotification('Chat history removed.');
+// চ্যাট লিস্ট থেকে আইটেমটি ম্যানুয়ালি সরানোর জন্য
+const chatItem = homeContent.querySelector(`.list-item[data-uid="${partnerId}"]`);
+if(chatItem){
+    chatItem.classList.add('hidden');
+    // যেহেতু চ্যাট ডেটা মুছে গেছে, তাই এর লাস্ট মেসেজ টাইমস্ট্যাম্প শূন্য করে দিতে হবে
+    lastMessageTimestamps[partnerId] = {text:'Tap to chat', timestamp:0};
+    sortChatList();
+}
+// Unread count আপডেট করা নিশ্চিত করা
+db.ref(`unreadCounts/${myUid}/${partnerId}`).remove();
 })
 .catch(err=>{
 showNotification(`Error deleting chat: ${err.message}`,5000);
@@ -1877,7 +1889,8 @@ partnerModalDeleteChatBtn.addEventListener('click',async()=>{
 if(currentChatPartner){
 const isConfirmed=await customConfirm('Are you sure you want to delete this chat and remove from chat list?');
 if(isConfirmed){
-deleteChatHistory(currentChatPartner.uid);
+// এখানে deleteChatHistory ফাংশন কল করা হয়েছে
+deleteChatHistory(currentChatPartner.uid); 
 showModal('partner-profile-modal',false);
 if(history.state)history.back();
 chatBackBtn.click();
