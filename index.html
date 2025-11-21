@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Messaging App</title>
+<title>Secret Messaging App</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -149,7 +149,7 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 #profile-copy-id-btn:active, #profile-copy-email-btn:active, #partner-modal-copy-id-btn:active{box-shadow:inset 3px 3px 6px #bebebe, inset -3px -3px 6px #ffffff;}
 #profile-copy-id-btn svg, #profile-copy-email-btn svg, #partner-modal-copy-id-btn svg{fill:#555;width:20px;height:20px;display:block;}
 .profile-blocked-frame strong{text-align:center;font-size:1.1rem;color:#444;margin-bottom:10px;display:block;}
-#blocked-users-list{max-height:150px;overflow-y:auto;background:#f0f2f5;border-radius:10px;border:none;width:100%;box-shadow:inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;padding:5px;}
+#blocked-users-list{max-height:150px;overflow-y:auto;background:#f0f2f5;border-radius:10px;border:none;width:100%;box-shadow:inset 4px 4px 8px #bebebe, -4px -4px 8px #ffffff;padding:5px;}
 .blocked-user-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #e0e0e0;}
 .unblock-btn{font-size:0.8rem;padding:6px 12px;background:#f0f2f5;border-radius:8px;color:var(--wa-link-color);border:none;cursor:pointer;box-shadow:3px 3px 6px #bebebe, -3px -3px 6px #ffffff;}
 .unblock-btn:active{box-shadow:inset 2px 2px 4px #bebebe, inset -2px -2px 4px #ffffff;}
@@ -212,10 +212,148 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 #support-send-btn{width:50px;height:50px;border:none;border-radius:50%;background:#f0f2f5;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:6px 6px 12px #bebebe, -6px -6px 12px #ffffff;transition:all 0.2s;}
 #support-send-btn:active{box-shadow:inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;}
 #support-send-btn svg{width:24px;height:24px;fill:#555;margin-left:4px;}
+
+/* --- নতুন ক্যালকুলেটর CSS --- */
+#calculator-lock-view {
+    width: 100%;
+    height: 100%;
+    max-width: 450px;
+    max-height: 950px;
+    background-color: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px;
+    z-index: 50;
+    position: absolute; /* .view ক্লাসের সাথে সামঞ্জস্য রাখা হয়েছে */
+    top: 0;
+    left: 0;
+}
+#calculator-screen {
+    width: 100%;
+    height: 120px;
+    background: #f0f2f5;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
+    font-size: 3rem;
+    text-align: right;
+    padding: 20px;
+    color: #444;
+    overflow-x: auto;
+    white-space: nowrap;
+    line-height: 80px;
+}
+.calculator-buttons {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+.calc-btn {
+    width: 100%;
+    height: 75px;
+    border-radius: 20px;
+    background-color: #f0f2f5;
+    box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
+    border: none;
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+.calc-btn:active {
+    box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;
+}
+.calc-btn.operator {
+    color: var(--wa-header-bg); /* Pink */
+    font-weight: 700;
+}
+.calc-btn.equals {
+    background-color: var(--wa-button-color); /* Green */
+    color: white;
+    font-size: 2rem;
+    box-shadow: 6px 6px 12px #88ff88, -6px -6px 12px #ffffff;
+}
+.calc-btn.equals:active {
+    box-shadow: inset 4px 4px 8px #008800, inset -4px -4px 8px #33ff33;
+}
+/* --- PIN Setup Modal (Neumorphism Style) --- */
+#pin-setup-modal .modal-content {
+    background: #f0f2f5;
+    box-shadow: 12px 12px 24px #bebebe, -12px -12px 24px #ffffff;
+}
+#pin-input-field {
+    width: 100%;
+    padding: 15px;
+    margin: 20px 0 10px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
+    font-size: 1.5rem;
+    text-align: center;
+    letter-spacing: 5px;
+}
+#set-pin-button {
+    width: 100%;
+    padding: 15px;
+    background: var(--wa-button-color);
+    color: white;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 6px 6px 12px #88ff88, -6px -6px 12px #ffffff;
+    transition: all 0.2s ease-in-out;
+}
+#set-pin-button:hover {
+    box-shadow: 8px 8px 16px #88ff88, -8px -8px 16px #ffffff;
+}
+#set-pin-button:active {
+    box-shadow: inset 6px 6px 12px #008800, inset -6px -6px 12px #33ff33;
+}
+#pin-setup-error {
+    color: var(--call-end-red);
+    font-size: 0.9rem;
+    text-align: center;
+    min-height: 1.2em;
+}
 </style>
 </head>
 <body>
 <div id="app-container">
+<div id="calculator-lock-view" class="view hidden">
+    <div id="calculator-screen">0</div>
+    <div class="calculator-buttons">
+        <button class="calc-btn operator" data-value="C">AC</button>
+        <button class="calc-btn operator" data-value="D">DEL</button>
+        <button class="calc-btn operator" data-value="%">%</button>
+        <button class="calc-btn operator" data-value="/">÷</button>
+        
+        <button class="calc-btn" data-value="7">7</button>
+        <button class="calc-btn" data-value="8">8</button>
+        <button class="calc-btn" data-value="9">9</button>
+        <button class="calc-btn operator" data-value="*">×</button>
+
+        <button class="calc-btn" data-value="4">4</button>
+        <button class="calc-btn" data-value="5">5</button>
+        <button class="calc-btn" data-value="6">6</button>
+        <button class="calc-btn operator" data-value="-">-</button>
+
+        <button class="calc-btn" data-value="1">1</button>
+        <button class="calc-btn" data-value="2">2</button>
+        <button class="calc-btn" data-value="3">3</button>
+        <button class="calc-btn operator" data-value="+">+</button>
+
+        <button class="calc-btn" data-value="0" style="grid-column: span 2;">0</button>
+        <button class="calc-btn" data-value=".">.</button>
+        <button class="calc-btn equals" data-value="=">=</button>
+    </div>
+</div>
 <div id="auth-view" class="view">
 <div class="auth-form-container">
 <h1>SECRET MESSAGING</h1>
@@ -460,6 +598,15 @@ ALL FRIEND
 </div>
 </div>
 </div>
+<div id="pin-setup-modal" class="modal hidden">
+    <div class="modal-content">
+        <h2>গোপন কোড সেট করুন</h2>
+        <p>এটি আপনার সিক্রেট অ্যাপের প্রবেশ কোড হবে। দয়া করে ৪-সংখ্যার কোড দিন।</p>
+        <input type="password" id="pin-input-field" placeholder="৪-সংখ্যার গোপন কোড" maxlength="4" autocomplete="off" inputmode="numeric" required>
+        <button id="set-pin-button">কোড সেট করুন</button>
+        <p id="pin-setup-error" class="error-message"></p>
+    </div>
+</div>
 <div id="notification-container"></div>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -491,12 +638,17 @@ const appContainer=document.getElementById('app-container');
 const authView=document.getElementById('auth-view');
 const mainView=document.getElementById('main-view');
 const chatView=document.getElementById('chat-view');
+const calculatorLockView = document.getElementById('calculator-lock-view');
 const allViews=document.querySelectorAll('.view');
 const addFriendModal=document.getElementById('add-friend-modal');
 const profileViewModal=document.getElementById('profile-view-modal');
 const customPromptModal=document.getElementById('custom-prompt-modal');
 const customPromptForm=document.getElementById('custom-prompt-form');
 const promptInput=document.getElementById('prompt-input');
+const pinSetupModal = document.getElementById('pin-setup-modal');
+const pinInputField = document.getElementById('pin-input-field');
+const setPinButton = document.getElementById('set-pin-button');
+const pinSetupError = document.getElementById('pin-setup-error');
 const allModals=document.querySelectorAll('.modal');
 const loginForm=document.getElementById('login-form');
 const signupForm=document.getElementById('signup-form');
@@ -571,6 +723,399 @@ const supportMessages=document.getElementById('support-messages');
 const supportInput=document.getElementById('support-input');
 const supportSendBtn=document.getElementById('support-send-btn');
 let supportListener=null;
+
+const calculatorScreen = document.getElementById('calculator-screen');
+const calcButtons = document.querySelectorAll('#calculator-lock-view .calc-btn');
+let currentExpression = '0';
+let userSecretPin = null; 
+let isAppUnlocked = false;
+
+function resetCalculator() {
+    currentExpression = '0';
+    calculatorScreen.textContent = currentExpression;
+}
+
+function updateCalculatorScreen() {
+    calculatorScreen.textContent = currentExpression || '0';
+}
+
+function isOperator(value) {
+    return ['+', '-', '*', '/', '%'].includes(value);
+}
+
+function handleCalculatorInput(value) {
+    userSecretPin = currentUserData.secretPin || null;
+    
+    if (value >= '0' && value <= '9' || value === '.') {
+        if (currentExpression === '0' && value !== '.') {
+            currentExpression = value;
+        } else {
+            currentExpression += value;
+        }
+    } else if (isOperator(value)) {
+        if (currentExpression === '0') return;
+        if (!isOperator(currentExpression.slice(-1))) {
+            currentExpression += value;
+        } else {
+            currentExpression = currentExpression.slice(0, -1) + value;
+        }
+    } else if (value === 'C') {
+        resetCalculator();
+    } else if (value === 'D') {
+        currentExpression = currentExpression.slice(0, -1);
+        if (currentExpression.length === 0) currentExpression = '0';
+    } else if (value === '=') {
+        if (userSecretPin && currentExpression === userSecretPin) {
+            showMainAppView();
+            return;
+        }
+        try {
+            const result = eval(currentExpression.replace(/×/g, '*').replace(/÷/g, '/'));
+            currentExpression = String(result);
+        } catch (e) {
+            currentExpression = 'Error';
+            showNotification('Invalid expression.', 3000);
+        }
+    }
+    
+    if (userSecretPin && currentExpression.length === 4 && currentExpression === userSecretPin) {
+        showMainAppView();
+        currentExpression = '0'; 
+        isAppUnlocked = true;
+        return;
+    }
+
+    updateCalculatorScreen();
+}
+
+calcButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        handleCalculatorInput(button.dataset.value);
+    });
+});
+
+function showView(viewId){
+    allViews.forEach(view=>{
+        view.classList.add('hidden');
+    });
+    calculatorLockView.classList.add('hidden');
+    
+    if (viewId === 'calculator-lock-view') {
+        calculatorLockView.classList.remove('hidden');
+        resetCalculator();
+    } else if (viewId === 'main-view') {
+        mainView.classList.remove('hidden');
+    } else if (viewId === 'auth-view') {
+        authView.classList.remove('hidden');
+    } else if (viewId === 'chat-view') {
+        chatView.classList.remove('hidden');
+    } else if (viewId === 'notification-view') {
+        notificationView.classList.remove('hidden');
+    } else if (viewId === 'support-view') {
+        supportView.classList.remove('hidden');
+    }
+}
+
+function handleSuccessfulAuth(user) {
+    db.ref('users/' + user.uid).once('value').then(snapshot => {
+        if (snapshot.exists()) {
+            currentUserData = snapshot.val();
+            checkPinStatus(user);
+        } else {
+            showCustomAlert("প্রোফাইল ডাটা পাওয়া যায়নি। সাপোর্টে যোগাযোগ করুন।");
+            auth.signOut();
+        }
+    }).catch(error => {
+        showCustomAlert("ডাটা লোড করতে সমস্যা: " + error.message);
+        auth.signOut();
+    });
+}
+
+function checkPinStatus(user) {
+    db.ref(`users/${user.uid}/secretPin`).once('value')
+    .then(snapshot => {
+        const secretPin = snapshot.val();
+        if (secretPin) {
+            currentUserData.secretPin = secretPin;
+            showView('calculator-lock-view');
+        } else {
+            showModal('pin-setup-modal');
+            history.pushState(null,'',window.location.pathname);
+        }
+    })
+    .catch(err => {
+        showCustomAlert("গোপন কোড চেক করতে সমস্যা: " + err.message);
+        auth.signOut();
+    });
+}
+
+setPinButton.addEventListener('click', () => {
+    const newPin = pinInputField.value.trim();
+    if (newPin.length === 4 && /^\d{4}$/.test(newPin)) {
+        db.ref(`users/${currentUser.uid}/secretPin`).set(newPin)
+        .then(() => {
+            currentUserData.secretPin = newPin;
+            showModal('pin-setup-modal', false);
+            showNotification('গোপন কোড সফলভাবে সেট করা হয়েছে!');
+            showView('calculator-lock-view');
+            resetCalculator();
+            if(history.state) history.back();
+        })
+        .catch(err => {
+            pinSetupError.textContent = 'কোড সেট করতে সমস্যা হয়েছে: ' + err.message;
+        });
+    } else {
+        pinSetupError.textContent = 'দয়া করে ৪-সংখ্যার সংখ্যা দিন।';
+    }
+});
+
+function showMainAppView() {
+    showPanel('home-content');
+    listenForContacts();
+    populateAllFriendsList();
+    listenForNotifications();
+    appInitialized=true;
+    isAppUnlocked = true;
+    showView('main-view');
+}
+
+function initializeAuthListener(){
+    auth.onAuthStateChanged(user=>{
+        cleanupListeners();
+        isAppUnlocked = false;
+        if(user){
+            currentUser=user;
+            
+            if(!authStateInitialized){
+                authStateInitialized=true;
+                authStateResolve();
+            }
+            const userRef=db.ref('users/'+user.uid);
+            if(contactListeners.currentUser)contactListeners.currentUser.off();
+            contactListeners.currentUser=userRef;
+            
+            userRef.on('value',snapshot=>{
+                const wasNotInitialized=!currentUserData;
+                if(snapshot.exists()){
+                    currentUserData=snapshot.val();
+                    if(!currentUserData.blockedUsers){
+                        currentUserData.blockedUsers={};
+                    }
+                    if(!profileViewModal.classList.contains('hidden')){
+                        profilePicWrapper.innerHTML=getProfilePicHTML(currentUserData,'4.5rem');
+                        profileViewName.innerHTML=`${currentUserData.name}${getVerifiedBadgeHTML(currentUserData)}`;
+                        profileViewEmail.textContent=currentUserData.email;
+                        profileUserEmailText.textContent=currentUserData.email;
+                    }
+                    if(wasNotInitialized){
+                        checkPinStatus(user); 
+                        listenForBlockedUsers(user.uid);
+                        listenForUnreadCounts();
+                    } else if (!isAppUnlocked && calculatorLockView.classList.contains('hidden') && authView.classList.contains('hidden')) {
+                        checkPinStatus(user); 
+                    }
+                }else{
+                    currentUserData=null;
+                }
+                if(userDataResolve){
+                    userDataResolve();
+                    userDataResolve=null;
+                }
+            });
+        }else{
+            currentUser=null;
+            currentUserData=null;
+            appInitialized=false;
+            showView('auth-view');
+            if(notificationBadge){
+                notificationBadge.classList.add('hidden');
+                notificationBadge.textContent='0';
+                unreadNotificationCount=0;
+            }
+            if(!authStateInitialized){
+                authStateInitialized=true;
+                authStateResolve();
+            }
+            if(userDataResolve){
+                userDataResolve();
+                userDataResolve=null;
+            }
+        }
+    });
+}
+
+loginForm.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const email=loginForm['login-email'].value;
+    const password=loginForm['login-password'].value;
+    auth.signInWithEmailAndPassword(email,password)
+    .then((userCredential)=>{
+        handleSuccessfulAuth(userCredential.user); 
+    })
+    .catch(error=>{
+        showCustomAlert(getBengaliErrorMessage(error.code));
+    });
+});
+
+signupForm.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const email=signupForm['signup-email'].value;
+    const password=signupForm['signup-password'].value;
+    auth.createUserWithEmailAndPassword(email,password)
+    .then((userCredential)=>{
+        const user=userCredential.user;
+        const defaultProfile={
+            uid:user.uid,
+            email:user.email,
+            name:user.uid,
+            profilePicUrl:"",
+            isVerified:false
+        };
+        db.ref('users/'+user.uid).set(defaultProfile)
+        .then(()=>{
+            handleSuccessfulAuth(user);
+        })
+        .catch(error=>{
+            showCustomAlert("সাইন আপ হয়েছে, কিন্তু প্রোফাইল তৈরি হয়নি: "+error.message);
+        });
+    })
+    .catch(error=>{
+        showCustomAlert(getBengaliErrorMessage(error.code));
+    });
+});
+
+function createOrUpdateContactItem(contact,isFriendList=false){
+const listContainer=isFriendList?callsContent:homeContent;
+const existingItem=listContainer.querySelector(`.list-item[data-uid="${contact.uid}"]`);
+if(!isFriendList&&currentUserData.blockedUsers&&currentUserData.blockedUsers[contact.uid]){
+if(existingItem){
+existingItem.remove();
+}
+return;
+}
+const lastMsgData=lastMessageTimestamps[contact.uid]||{text:'Tap to chat',timestamp:0};
+const lastMsgText=lastMsgData.text;
+const timestamp=lastMsgData.timestamp;
+if(existingItem){
+existingItem.querySelector('.item-emoji').innerHTML=getProfilePicHTML(contact);
+existingItem.querySelector('.item-name-text').textContent=contact.name;
+const badgeContainer=existingItem.querySelector('.item-name.name-with-badge');
+const oldBadge=badgeContainer.querySelector('.verified-badge');
+if(oldBadge)oldBadge.remove();
+badgeContainer.insertAdjacentHTML('beforeend',getVerifiedBadgeHTML(contact));
+if(!isFriendList){
+existingItem.querySelector('.item-subtext').textContent=lastMsgText;
+// --- পরিবর্তন ১: মেসেজ না থাকলে চ্যাট লিস্ট থেকে লুকানো ---
+existingItem.classList.toggle('hidden', lastMsgData.timestamp === 0);
+}
+}else{
+const item=document.createElement('div');
+item.className='list-item';
+// --- পরিবর্তন ২: নতুন আইটেম তৈরির সময় মেসেজ না থাকলে লুকানো ---
+if(!isFriendList && lastMsgData.timestamp === 0){
+    item.classList.add('hidden');
+}
+item.dataset.uid=contact.uid;
+let itemHTML=`
+<div class="item-emoji">${getProfilePicHTML(contact)}</div>
+<div class="item-details">
+<div class="item-name name-with-badge">
+<span class="item-name-text">${contact.name}</span>
+${getVerifiedBadgeHTML(contact)}
+</div>
+`;
+if(isFriendList){
+itemHTML+=`</div>`;
+}else{
+itemHTML+=`
+<div class="item-subtext" id="subtext-${contact.uid}">${lastMsgText}</div>
+</div>
+<div class="item-actions">
+<span class="badge hidden" id="badge-${contact.uid}"></span>
+</div>
+`;
+}
+item.innerHTML=itemHTML+'</div>';
+item.addEventListener('click',(e)=>{
+if(e.target.closest('.verified-badge'))return;
+openChat(contact);
+});
+listContainer.appendChild(item);
+}
+if(!isFriendList){
+sortChatList();
+}
+}
+
+function handleCustomBack(){
+    if(!verifiedInfoModal.classList.contains('hidden')){
+        verifiedInfoBtnOk.click();
+        return true;
+    }
+    if(!messageOptionsModal.classList.contains('hidden')){
+        showModal('message-options-modal',false);
+        return true;
+    }
+    if(!customAlertModal.classList.contains('hidden')){
+        customAlertBtnOk.click();
+        return true;
+    }
+    if(!customConfirmModal.classList.contains('hidden')){
+        customConfirmBtnNo.click();
+        return true;
+    }
+    if(!partnerProfileModal.classList.contains('hidden')){
+        showModal('partner-profile-modal',false);
+        return true;
+    }
+    if(!profileViewModal.classList.contains('hidden')){
+        showModal('profile-view-modal',false);
+        return true;
+    }
+    if(!addFriendModal.classList.contains('hidden')){
+        showModal('add-friend-modal',false);
+        return true;
+    }
+    if(!pinSetupModal.classList.contains('hidden')){
+        return true; 
+    }
+    if(!notificationView.classList.contains('hidden')){
+        notificationBackBtn.click();
+        return true;
+    }
+    if(!supportView.classList.contains('hidden')){
+        supportBackBtn.click();
+        return true;
+    }
+    if(!chatView.classList.contains('hidden')){
+        showView('main-view'); 
+        currentChatPartner=null;
+        if(currentChatListener){
+            currentChatListener.off();
+            currentChatListener=null;
+        }
+        return true;
+    }
+    if(!mainView.classList.contains('hidden')){
+        if(!homeContent.classList.contains('active')){
+            showPanel('home-content');
+            return true;
+        }else{
+            showView('calculator-lock-view');
+            isAppUnlocked = false;
+            return true;
+        }
+    }
+    if(!calculatorLockView.classList.contains('hidden')){
+        auth.signOut();
+        return true;
+    }
+    if(!authView.classList.contains('hidden')){
+        return false;
+    }
+    return false;
+}
+
 function showNotification(message,duration=3000,actions=null){
 const notification=document.createElement('div');
 notification.className='custom-notification';
@@ -714,11 +1259,6 @@ customPromptResolver=null;
 showModal('custom-prompt-modal',false);
 if(history.state)history.back();
 });
-function showView(viewId){
-allViews.forEach(view=>{
-view.classList.toggle('hidden',view.id!==viewId);
-});
-}
 function showModal(modalId,show=true){
 const modal=document.getElementById(modalId);
 if(modal){
@@ -820,60 +1360,6 @@ showNotification(message);
 showNotification('Failed to copy.',5000);
 }
 }
-function handleCustomBack(){
-if(!verifiedInfoModal.classList.contains('hidden')){
-verifiedInfoBtnOk.click();
-return true;
-}
-if(!messageOptionsModal.classList.contains('hidden')){
-showModal('message-options-modal',false);
-return true;
-}
-if(!customAlertModal.classList.contains('hidden')){
-customAlertBtnOk.click();
-return true;
-}
-if(!customConfirmModal.classList.contains('hidden')){
-customConfirmBtnNo.click();
-return true;
-}
-if(!partnerProfileModal.classList.contains('hidden')){
-showModal('partner-profile-modal',false);
-return true;
-}
-if(!profileViewModal.classList.contains('hidden')){
-showModal('profile-view-modal',false);
-return true;
-}
-if(!addFriendModal.classList.contains('hidden')){
-showModal('add-friend-modal',false);
-return true;
-}
-if(!notificationView.classList.contains('hidden')){
-notificationBackBtn.click();
-return true;
-}
-if(!supportView.classList.contains('hidden')){
-supportBackBtn.click();
-return true;
-}
-if(!chatView.classList.contains('hidden')){
-chatBackBtn.click();
-return true;
-}
-if(!authView.classList.contains('hidden')){
-return false;
-}
-if(!mainView.classList.contains('hidden')){
-if(!homeContent.classList.contains('active')){
-showPanel('home-content');
-return true;
-}else{
-return false;
-}
-}
-return false;
-}
 window.addEventListener('popstate',(event)=>{
 const handled=handleCustomBack();
 if(handled){
@@ -888,68 +1374,6 @@ initializeAuthListener();
 .catch((error)=>{
 initializeAuthListener();
 });
-function initializeAuthListener(){
-auth.onAuthStateChanged(user=>{
-cleanupListeners();
-if(user){
-currentUser=user;
-showView('main-view');
-if(!authStateInitialized){
-authStateInitialized=true;
-authStateResolve();
-}
-const userRef=db.ref('users/'+user.uid);
-if(contactListeners.currentUser)contactListeners.currentUser.off();
-contactListeners.currentUser=userRef;
-userRef.on('value',snapshot=>{
-const wasNotInitialized=!currentUserData;
-if(snapshot.exists()){
-currentUserData=snapshot.val();
-if(!currentUserData.blockedUsers){
-currentUserData.blockedUsers={};
-}
-if(!profileViewModal.classList.contains('hidden')){
-profilePicWrapper.innerHTML=getProfilePicHTML(currentUserData,'4.5rem');
-profileViewName.innerHTML=`${currentUserData.name}${getVerifiedBadgeHTML(currentUserData)}`;
-profileViewEmail.textContent=currentUserData.email;
-profileUserEmailText.textContent=currentUserData.email;
-}
-if(wasNotInitialized){
-if(!appInitialized){
-initializeApp();
-}
-listenForBlockedUsers(user.uid);
-listenForUnreadCounts();
-}
-}else{
-currentUserData=null;
-}
-if(userDataResolve){
-userDataResolve();
-userDataResolve=null;
-}
-});
-}else{
-currentUser=null;
-currentUserData=null;
-appInitialized=false;
-showView('auth-view');
-if(notificationBadge){
-notificationBadge.classList.add('hidden');
-notificationBadge.textContent='0';
-unreadNotificationCount=0;
-}
-if(!authStateInitialized){
-authStateInitialized=true;
-authStateResolve();
-}
-if(userDataResolve){
-userDataResolve();
-userDataResolve=null;
-}
-}
-});
-}
 function listenForBlockedUsers(uid){
 const blockedRef=db.ref('blockedUsers/'+uid);
 if(contactListeners.blocked)contactListeners.blocked.off();
@@ -962,55 +1386,10 @@ populateAllFriendsList();
 });
 contactListeners.blocked=blockedRef;
 }
-loginForm.addEventListener('submit',(e)=>{
-e.preventDefault();
-const email=loginForm['login-email'].value;
-const password=loginForm['login-password'].value;
-auth.signInWithEmailAndPassword(email,password)
-.then((userCredential)=>{
-const user=userCredential.user;
-db.ref('users/'+user.uid).once('value',snapshot=>{
-if(snapshot.exists()){
-}else{
-showCustomAlert("প্রোফাইল ডাটা পাওয়া যায়নি। সাপোর্টে যোগাযোগ করুন।");
-auth.signOut();
-}
-});
-})
-.catch(error=>{
-showCustomAlert(getBengaliErrorMessage(error.code));
-});
-});
-signupForm.addEventListener('submit',(e)=>{
-e.preventDefault();
-const email=signupForm['signup-email'].value;
-const password=signupForm['signup-password'].value;
-auth.createUserWithEmailAndPassword(email,password)
-.then((userCredential)=>{
-const user=userCredential.user;
-const defaultProfile={
-uid:user.uid,
-email:user.email,
-name:user.uid,
-profilePicUrl:"",
-isVerified:false
-};
-db.ref('users/'+user.uid).set(defaultProfile)
-.then(()=>{
-loginForm.classList.remove('hidden');
-signupForm.classList.add('hidden');
-showNotification('Signup successful! Please log in.');
-})
-.catch(error=>{
-showCustomAlert("সাইন আপ হয়েছে, কিন্তু প্রোফাইল তৈরি হয়নি: "+error.message);
-});
-})
-.catch(error=>{
-showCustomAlert(getBengaliErrorMessage(error.code));
-});
-});
 logoutBtn.addEventListener('click',()=>{
 appInitialized=false;
+isAppUnlocked = false;
+showModal('pin-setup-modal', false);
 auth.signOut();
 showModal('profile-view-modal',false);
 });
@@ -1199,17 +1578,11 @@ supportMessages.appendChild(bubble);
 supportMessages.scrollTop=supportMessages.scrollHeight;
 }
 function initializeApp(){
-showPanel('home-content');
-listenForContacts();
-populateAllFriendsList();
-listenForNotifications();
-appInitialized=true;
 }
 async function populateAllFriendsList(){
 if(!callsContent||!currentUser||!currentUserData)return;
 callsContent.innerHTML='';
 try{
-// STRICTLY fetch only from contacts
 const contactsSnap=await db.ref('contacts/'+currentUser.uid).once('value');
 if(!contactsSnap.exists()||!contactsSnap.hasChildren()){
 callsContent.innerHTML='<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No friends found. Add friends using their ID.</p>';
@@ -1279,6 +1652,7 @@ showNotification('User not found.',5000);
 });
 function sortChatList(){
 const chatItems=Array.from(homeContent.querySelectorAll('.list-item'));
+// --- পরিবর্তন ৩: শুধুমাত্র দৃশ্যমান আইটেম দিয়ে লিস্ট সর্ট ও চেক করা ---
 chatItems.sort((a,b)=>{
 const uidA=a.dataset.uid;
 const uidB=b.dataset.uid;
@@ -1289,7 +1663,8 @@ return timeB-timeA;
 chatItems.forEach(item=>homeContent.appendChild(item));
 const noChatsMsgId='no-chats-message';
 let noChatsMsg=homeContent.querySelector(`#${noChatsMsgId}`);
-const allHiddenOrEmpty=chatItems.length===0||chatItems.every(item=>item.classList.contains('hidden'));
+const visibleItems = chatItems.filter(item => !item.classList.contains('hidden'));
+const allHiddenOrEmpty = visibleItems.length === 0;
 if(allHiddenOrEmpty&&!noChatsMsg){
 noChatsMsg=document.createElement('p');
 noChatsMsg.id=noChatsMsgId;
@@ -1300,66 +1675,6 @@ noChatsMsg.textContent='No active chats. Start a new one from the "ALL FRIEND" t
 homeContent.appendChild(noChatsMsg);
 }else if(!allHiddenOrEmpty&&noChatsMsg){
 noChatsMsg.remove();
-}
-}
-function createOrUpdateContactItem(contact,isFriendList=false){
-const listContainer=isFriendList?callsContent:homeContent;
-const existingItem=listContainer.querySelector(`.list-item[data-uid="${contact.uid}"]`);
-if(!isFriendList&&currentUserData.blockedUsers&&currentUserData.blockedUsers[contact.uid]){
-if(existingItem){
-existingItem.remove();
-}
-return;
-}
-const lastMsgData=lastMessageTimestamps[contact.uid]||{text:'Tap to chat',timestamp:0};
-const lastMsgText=lastMsgData.text;
-const timestamp=lastMsgData.timestamp;
-if(existingItem){
-existingItem.querySelector('.item-emoji').innerHTML=getProfilePicHTML(contact);
-existingItem.querySelector('.item-name-text').textContent=contact.name;
-const badgeContainer=existingItem.querySelector('.item-name.name-with-badge');
-const oldBadge=badgeContainer.querySelector('.verified-badge');
-if(oldBadge)oldBadge.remove();
-badgeContainer.insertAdjacentHTML('beforeend',getVerifiedBadgeHTML(contact));
-if(!isFriendList){
-existingItem.querySelector('.item-subtext').textContent=lastMsgText;
-existingItem.classList.toggle('hidden',lastMsgData.timestamp===0);
-}
-}else{
-const item=document.createElement('div');
-item.className='list-item';
-if(!isFriendList&&lastMsgData.timestamp===0){
-item.classList.add('hidden');
-}
-item.dataset.uid=contact.uid;
-let itemHTML=`
-<div class="item-emoji">${getProfilePicHTML(contact)}</div>
-<div class="item-details">
-<div class="item-name name-with-badge">
-<span class="item-name-text">${contact.name}</span>
-${getVerifiedBadgeHTML(contact)}
-</div>
-`;
-if(isFriendList){
-itemHTML+=`</div>`;
-}else{
-itemHTML+=`
-<div class="item-subtext" id="subtext-${contact.uid}">${lastMsgText}</div>
-</div>
-<div class="item-actions">
-<span class="badge hidden" id="badge-${contact.uid}"></span>
-</div>
-`;
-}
-item.innerHTML=itemHTML+'</div>';
-item.addEventListener('click',(e)=>{
-if(e.target.closest('.verified-badge'))return;
-openChat(contact);
-});
-listContainer.appendChild(item);
-}
-if(!isFriendList){
-sortChatList();
 }
 }
 function listenForLastMessageUpdates(contactId){
@@ -1383,6 +1698,7 @@ timestamp:msg.timestamp
 const item=homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
 if(item){
 item.querySelector('.item-subtext').textContent=`${sender}${msg.text}`;
+// --- পরিবর্তন ৪: নতুন মেসেজ আসলে চ্যাট শো করা ---
 item.classList.remove('hidden');
 sortChatList();
 }
@@ -1402,6 +1718,7 @@ if(item)item.querySelector('.item-subtext').textContent=`${sender}${msg.text}`;
 lastMessageTimestamps[contactId]={text:'Tap to chat',timestamp:0};
 if(item){
 item.querySelector('.item-subtext').textContent='Tap to chat';
+// --- পরিবর্তন ৫: মেসেজ মুছে গেলে চ্যাট লুকানো ---
 item.classList.add('hidden');
 }
 }
@@ -1458,21 +1775,17 @@ const chatId=getChatId(myUid,partnerId);
 updates[`messages/${chatId}`]=null;
 updates[`unreadCounts/${myUid}/${partnerId}`]=null;
 updates[`unreadCounts/${partnerId}/${myUid}`]=null;
-// updates[`contacts/${myUid}/${partnerId}`]=null; // <--- এই লাইনটি এবং নিচের লাইনটি মুছে দেওয়া হয়েছে
-// updates[`contacts/${partnerId}/${myUid}`]=null; // <--- এই লাইনটি মুছে দেওয়া হয়েছে
-
 db.ref().update(updates)
 .then(()=>{
 showNotification('Chat history removed.');
-// চ্যাট লিস্ট থেকে আইটেমটি ম্যানুয়ালি সরানোর জন্য
 const chatItem = homeContent.querySelector(`.list-item[data-uid="${partnerId}"]`);
 if(chatItem){
-    chatItem.classList.add('hidden');
-    // যেহেতু চ্যাট ডেটা মুছে গেছে, তাই এর লাস্ট মেসেজ টাইমস্ট্যাম্প শূন্য করে দিতে হবে
+    // --- পরিবর্তন ৬: চ্যাট হিস্টোরি ডিলিট হলে চ্যাট লুকানো ---
     lastMessageTimestamps[partnerId] = {text:'Tap to chat', timestamp:0};
+    chatItem.querySelector('.item-subtext').textContent = 'Tap to chat';
+    chatItem.classList.add('hidden');
     sortChatList();
 }
-// Unread count আপডেট করা নিশ্চিত করা
 db.ref(`unreadCounts/${myUid}/${partnerId}`).remove();
 })
 .catch(err=>{
@@ -1489,7 +1802,6 @@ history.pushState(null,'',window.location.pathname);
 function openChat(partner){
 const myUid=currentUser.uid;
 const partnerId=partner.uid;
-// REMOVED AUTO-ADD CONTACT LOGIC HERE TO ENSURE MANUAL ADDS ONLY
 currentChatPartner=partner;
 chatHeaderPicWrapper.innerHTML=getProfilePicHTML(partner,'1.8rem');
 chatHeaderName.innerHTML=`<span class="item-name-text">${partner.name}</span>${getVerifiedBadgeHTML(partner)}`;
@@ -1889,7 +2201,6 @@ partnerModalDeleteChatBtn.addEventListener('click',async()=>{
 if(currentChatPartner){
 const isConfirmed=await customConfirm('Are you sure you want to delete this chat and remove from chat list?');
 if(isConfirmed){
-// এখানে deleteChatHistory ফাংশন কল করা হয়েছে
 deleteChatHistory(currentChatPartner.uid); 
 showModal('partner-profile-modal',false);
 if(history.state)history.back();
