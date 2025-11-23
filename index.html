@@ -8,26 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{
-    --wa-header-bg:#FF0055;
-    --wa-accent-blue:#34B7F1;
-    --wa-message-out-bg:#FFF4DF;
-    --wa-message-in-bg:#A5F1F6;
-    --wa-app-bg:#AA00FF;
-    --wa-chat-bg:#0000ff;
-    --wa-icon-color:#f0f2f5;
-    --wa-text-primary:#111b21;
-    --wa-text-secondary:#667781;
-    --wa-border-color:#EFD1D4;
-    --wa-active-tab-indicator:var(--wa-accent-blue);
-    --wa-button-color:#00FF55;
-    --wa-link-color:#00a8e8;
-    --wa-shadow:rgba(17,27,33,0.15);
-    --call-end-red:#e91e63;
-    --modal-bg:#FBE8ED;
-    --modal-border-radius:20px;
-    --modal-shadow:12px 12px 24px #bebebe, -12px -12px 24px #ffffff;
-}
+:root{--wa-header-bg:#FF0055;--wa-accent-blue:#34B7F1;--wa-message-out-bg:#FFF4DF;--wa-message-in-bg:#A5F1F6;--wa-app-bg:#AA00FF;--wa-chat-bg:#0000ff;--wa-icon-color:#f0f2f5;--wa-text-primary:#111b21;--wa-text-secondary:#667781;--wa-border-color:#EFD1D4;--wa-active-tab-indicator:var(--wa-accent-blue);--wa-button-color:#00FF55;--wa-link-color:#00a8e8;--wa-shadow:rgba(17,27,33,0.15);--call-end-red:#e91e63;--modal-bg:#FBE8ED;--modal-border-radius:20px;--modal-shadow:12px 12px 24px #bebebe, -12px -12px 24px #ffffff;}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;}
 html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;display:flex;align-items:center;justify-content:center;color:var(--wa-text-primary);}
 .hidden{display:none!important;}
@@ -71,12 +52,6 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 #home-content.active{display:flex;flex-direction:column;}
 .list-item{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--wa-border-color);cursor:pointer;position:relative;overflow:hidden;background-color:#fff;transition:background-color 0.2s;}
 .list-item:hover{background-color:var(--wa-app-bg);}
-.delete-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(233,30,99,0.95);display:flex;align-items:center;justify-content:center;gap:15px;transform:translateX(100%);transition:transform 0.3s ease-out;z-index:5;}
-.list-item.deleting .delete-overlay{transform:translateX(0);}
-.delete-button,.cancel-delete-button{background:none;border:2px solid white;color:white;padding:8px 16px;border-radius:20px;font-weight:500;font-size:0.9rem;cursor:pointer;transition:background 0.2s;}
-.delete-button:hover,.cancel-delete-button:hover{background:rgba(255,255,255,0.2);}
-.item-emoji,.item-details,.item-actions{transition:opacity 0.3s ease-out;z-index:10;}
-.list-item.deleting .item-emoji,.list-item.deleting .item-details,.list-item.deleting .item-actions{opacity:0.2;pointer-events:none;}
 .item-emoji{font-size:2.5rem;margin-right:12px;background:var(--wa-border-color);width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1;overflow:hidden;}
 .item-emoji img{width:100%;height:100%;object-fit:cover;}
 .item-emoji span{font-size:2.5rem;line-height:1;user-select:none;color:var(--wa-text-secondary);}
@@ -85,20 +60,14 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 .item-subtext{font-size:0.9rem;color:var(--wa-text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .item-actions{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:0.8rem;color:var(--wa-text-secondary);}
 .item-actions .badge{position:static;}
-.notification-actions{display:flex;gap:8px;margin-top:8px;}
-.notif-btn{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;font-weight:500;}
-.notif-btn.accept{background-color:var(--wa-button-color);color:white;}
-.notif-btn.reject{background-color:var(--wa-border-color);color:var(--wa-text-primary);}
 #chat-view{background-color:var(--wa-chat-bg);z-index:60;}
 .chat-header{display:flex;align-items:center;gap:8px;background-color:var(--wa-header-bg);color:var(--wa-icon-color);padding:10px;flex-shrink:0;}
 .chat-contact-info{display:flex;align-items:center;gap:10px;flex:1;cursor:pointer;}
 .chat-contact-info .item-emoji{width:40px;height:40px;font-size:1.8rem;margin-right:0;}
-.chat-contact-info .item-emoji span{font-size:1.8rem;}
 .chat-contact-details .item-name{color:var(--wa-icon-color);font-size:1.1rem;}
 .chat-contact-details .item-subtext{color:rgba(240,242,245,0.8);font-size:0.8rem;}
-.chat-header-icons{display:flex;}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px;background-image:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23bdbdbd' fill-opacity='0.15' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");}
-.message-bubble{padding:8px 12px;border-radius:12px;max-width:75%;word-wrap:break-word;box-shadow:0 1px 1px var(--wa-shadow);position:relative; user-select: none; -webkit-user-select: none;}
+.message-bubble{padding:8px 12px;border-radius:12px;max-width:75%;word-wrap:break-word;box-shadow:0 1px 1px var(--wa-shadow);position:relative;user-select:none;-webkit-user-select:none;}
 .message-sent{align-self:flex-end;background-color:var(--wa-message-out-bg);border-top-right-radius:4px;}
 .message-received{align-self:flex-start;background-color:var(--wa-message-in-bg);border-top-left-radius:4px;}
 .message-content-wrapper{display:flex;align-items:flex-end;}
@@ -109,9 +78,16 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 #chat-input-container{display:flex;align-items:center;gap:8px;padding:8px 12px;background-color:var(--wa-app-bg);flex-shrink:0;}
 #chat-input{flex:1;padding:12px 18px;border:none;border-radius:24px;font-size:1rem;}
 #chat-input:focus{outline:none;}
-#chat-send-btn{background-color:var(--wa-button-color);border-radius:50%;padding:12px;transition:background-color 0.2s;}
-#chat-send-btn:hover{background-color:#006652;}
-#chat-send-btn svg{fill:white;width:20px;height:20px;}
+#chat-send-btn, #voice-record-btn{background-color:var(--wa-button-color);border-radius:50%;padding:12px;transition:background-color 0.2s;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+#chat-send-btn:hover, #voice-record-btn:hover{background-color:#006652;}
+#chat-send-btn svg, #voice-record-btn svg{fill:white;width:20px;height:20px;}
+#recording-ui{display:flex;align-items:center;background:#fff;padding:5px 15px;border-radius:20px;margin-right:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);flex:1;}
+.recording-dot{width:10px;height:10px;background-color:red;border-radius:50%;margin-left:8px;animation:blink 1s infinite;}
+@keyframes blink{0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
+.audio-player{width:200px;height:40px;}
+#chat-input-container.recording #chat-input{display:none;}
+#chat-input-container.recording #voice-record-btn{background-color:#ffdddd;}
+#chat-input-container.recording #voice-record-btn svg{fill:red;}
 .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;max-width:450px;max-height:950px;margin:auto;}
 .modal-content{background:var(--modal-bg);padding:30px;border-radius:var(--modal-border-radius);width:90%;max-width:380px;box-shadow:var(--modal-shadow);display:flex;flex-direction:column;gap:20px;transform:scale(1);transition:transform 0.3s ease-out;color:#555;border:none;}
 .modal.hidden .modal-content{transform:scale(0.95);opacity:0;}
@@ -212,147 +188,47 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 #support-send-btn{width:50px;height:50px;border:none;border-radius:50%;background:#f0f2f5;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:6px 6px 12px #bebebe, -6px -6px 12px #ffffff;transition:all 0.2s;}
 #support-send-btn:active{box-shadow:inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;}
 #support-send-btn svg{width:24px;height:24px;fill:#555;margin-left:4px;}
-
-/* --- নতুন ক্যালকুলেটর CSS --- */
-#calculator-lock-view {
-    width: 100%;
-    height: 100%;
-    max-width: 450px;
-    max-height: 950px;
-    background-color: #f0f2f5;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 20px;
-    z-index: 50;
-    position: absolute; /* .view ক্লাসের সাথে সামঞ্জস্য রাখা হয়েছে */
-    top: 0;
-    left: 0;
-}
-#calculator-screen {
-    width: 100%;
-    height: 120px;
-    background: #f0f2f5;
-    border-radius: 15px;
-    margin-bottom: 20px;
-    box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
-    font-size: 3rem;
-    text-align: right;
-    padding: 20px;
-    color: #444;
-    overflow-x: auto;
-    white-space: nowrap;
-    line-height: 80px;
-}
-.calculator-buttons {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-}
-.calc-btn {
-    width: 100%;
-    height: 75px;
-    border-radius: 20px;
-    background-color: #f0f2f5;
-    box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
-    border: none;
-    font-size: 1.8rem;
-    font-weight: 500;
-    color: #555;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-.calc-btn:active {
-    box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;
-}
-.calc-btn.operator {
-    color: var(--wa-header-bg); /* Pink */
-    font-weight: 700;
-}
-.calc-btn.equals {
-    background-color: var(--wa-button-color); /* Green */
-    color: white;
-    font-size: 2rem;
-    box-shadow: 6px 6px 12px #88ff88, -6px -6px 12px #ffffff;
-}
-.calc-btn.equals:active {
-    box-shadow: inset 4px 4px 8px #008800, inset -4px -4px 8px #33ff33;
-}
-/* --- PIN Setup Modal (Neumorphism Style) --- */
-#pin-setup-modal .modal-content {
-    background: #f0f2f5;
-    box-shadow: 12px 12px 24px #bebebe, -12px -12px 24px #ffffff;
-}
-#pin-input-field {
-    width: 100%;
-    padding: 15px;
-    margin: 20px 0 10px;
-    border: none;
-    border-radius: 10px;
-    box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
-    font-size: 1.5rem;
-    text-align: center;
-    letter-spacing: 5px;
-}
-#set-pin-button {
-    width: 100%;
-    padding: 15px;
-    background: var(--wa-button-color);
-    color: white;
-    border: none;
-    outline: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 6px 6px 12px #88ff88, -6px -6px 12px #ffffff;
-    transition: all 0.2s ease-in-out;
-}
-#set-pin-button:hover {
-    box-shadow: 8px 8px 16px #88ff88, -8px -8px 16px #ffffff;
-}
-#set-pin-button:active {
-    box-shadow: inset 6px 6px 12px #008800, inset -6px -6px 12px #33ff33;
-}
-#pin-setup-error {
-    color: var(--call-end-red);
-    font-size: 0.9rem;
-    text-align: center;
-    min-height: 1.2em;
-}
+#calculator-lock-view{width:100%;height:100%;max-width:450px;max-height:950px;background-color:#f0f2f5;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:20px;z-index:50;position:absolute;top:0;left:0;}
+#calculator-screen{width:100%;height:120px;background:#f0f2f5;border-radius:15px;margin-bottom:20px;box-shadow:inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;font-size:3rem;text-align:right;padding:20px;color:#444;overflow-x:auto;white-space:nowrap;line-height:80px;}
+.calculator-buttons{width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.calc-btn{width:100%;height:75px;border-radius:20px;background-color:#f0f2f5;box-shadow:6px 6px 12px #bebebe,-6px -6px 12px #ffffff;border:none;font-size:1.8rem;font-weight:500;color:#555;cursor:pointer;transition:all 0.2s ease-in-out;}
+.calc-btn:active{box-shadow:inset 4px 4px 8px #bebebe,inset -4px -4px 8px #ffffff;}
+.calc-btn.operator{color:var(--wa-header-bg);font-weight:700;}
+.calc-btn.equals{background-color:var(--wa-button-color);color:white;font-size:2rem;box-shadow:6px 6px 12px #88ff88,-6px -6px 12px #ffffff;}
+.calc-btn.equals:active{box-shadow:inset 4px 4px 8px #008800,inset -4px -4px 8px #33ff33;}
+#pin-setup-modal .modal-content{background:#f0f2f5;box-shadow:12px 12px 24px #bebebe,-12px -12px 24px #ffffff;}
+#pin-input-field{width:100%;padding:15px;margin:20px 0 10px;border:none;border-radius:10px;box-shadow:inset 6px 6px 12px #bebebe,inset -6px -6px 12px #ffffff;font-size:1.5rem;text-align:center;letter-spacing:5px;}
+#set-pin-button{width:100%;padding:15px;background:var(--wa-button-color);color:white;border:none;outline:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:6px 6px 12px #88ff88,-6px -6px 12px #ffffff;transition:all 0.2s ease-in-out;}
+#set-pin-button:hover{box-shadow:8px 8px 16px #88ff88,-8px -8px 16px #ffffff;}
+#set-pin-button:active{box-shadow:inset 6px 6px 12px #008800,inset -6px -6px 12px #33ff33;}
+#pin-setup-error{color:var(--call-end-red);font-size:0.9rem;text-align:center;min-height:1.2em;}
 </style>
 </head>
 <body>
 <div id="app-container">
 <div id="calculator-lock-view" class="view">
-    <div id="calculator-screen">0</div>
-    <div class="calculator-buttons">
-        <button class="calc-btn operator" data-value="C">AC</button>
-        <button class="calc-btn operator" data-value="D">DEL</button>
-        <button class="calc-btn operator" data-value="%">%</button>
-        <button class="calc-btn operator" data-value="/">÷</button>
-        
-        <button class="calc-btn" data-value="7">7</button>
-        <button class="calc-btn" data-value="8">8</button>
-        <button class="calc-btn" data-value="9">9</button>
-        <button class="calc-btn operator" data-value="*">×</button>
-
-        <button class="calc-btn" data-value="4">4</button>
-        <button class="calc-btn" data-value="5">5</button>
-        <button class="calc-btn" data-value="6">6</button>
-        <button class="calc-btn operator" data-value="-">-</button>
-
-        <button class="calc-btn" data-value="1">1</button>
-        <button class="calc-btn" data-value="2">2</button>
-        <button class="calc-btn" data-value="3">3</button>
-        <button class="calc-btn operator" data-value="+">+</button>
-
-        <button class="calc-btn" data-value="0" style="grid-column: span 2;">0</button>
-        <button class="calc-btn" data-value=".">.</button>
-        <button class="calc-btn equals" data-value="=">=</button>
-    </div>
+<div id="calculator-screen">0</div>
+<div class="calculator-buttons">
+<button class="calc-btn operator" data-value="C">AC</button>
+<button class="calc-btn operator" data-value="D">DEL</button>
+<button class="calc-btn operator" data-value="%">%</button>
+<button class="calc-btn operator" data-value="/">÷</button>
+<button class="calc-btn" data-value="7">7</button>
+<button class="calc-btn" data-value="8">8</button>
+<button class="calc-btn" data-value="9">9</button>
+<button class="calc-btn operator" data-value="*">×</button>
+<button class="calc-btn" data-value="4">4</button>
+<button class="calc-btn" data-value="5">5</button>
+<button class="calc-btn" data-value="6">6</button>
+<button class="calc-btn operator" data-value="-">-</button>
+<button class="calc-btn" data-value="1">1</button>
+<button class="calc-btn" data-value="2">2</button>
+<button class="calc-btn" data-value="3">3</button>
+<button class="calc-btn operator" data-value="+">+</button>
+<button class="calc-btn" data-value="0" style="grid-column: span 2;">0</button>
+<button class="calc-btn" data-value=".">.</button>
+<button class="calc-btn equals" data-value="=">=</button>
+</div>
 </div>
 <div id="auth-view" class="view hidden">
 <div class="auth-form-container">
@@ -380,12 +256,8 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 <p class="app-developer">𝐀𝐏𝐏 𝐃𝐄𝐕𝐀𝐋𝐎𝐏𝐄𝐑 𝐊𝐀𝐖𝐒𝐀𝐑</p>
 </div>
 <div class="header-top-icons">
-<button id="add-friend-btn" class="icon-btn" title="Add Friend">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-</button>
-<button id="menu-btn" class="icon-btn" title="Profile">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-</button>
+<button id="add-friend-btn" class="icon-btn" title="Add Friend"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></button>
+<button id="menu-btn" class="icon-btn" title="Profile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></button>
 <button id="notification-btn" class="icon-btn" title="Notifications">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
 <span id="notification-badge" class="badge hidden"></span>
@@ -393,31 +265,20 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 </div>
 </div>
 <nav class="header-nav">
-<div id="nav-home" class="nav-tab active">
-CHATS <span id="chats-badge" class="badge hidden"></span>
-</div>
-<div id="nav-calls" class="nav-tab">
-ALL FRIEND
-</div>
+<div id="nav-home" class="nav-tab active">CHATS <span id="chats-badge" class="badge hidden"></span></div>
+<div id="nav-calls" class="nav-tab">ALL FRIEND</div>
 </nav>
 </header>
 <main id="main-content">
-<div id="home-content" class="content-panel active">
-</div>
-<div id="notifications-content" class="content-panel">
-</div>
-<div id="calls-content" class="content-panel">
-</div>
+<div id="home-content" class="content-panel active"></div>
+<div id="notifications-content" class="content-panel"></div>
+<div id="calls-content" class="content-panel"></div>
 </main>
-<button id="support-fab-btn" title="Support">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
-</button>
+<button id="support-fab-btn" title="Support"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg></button>
 </div>
 <div id="chat-view" class="view hidden">
 <header class="chat-header">
-<button id="chat-back-btn" class="icon-btn" title="Back">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-</button>
+<button id="chat-back-btn" class="icon-btn" title="Back"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
 <div id="chat-header-info" class="chat-contact-info">
 <div id="chat-header-pic-wrapper" class="item-emoji"></div>
 <div class="chat-contact-details">
@@ -425,13 +286,19 @@ ALL FRIEND
 <div id="chat-header-status" class="item-subtext"></div>
 </div>
 </div>
-<div class="chat-header-icons">
-</div>
+<div class="chat-header-icons"></div>
 </header>
-<div id="chat-messages">
-</div>
+<div id="chat-messages"></div>
 <footer id="chat-input-container">
+<div id="recording-ui" class="hidden">
+<span id="recording-timer">00:00</span>
+<span class="recording-dot"></span>
+<button id="cancel-recording-btn" style="color:red;margin-left:10px;border:none;background:none;cursor:pointer;font-weight:bold;">Cancel</button>
+</div>
 <input type="text" id="chat-input" placeholder="Type a message...">
+<button id="voice-record-btn" class="icon-btn" title="Record Voice">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+</button>
 <button id="chat-send-btn" class="icon-btn" title="Send">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
 </button>
@@ -439,34 +306,25 @@ ALL FRIEND
 </div>
 <div id="notification-view" class="view hidden">
 <header class="neumorphism-header">
-<button id="notification-back-btn" class="neumorphism-icon-btn">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-</button>
+<button id="notification-back-btn" class="neumorphism-icon-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
 <h2>Notifications</h2>
 </header>
-<main id="notification-list-content">
-</main>
+<main id="notification-list-content"></main>
 </div>
 <div id="support-view" class="view hidden">
 <header class="neumorphism-header">
-<button id="support-back-btn" class="neumorphism-icon-btn">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-</button>
+<button id="support-back-btn" class="neumorphism-icon-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
 <h2>Support</h2>
 </header>
-<main id="support-messages">
-</main>
+<main id="support-messages"></main>
 <footer id="support-input-container">
 <input type="text" id="support-input" placeholder="Type your problem...">
-<button id="support-send-btn">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-</button>
+<button id="support-send-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
 </footer>
 </div>
 <div id="add-friend-modal" class="modal hidden">
 <div class="modal-content">
 <h2>ADD FRIEND</h2>
-<p></p>
 <form id="add-friend-form">
 <input type="text" id="friend-id-input" placeholder="Friend ID" required>
 <button type="submit">ADD FRIEND</button>
@@ -478,13 +336,10 @@ ALL FRIEND
 <div id="profile-view-content" class="modal-content">
 <h2>SETTINGS</h2>
 <div class="profile-info-frame">
-<div id="profile-pic-wrapper" class="item-emoji" title="Click to change picture">
-</div>
+<div id="profile-pic-wrapper" class="item-emoji" title="Click to change picture"></div>
 <div class="profile-name-wrapper">
 <h3 id="profile-view-name">YOUR NAME</h3>
-<button id="profile-edit-name-btn" title="Edit Name">
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>
-</button>
+<button id="profile-edit-name-btn" title="Edit Name"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg></button>
 </div>
 <div id="profile-edit-name-form" class="hidden">
 <input type="text" id="profile-name-input" placeholder="New Name">
@@ -494,118 +349,63 @@ ALL FRIEND
 </div>
 <div class="profile-id-frame">
 <div class="id-wrapper">
-<div class="id-text-wrapper">
-<p>YOUR ID</p>
-<span id="profile-user-id-text"></span>
+<div class="id-text-wrapper"><p>YOUR ID</p><span id="profile-user-id-text"></span></div>
+<button id="profile-copy-id-btn" title="Copy ID"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0 -1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
 </div>
-<button id="profile-copy-id-btn" title="Copy ID">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0 -1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-</button>
-</div>
-<div class="id-wrapper" style="margin-top: 10px; border-top: 1px solid #d1d1d1; padding-top: 10px;">
-<div class="id-text-wrapper">
-<p>EMAIL</p>
-<span id="profile-user-email-text"></span>
-</div>
-<button id="profile-copy-email-btn" title="Copy Email">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0 -1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-</button>
+<div class="id-wrapper" style="margin-top:10px;border-top:1px solid #d1d1d1;padding-top:10px;">
+<div class="id-text-wrapper"><p>EMAIL</p><span id="profile-user-email-text"></span></div>
+<button id="profile-copy-email-btn" title="Copy Email"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0 -1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
 </div>
 </div>
-<div class="profile-blocked-frame">
-<strong>Blocked Users</strong>
-<div id="blocked-users-list">
-</div>
-</div>
-<div class="profile-button-group">
-<button id="logout-btn">Log Out</button>
-<button type="button" class="close-modal-btn">Close</button>
-</div>
+<div class="profile-blocked-frame"><strong>Blocked Users</strong><div id="blocked-users-list"></div></div>
+<div class="profile-button-group"><button id="logout-btn">Log Out</button><button type="button" class="close-modal-btn">Close</button></div>
 </div>
 </div>
 <div id="custom-prompt-modal" class="modal hidden">
 <div class="modal-content">
 <h2 id="prompt-modal-title">Enter Value</h2>
-<form id="custom-prompt-form">
-<input type="text" id="prompt-input" placeholder="Value" required>
-<button type="submit">SUBMIT</button>
-<button type="button" class="close-modal-btn">CANCEL</button>
-</form>
+<form id="custom-prompt-form"><input type="text" id="prompt-input" placeholder="Value" required><button type="submit">SUBMIT</button><button type="button" class="close-modal-btn">CANCEL</button></form>
 </div>
 </div>
 <div id="partner-profile-modal" class="modal hidden">
 <div class="modal-content">
-<h2 id="partner-modal-name" class="name-with-badge" style="justify-content: center; font-size: 1.6rem;">Friend's Profile</h2>
+<h2 id="partner-modal-name" class="name-with-badge" style="justify-content:center;font-size:1.6rem;">Friend's Profile</h2>
 <div class="profile-id-frame">
 <div class="id-wrapper">
-<div class="id-text-wrapper">
-<p>USER ID</p>
-<span id="partner-modal-id-text"></span>
-</div>
-<button id="partner-modal-copy-id-btn" title="Copy ID">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0 -1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-</button>
+<div class="id-text-wrapper"><p>USER ID</p><span id="partner-modal-id-text"></span></div>
+<button id="partner-modal-copy-id-btn" title="Copy ID"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0 -1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
 </div>
 </div>
-<div class="profile-button-group">
-<button type="button" id="partner-modal-delete-chat-btn">Delete Chat</button>
-<button type="button" id="partner-modal-block-btn">Block User</button>
-<button type="button" class="close-modal-btn">Close</button>
-</div>
-</div>
+<div class="profile-button-group"><button type="button" id="partner-modal-delete-chat-btn">Delete Chat</button><button type="button" id="partner-modal-block-btn">Block User</button><button type="button" class="close-modal-btn">Close</button></div>
 </div>
 </div>
 <div id="custom-confirm-modal" class="modal hidden">
-<div class="neumorphism-modal-content">
-<p id="custom-confirm-message">Are you sure?</p>
-<div class="neumorphism-button-group">
-<button id="custom-confirm-btn-no">NO</button>
-<button id="custom-confirm-btn-yes">YES</button>
-</div>
-</div>
+<div class="neumorphism-modal-content"><p id="custom-confirm-message">Are you sure?</p><div class="neumorphism-button-group"><button id="custom-confirm-btn-no">NO</button><button id="custom-confirm-btn-yes">YES</button></div></div>
 </div>
 <div id="custom-alert-modal" class="modal hidden">
-<div class="neumorphism-modal-content">
-<p id="custom-alert-message"></p>
-<div class="neumorphism-button-group">
-<button id="custom-alert-btn-ok">ঠিক আছে</button>
-</div>
-</div>
+<div class="neumorphism-modal-content"><p id="custom-alert-message"></p><div class="neumorphism-button-group"><button id="custom-alert-btn-ok">ঠিক আছে</button></div></div>
 </div>
 <div id="verified-info-modal" class="modal hidden">
 <div class="neumorphism-modal-content">
-<div style="text-align: center; margin-bottom: 10px;">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" style="width: 50px; height: 50px; fill: var(--wa-accent-blue);">
-<path d="M6.75 12.13l-3.48-3.48c-.3-.3-.78-.3-1.06 0s-.3.78 0 1.06l4 4c.3.3.78.3 1.06 0l8.5-8.5c.3-.3.3-.78 0-1.06s-.78-.3-1.06 0L6.75 12.13z"/>
-</svg>
-</div>
-<p id="verified-info-message" style="text-align: center; color: #555;">
-‎ভেরিফাই ব্যাজ কিছু গুরুত্বপূর্ণ ইউজার কে দেওয়া হয়..!
-</p>
-<div class="neumorphism-button-group">
-<button id="verified-info-btn-ok">ঠিক আছে</button>
-</div>
+<div style="text-align:center;margin-bottom:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" style="width:50px;height:50px;fill:var(--wa-accent-blue);"><path d="M6.75 12.13l-3.48-3.48c-.3-.3-.78-.3-1.06 0s-.3.78 0 1.06l4 4c.3.3.78.3 1.06 0l8.5-8.5c.3-.3.3-.78 0-1.06s-.78-.3-1.06 0L6.75 12.13z"/></svg></div>
+<p id="verified-info-message" style="text-align:center;color:#555;">‎ভেরিফাই ব্যাজ কিছু গুরুত্বপূর্ণ ইউজার কে দেওয়া হয়..!</p>
+<div class="neumorphism-button-group"><button id="verified-info-btn-ok">ঠিক আছে</button></div>
 </div>
 </div>
 <div id="message-options-modal" class="modal hidden">
 <div class="neumorphism-modal-content">
-<h3 style="text-align:center; color:#555; margin-bottom:10px;">Message Options</h3>
-<div class="neumorphism-button-group vertical">
-<button id="msg-opt-copy">Copy Text</button>
-<button id="msg-opt-delete-me">Delete only me</button>
-<button id="msg-opt-delete-everyone" class="hidden">Delete everyone</button>
-<button id="msg-opt-cancel">Cancel</button>
-</div>
+<h3 style="text-align:center;color:#555;margin-bottom:10px;">Message Options</h3>
+<div class="neumorphism-button-group vertical"><button id="msg-opt-copy">Copy Text</button><button id="msg-opt-delete-me">Delete only me</button><button id="msg-opt-delete-everyone" class="hidden">Delete everyone</button><button id="msg-opt-cancel">Cancel</button></div>
 </div>
 </div>
 <div id="pin-setup-modal" class="modal hidden">
-    <div class="modal-content">
-        <h2>গোপন কোড সেট করুন</h2>
-        <p>এটি আপনার সিক্রেট অ্যাপের প্রবেশ কোড হবে। দয়া করে ৪-সংখ্যার কোড দিন।</p>
-        <input type="password" id="pin-input-field" placeholder="৪-সংখ্যার গোপন কোড" maxlength="4" autocomplete="off" inputmode="numeric" required>
-        <button id="set-pin-button">কোড সেট করুন</button>
-        <p id="pin-setup-error" class="error-message"></p>
-    </div>
+<div class="modal-content">
+<h2>গোপন কোড সেট করুন</h2>
+<p>এটি আপনার সিক্রেট অ্যাপের প্রবেশ কোড হবে। দয়া করে ৪-সংখ্যার কোড দিন।</p>
+<input type="password" id="pin-input-field" placeholder="৪-সংখ্যার গোপন কোড" maxlength="4" autocomplete="off" inputmode="numeric" required>
+<button id="set-pin-button">কোড সেট করুন</button>
+<p id="pin-setup-error" class="error-message"></p>
+</div>
 </div>
 <div id="notification-container"></div>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -617,1610 +417,457 @@ const firebaseConfig={apiKey:"AIzaSyBh7oN1SOlJvTdV4ld5JRP6wBRWu-DL_nQ",authDomai
 firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth();
 const db=firebase.database();
-let currentUser=null;
-let currentUserData=null;
-let appInitialized=false;
-let authStateInitialized=false;
-let authStateResolve=null;
+let currentUser=null,currentUserData=null,appInitialized=false,authStateInitialized=false,authStateResolve=null;
 const authReadyPromise=new Promise(resolve=>{authStateResolve=resolve;});
 let userDataResolve=null;
 const userDataReadyPromise=new Promise(resolve=>{userDataResolve=resolve;});
-let currentChatPartner=null;
-let currentChatListener=null;
-let unreadListeners={};
-let contactListeners={};
-let lastMessageTimestamps={};
-let messageElements={};
-let customPromptResolver=null;
-let customConfirmResolver=null;
-let customAlertResolver=null;
-const appContainer=document.getElementById('app-container');
-const authView=document.getElementById('auth-view');
-const mainView=document.getElementById('main-view');
-const chatView=document.getElementById('chat-view');
-const calculatorLockView = document.getElementById('calculator-lock-view');
-const allViews=document.querySelectorAll('.view');
-const addFriendModal=document.getElementById('add-friend-modal');
-const profileViewModal=document.getElementById('profile-view-modal');
-const customPromptModal=document.getElementById('custom-prompt-modal');
-const customPromptForm=document.getElementById('custom-prompt-form');
-const promptInput=document.getElementById('prompt-input');
-const pinSetupModal = document.getElementById('pin-setup-modal');
-const pinInputField = document.getElementById('pin-input-field');
-const setPinButton = document.getElementById('set-pin-button');
-const pinSetupError = document.getElementById('pin-setup-error');
-const allModals=document.querySelectorAll('.modal');
-const loginForm=document.getElementById('login-form');
-const signupForm=document.getElementById('signup-form');
-const addFriendBtn=document.getElementById('add-friend-btn');
-const menuBtn=document.getElementById('menu-btn');
-const navHome=document.getElementById('nav-home');
-const navCalls=document.getElementById('nav-calls');
-const homeContent=document.getElementById('home-content');
-const callsContent=document.getElementById('calls-content');
-const allNavTabs=document.querySelectorAll('.nav-tab');
-const allContentPanels=document.querySelectorAll('.content-panel');
-const chatsBadge=document.getElementById('chats-badge');
-const chatBackBtn=document.getElementById('chat-back-btn');
-const chatHeaderInfo=document.getElementById('chat-header-info');
-const chatHeaderPicWrapper=document.getElementById('chat-header-pic-wrapper');
-const chatHeaderName=document.getElementById('chat-header-name');
-const chatMessages=document.getElementById('chat-messages');
-const chatInput=document.getElementById('chat-input');
-const chatSendBtn=document.getElementById('chat-send-btn');
-const addFriendForm=document.getElementById('add-friend-form');
-const friendIdInput=document.getElementById('friend-id-input');
-const profilePicWrapper=document.getElementById('profile-pic-wrapper');
-const profileViewName=document.getElementById('profile-view-name');
-const profileViewEmail=document.getElementById('profile-view-email');
-const profileEditNameBtn=document.getElementById('profile-edit-name-btn');
-const profileEditNameForm=document.getElementById('profile-edit-name-form');
-const profileNameInput=document.getElementById('profile-name-input');
-const profileSaveNameBtn=document.getElementById('profile-save-name-btn');
-const profileUserIdText=document.getElementById('profile-user-id-text');
-const profileUserEmailText=document.getElementById('profile-user-email-text');
-const profileCopyIdBtn=document.getElementById('profile-copy-id-btn');
-const profileCopyEmailBtn=document.getElementById('profile-copy-email-btn');
-const notificationContainer=document.getElementById('notification-container');
-const partnerProfileModal=document.getElementById('partner-profile-modal');
-const partnerModalName=document.getElementById('partner-modal-name');
-const partnerModalIdText=document.getElementById('partner-modal-id-text');
-const partnerModalCopyIdBtn=document.getElementById('partner-modal-copy-id-btn');
-const blockedUsersListEl=document.getElementById('blocked-users-list');
-const partnerModalBlockBtn=document.getElementById('partner-modal-block-btn');
-const partnerModalDeleteChatBtn=document.getElementById('partner-modal-delete-chat-btn');
-const logoutBtn=document.getElementById('logout-btn');
-const showSignupBtn=document.getElementById('show-signup');
-const showLoginBtn=document.getElementById('show-login');
-const customConfirmModal=document.getElementById('custom-confirm-modal');
-const customConfirmMessage=document.getElementById('custom-confirm-message');
-const customConfirmBtnYes=document.getElementById('custom-confirm-btn-yes');
-const customConfirmBtnNo=document.getElementById('custom-confirm-btn-no');
-const customAlertModal=document.getElementById('custom-alert-modal');
-const customAlertMessage=document.getElementById('custom-alert-message');
-const customAlertBtnOk=document.getElementById('custom-alert-btn-ok');
-const verifiedInfoModal=document.getElementById('verified-info-modal');
-const verifiedInfoBtnOk=document.getElementById('verified-info-btn-ok');
-const messageOptionsModal=document.getElementById('message-options-modal');
-const msgOptCopy=document.getElementById('msg-opt-copy');
-const msgOptDeleteMe=document.getElementById('msg-opt-delete-me');
-const msgOptDeleteEveryone=document.getElementById('msg-opt-delete-everyone');
-const msgOptCancel=document.getElementById('msg-opt-cancel');
-let currentSelectedMsgId=null;
-let currentSelectedMsgText=null;
-let currentSelectedMsgIsSender=false;
-const notificationView=document.getElementById('notification-view');
-const notificationBtn=document.getElementById('notification-btn');
-const notificationBadge=document.getElementById('notification-badge');
-const notificationListContent=document.getElementById('notification-list-content');
-const notificationBackBtn=document.getElementById('notification-back-btn');
-let notificationListener=null;
-let unreadNotificationCount=0;
-const supportFabBtn=document.getElementById('support-fab-btn');
-const supportView=document.getElementById('support-view');
-const supportBackBtn=document.getElementById('support-back-btn');
-const supportMessages=document.getElementById('support-messages');
-const supportInput=document.getElementById('support-input');
-const supportSendBtn=document.getElementById('support-send-btn');
-let supportListener=null;
-
-const calculatorScreen = document.getElementById('calculator-screen');
-const calcButtons = document.querySelectorAll('#calculator-lock-view .calc-btn');
-let currentExpression = '0';
-let userSecretPin = null; 
-let isAppUnlocked = false;
-
-function resetCalculator() {
-    currentExpression = '0';
-    calculatorScreen.textContent = currentExpression;
+let currentChatPartner=null,currentChatListener=null,unreadListeners={},contactListeners={},lastMessageTimestamps={},messageElements={};
+let customPromptResolver=null,customConfirmResolver=null,customAlertResolver=null;
+let notificationListener=null,unreadNotificationCount=0,supportListener=null;
+let mediaRecorder=null,audioChunks=[],isRecording=false,recordingTimerInterval=null,autoStopTimeout=null;
+let currentSelectedMsgId=null,currentSelectedMsgText=null,currentSelectedMsgIsSender=false;
+const appContainer=document.getElementById('app-container'),authView=document.getElementById('auth-view'),mainView=document.getElementById('main-view'),chatView=document.getElementById('chat-view'),calculatorLockView=document.getElementById('calculator-lock-view'),allViews=document.querySelectorAll('.view');
+const addFriendModal=document.getElementById('add-friend-modal'),profileViewModal=document.getElementById('profile-view-modal'),customPromptModal=document.getElementById('custom-prompt-modal'),customPromptForm=document.getElementById('custom-prompt-form'),promptInput=document.getElementById('prompt-input'),pinSetupModal=document.getElementById('pin-setup-modal'),pinInputField=document.getElementById('pin-input-field'),setPinButton=document.getElementById('set-pin-button'),pinSetupError=document.getElementById('pin-setup-error'),allModals=document.querySelectorAll('.modal');
+const loginForm=document.getElementById('login-form'),signupForm=document.getElementById('signup-form'),addFriendBtn=document.getElementById('add-friend-btn'),menuBtn=document.getElementById('menu-btn'),navHome=document.getElementById('nav-home'),navCalls=document.getElementById('nav-calls'),homeContent=document.getElementById('home-content'),callsContent=document.getElementById('calls-content'),allNavTabs=document.querySelectorAll('.nav-tab'),allContentPanels=document.querySelectorAll('.content-panel'),chatsBadge=document.getElementById('chats-badge'),chatBackBtn=document.getElementById('chat-back-btn'),chatHeaderInfo=document.getElementById('chat-header-info'),chatHeaderPicWrapper=document.getElementById('chat-header-pic-wrapper'),chatHeaderName=document.getElementById('chat-header-name'),chatMessages=document.getElementById('chat-messages'),chatInput=document.getElementById('chat-input'),chatSendBtn=document.getElementById('chat-send-btn');
+const voiceRecordBtn=document.getElementById('voice-record-btn'),recordingUi=document.getElementById('recording-ui'),recordingTimer=document.getElementById('recording-timer'),cancelRecordingBtn=document.getElementById('cancel-recording-btn'),chatInputContainer=document.getElementById('chat-input-container');
+const addFriendForm=document.getElementById('add-friend-form'),friendIdInput=document.getElementById('friend-id-input'),profilePicWrapper=document.getElementById('profile-pic-wrapper'),profileViewName=document.getElementById('profile-view-name'),profileViewEmail=document.getElementById('profile-view-email'),profileEditNameBtn=document.getElementById('profile-edit-name-btn'),profileEditNameForm=document.getElementById('profile-edit-name-form'),profileNameInput=document.getElementById('profile-name-input'),profileSaveNameBtn=document.getElementById('profile-save-name-btn'),profileUserIdText=document.getElementById('profile-user-id-text'),profileUserEmailText=document.getElementById('profile-user-email-text'),profileCopyIdBtn=document.getElementById('profile-copy-id-btn'),profileCopyEmailBtn=document.getElementById('profile-copy-email-btn'),notificationContainer=document.getElementById('notification-container'),partnerProfileModal=document.getElementById('partner-profile-modal'),partnerModalName=document.getElementById('partner-modal-name'),partnerModalIdText=document.getElementById('partner-modal-id-text'),partnerModalCopyIdBtn=document.getElementById('partner-modal-copy-id-btn'),blockedUsersListEl=document.getElementById('blocked-users-list'),partnerModalBlockBtn=document.getElementById('partner-modal-block-btn'),partnerModalDeleteChatBtn=document.getElementById('partner-modal-delete-chat-btn'),logoutBtn=document.getElementById('logout-btn'),showSignupBtn=document.getElementById('show-signup'),showLoginBtn=document.getElementById('show-login');
+const customConfirmModal=document.getElementById('custom-confirm-modal'),customConfirmMessage=document.getElementById('custom-confirm-message'),customConfirmBtnYes=document.getElementById('custom-confirm-btn-yes'),customConfirmBtnNo=document.getElementById('custom-confirm-btn-no'),customAlertModal=document.getElementById('custom-alert-modal'),customAlertMessage=document.getElementById('custom-alert-message'),customAlertBtnOk=document.getElementById('custom-alert-btn-ok'),verifiedInfoModal=document.getElementById('verified-info-modal'),verifiedInfoBtnOk=document.getElementById('verified-info-btn-ok'),messageOptionsModal=document.getElementById('message-options-modal'),msgOptCopy=document.getElementById('msg-opt-copy'),msgOptDeleteMe=document.getElementById('msg-opt-delete-me'),msgOptDeleteEveryone=document.getElementById('msg-opt-delete-everyone'),msgOptCancel=document.getElementById('msg-opt-cancel');
+const notificationView=document.getElementById('notification-view'),notificationBtn=document.getElementById('notification-btn'),notificationBadge=document.getElementById('notification-badge'),notificationListContent=document.getElementById('notification-list-content'),notificationBackBtn=document.getElementById('notification-back-btn'),supportFabBtn=document.getElementById('support-fab-btn'),supportView=document.getElementById('support-view'),supportBackBtn=document.getElementById('support-back-btn'),supportMessages=document.getElementById('support-messages'),supportInput=document.getElementById('support-input'),supportSendBtn=document.getElementById('support-send-btn');
+const calculatorScreen=document.getElementById('calculator-screen'),calcButtons=document.querySelectorAll('#calculator-lock-view .calc-btn');
+let currentExpression='0',userSecretPin=null,isAppUnlocked=false;
+function resetCalculator(){currentExpression='0';calculatorScreen.textContent=currentExpression;}
+function updateCalculatorScreen(){calculatorScreen.textContent=currentExpression||'0';}
+function isOperator(value){return['+','-','*','/','%'].includes(value);}
+function handleCalculatorInput(value){
+userSecretPin=currentUserData?currentUserData.secretPin:null;
+if(value>='0'&&value<='9'||value==='.'){
+if(currentExpression==='0'&&value!=='.')currentExpression=value;else currentExpression+=value;
+}else if(isOperator(value)){
+if(currentExpression==='0')return;
+if(!isOperator(currentExpression.slice(-1)))currentExpression+=value;else currentExpression=currentExpression.slice(0,-1)+value;
+}else if(value==='C')resetCalculator();else if(value==='D'){
+currentExpression=currentExpression.slice(0,-1);if(currentExpression.length===0)currentExpression='0';
+}else if(value==='='){
+if(userSecretPin&&currentExpression===userSecretPin){showMainAppView();return;}
+try{const result=eval(currentExpression.replace(/×/g,'*').replace(/÷/g,'/'));currentExpression=String(result);}catch(e){currentExpression='Error';showNotification('Invalid expression.',3000);}
 }
-
-function updateCalculatorScreen() {
-    calculatorScreen.textContent = currentExpression || '0';
+if(userSecretPin&&currentExpression.length===4&&currentExpression===userSecretPin){showMainAppView();currentExpression='0';isAppUnlocked=true;return;}
+updateCalculatorScreen();
 }
-
-function isOperator(value) {
-    return ['+', '-', '*', '/', '%'].includes(value);
-}
-
-function handleCalculatorInput(value) {
-    userSecretPin = currentUserData ? currentUserData.secretPin : null;
-    
-    if (value >= '0' && value <= '9' || value === '.') {
-        if (currentExpression === '0' && value !== '.') {
-            currentExpression = value;
-        } else {
-            currentExpression += value;
-        }
-    } else if (isOperator(value)) {
-        if (currentExpression === '0') return;
-        if (!isOperator(currentExpression.slice(-1))) {
-            currentExpression += value;
-        } else {
-            currentExpression = currentExpression.slice(0, -1) + value;
-        }
-    } else if (value === 'C') {
-        resetCalculator();
-    } else if (value === 'D') {
-        currentExpression = currentExpression.slice(0, -1);
-        if (currentExpression.length === 0) currentExpression = '0';
-    } else if (value === '=') {
-        if (userSecretPin && currentExpression === userSecretPin) {
-            showMainAppView();
-            return;
-        }
-        try {
-            const result = eval(currentExpression.replace(/×/g, '*').replace(/÷/g, '/'));
-            currentExpression = String(result);
-        } catch (e) {
-            currentExpression = 'Error';
-            showNotification('Invalid expression.', 3000);
-        }
-    }
-    
-    if (userSecretPin && currentExpression.length === 4 && currentExpression === userSecretPin) {
-        showMainAppView();
-        currentExpression = '0'; 
-        isAppUnlocked = true;
-        return;
-    }
-
-    updateCalculatorScreen();
-}
-
-calcButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        handleCalculatorInput(button.dataset.value);
-    });
-});
-
+calcButtons.forEach(button=>{button.addEventListener('click',()=>{handleCalculatorInput(button.dataset.value);});});
 function showView(viewId){
-    allViews.forEach(view=>{
-        view.classList.add('hidden');
-    });
-    calculatorLockView.classList.add('hidden');
-    
-    if (viewId === 'calculator-lock-view') {
-        calculatorLockView.classList.remove('hidden');
-        resetCalculator();
-    } else if (viewId === 'main-view') {
-        mainView.classList.remove('hidden');
-    } else if (viewId === 'auth-view') {
-        authView.classList.remove('hidden');
-    } else if (viewId === 'chat-view') {
-        chatView.classList.remove('hidden');
-    } else if (viewId === 'notification-view') {
-        notificationView.classList.remove('hidden');
-    } else if (viewId === 'support-view') {
-        supportView.classList.remove('hidden');
-    }
+allViews.forEach(view=>{view.classList.add('hidden');});
+calculatorLockView.classList.add('hidden');
+if(viewId==='calculator-lock-view'){calculatorLockView.classList.remove('hidden');resetCalculator();}
+else if(viewId==='main-view')mainView.classList.remove('hidden');
+else if(viewId==='auth-view')authView.classList.remove('hidden');
+else if(viewId==='chat-view')chatView.classList.remove('hidden');
+else if(viewId==='notification-view')notificationView.classList.remove('hidden');
+else if(viewId==='support-view')supportView.classList.remove('hidden');
 }
-
-function handleSuccessfulAuth(user) {
-    db.ref('users/' + user.uid).once('value').then(snapshot => {
-        if (snapshot.exists()) {
-            currentUserData = snapshot.val();
-            checkPinStatus(user);
-        } else {
-            showCustomAlert("প্রোফাইল ডাটা পাওয়া যায়নি। সাপোর্টে যোগাযোগ করুন।");
-            auth.signOut();
-        }
-    }).catch(error => {
-        showCustomAlert("ডাটা লোড করতে সমস্যা: " + error.message);
-        auth.signOut();
-    });
+function handleSuccessfulAuth(user){
+db.ref('users/'+user.uid).once('value').then(snapshot=>{
+if(snapshot.exists()){currentUserData=snapshot.val();checkPinStatus(user);}else{showCustomAlert("প্রোফাইল ডাটা পাওয়া যায়নি।");auth.signOut();}
+}).catch(error=>{showCustomAlert("ডাটা লোড সমস্যা: "+error.message);auth.signOut();});
 }
-
-function checkPinStatus(user) {
-    db.ref(`users/${user.uid}/secretPin`).once('value')
-    .then(snapshot => {
-        const secretPin = snapshot.val();
-        if (secretPin) {
-            currentUserData.secretPin = secretPin;
-            showView('calculator-lock-view');
-        } else {
-            showModal('pin-setup-modal');
-            history.pushState(null,'',window.location.pathname);
-        }
-    })
-    .catch(err => {
-        showCustomAlert("গোপন কোড চেক করতে সমস্যা: " + err.message);
-        auth.signOut();
-    });
+function checkPinStatus(user){
+db.ref(`users/${user.uid}/secretPin`).once('value').then(snapshot=>{
+const secretPin=snapshot.val();
+if(secretPin){currentUserData.secretPin=secretPin;showView('calculator-lock-view');}else{showModal('pin-setup-modal');history.pushState(null,'',window.location.pathname);}
+}).catch(err=>{showCustomAlert("কোড চেক সমস্যা: "+err.message);auth.signOut();});
 }
-
-setPinButton.addEventListener('click', () => {
-    const newPin = pinInputField.value.trim();
-    if (newPin.length === 4 && /^\d{4}$/.test(newPin)) {
-        db.ref(`users/${currentUser.uid}/secretPin`).set(newPin)
-        .then(() => {
-            currentUserData.secretPin = newPin;
-            showModal('pin-setup-modal', false);
-            showNotification('গোপন কোড সফলভাবে সেট করা হয়েছে!');
-            showView('calculator-lock-view');
-            resetCalculator();
-            if(history.state) history.back();
-        })
-        .catch(err => {
-            pinSetupError.textContent = 'কোড সেট করতে সমস্যা হয়েছে: ' + err.message;
-        });
-    } else {
-        pinSetupError.textContent = 'দয়া করে ৪-সংখ্যার সংখ্যা দিন।';
-    }
+setPinButton.addEventListener('click',()=>{
+const newPin=pinInputField.value.trim();
+if(newPin.length===4&&/^\d{4}$/.test(newPin)){
+db.ref(`users/${currentUser.uid}/secretPin`).set(newPin).then(()=>{
+currentUserData.secretPin=newPin;showModal('pin-setup-modal',false);showNotification('গোপন কোড সেট করা হয়েছে!');showView('calculator-lock-view');resetCalculator();if(history.state)history.back();
+}).catch(err=>{pinSetupError.textContent='সমস্যা হয়েছে: '+err.message;});
+}else pinSetupError.textContent='দয়া করে ৪-সংখ্যার সংখ্যা দিন।';
 });
-
-function showMainAppView() {
-    showPanel('home-content');
-    listenForContacts();
-    populateAllFriendsList();
-    listenForNotifications();
-    appInitialized=true;
-    isAppUnlocked = true;
-    showView('main-view');
-}
-
+function showMainAppView(){showPanel('home-content');listenForContacts();populateAllFriendsList();listenForNotifications();appInitialized=true;isAppUnlocked=true;showView('main-view');}
 function initializeAuthListener(){
-    auth.onAuthStateChanged(user=>{
-        cleanupListeners();
-        isAppUnlocked = false;
-        if(user){
-            currentUser=user;
-            
-            if(!authStateInitialized){
-                authStateInitialized=true;
-                authStateResolve();
-            }
-            const userRef=db.ref('users/'+user.uid);
-            if(contactListeners.currentUser)contactListeners.currentUser.off();
-            contactListeners.currentUser=userRef;
-            
-            userRef.on('value',snapshot=>{
-                const wasNotInitialized=!currentUserData;
-                if(snapshot.exists()){
-                    currentUserData=snapshot.val();
-                    if(!currentUserData.blockedUsers){
-                        currentUserData.blockedUsers={};
-                    }
-                    if(!profileViewModal.classList.contains('hidden')){
-                        profilePicWrapper.innerHTML=getProfilePicHTML(currentUserData,'4.5rem');
-                        profileViewName.innerHTML=`${currentUserData.name}${getVerifiedBadgeHTML(currentUserData)}`;
-                        profileViewEmail.textContent=currentUserData.email;
-                        profileUserEmailText.textContent=currentUserData.email;
-                    }
-                    if(wasNotInitialized){
-                        checkPinStatus(user); 
-                        listenForBlockedUsers(user.uid);
-                        listenForUnreadCounts();
-                    } else if (!isAppUnlocked && calculatorLockView.classList.contains('hidden') && authView.classList.contains('hidden')) {
-                        checkPinStatus(user); 
-                    }
-                }else{
-                    currentUserData=null;
-                }
-                if(userDataResolve){
-                    userDataResolve();
-                    userDataResolve=null;
-                }
-            });
-        }else{
-            currentUser=null;
-            currentUserData=null;
-            appInitialized=false;
-            
-            // এখানে পরিবর্তন: লগইন না থাকলে ক্যালকুলেটর লুকান এবং Auth View দেখান
-            if (calculatorLockView && !calculatorLockView.classList.contains('hidden')) {
-                 showView('auth-view');
-            } else {
-                // অ্যাপ প্রথম লোডের সময় যাতে ক্যালকুলেটর দেখায় (HTML এ করা আছে), 
-                // তবে Firebase যদি বলে লগইন নেই, তখন Auth View এ সুইচ হবে।
-                showView('auth-view'); 
-            }
-
-            if(notificationBadge){
-                notificationBadge.classList.add('hidden');
-                notificationBadge.textContent='0';
-                unreadNotificationCount=0;
-            }
-            if(!authStateInitialized){
-                authStateInitialized=true;
-                authStateResolve();
-            }
-            if(userDataResolve){
-                userDataResolve();
-                userDataResolve=null;
-            }
-        }
-    });
+auth.onAuthStateChanged(user=>{
+cleanupListeners();isAppUnlocked=false;
+if(user){
+currentUser=user;if(!authStateInitialized){authStateInitialized=true;authStateResolve();}
+const userRef=db.ref('users/'+user.uid);if(contactListeners.currentUser)contactListeners.currentUser.off();contactListeners.currentUser=userRef;
+userRef.on('value',snapshot=>{
+const wasNotInitialized=!currentUserData;
+if(snapshot.exists()){
+currentUserData=snapshot.val();if(!currentUserData.blockedUsers)currentUserData.blockedUsers={};
+if(!profileViewModal.classList.contains('hidden')){
+profilePicWrapper.innerHTML=getProfilePicHTML(currentUserData,'4.5rem');
+profileViewName.innerHTML=`${currentUserData.name}${getVerifiedBadgeHTML(currentUserData)}`;
+profileViewEmail.textContent=currentUserData.email;profileUserEmailText.textContent=currentUserData.email;
 }
-
-loginForm.addEventListener('submit',(e)=>{
-    e.preventDefault();
-    const email=loginForm['login-email'].value;
-    const password=loginForm['login-password'].value;
-    auth.signInWithEmailAndPassword(email,password)
-    .then((userCredential)=>{
-        handleSuccessfulAuth(userCredential.user); 
-    })
-    .catch(error=>{
-        showCustomAlert(getBengaliErrorMessage(error.code));
-    });
+if(wasNotInitialized){checkPinStatus(user);listenForBlockedUsers(user.uid);listenForUnreadCounts();}else if(!isAppUnlocked&&calculatorLockView.classList.contains('hidden')&&authView.classList.contains('hidden'))checkPinStatus(user);
+}else currentUserData=null;
+if(userDataResolve){userDataResolve();userDataResolve=null;}
 });
-
-signupForm.addEventListener('submit',(e)=>{
-    e.preventDefault();
-    const email=signupForm['signup-email'].value;
-    const password=signupForm['signup-password'].value;
-    auth.createUserWithEmailAndPassword(email,password)
-    .then((userCredential)=>{
-        const user=userCredential.user;
-        const defaultProfile={
-            uid:user.uid,
-            email:user.email,
-            name:user.uid,
-            profilePicUrl:"",
-            isVerified:false
-        };
-        db.ref('users/'+user.uid).set(defaultProfile)
-        .then(()=>{
-            handleSuccessfulAuth(user);
-        })
-        .catch(error=>{
-            showCustomAlert("সাইন আপ হয়েছে, কিন্তু প্রোফাইল তৈরি হয়নি: "+error.message);
-        });
-    })
-    .catch(error=>{
-        showCustomAlert(getBengaliErrorMessage(error.code));
-    });
+}else{
+currentUser=null;currentUserData=null;appInitialized=false;
+if(calculatorLockView&&!calculatorLockView.classList.contains('hidden'))showView('auth-view');else showView('auth-view');
+if(notificationBadge){notificationBadge.classList.add('hidden');notificationBadge.textContent='0';unreadNotificationCount=0;}
+if(!authStateInitialized){authStateInitialized=true;authStateResolve();}
+if(userDataResolve){userDataResolve();userDataResolve=null;}
+}
 });
-
+}
+loginForm.addEventListener('submit',(e)=>{e.preventDefault();auth.signInWithEmailAndPassword(loginForm['login-email'].value,loginForm['login-password'].value).then((u)=>handleSuccessfulAuth(u.user)).catch(e=>showCustomAlert(getBengaliErrorMessage(e.code)));});
+signupForm.addEventListener('submit',(e)=>{e.preventDefault();auth.createUserWithEmailAndPassword(signupForm['signup-email'].value,signupForm['signup-password'].value).then((u)=>{const user=u.user;db.ref('users/'+user.uid).set({uid:user.uid,email:user.email,name:user.uid,profilePicUrl:"",isVerified:false}).then(()=>handleSuccessfulAuth(user)).catch(e=>showCustomAlert(e.message));}).catch(e=>showCustomAlert(getBengaliErrorMessage(e.code)));});
+voiceRecordBtn.addEventListener('click',async()=>{if(!isRecording)startRecording();else stopRecording(true);});
+cancelRecordingBtn.addEventListener('click',()=>{stopRecording(false);});
+async function startRecording(){
+try{
+const stream=await navigator.mediaDevices.getUserMedia({audio:true});mediaRecorder=new MediaRecorder(stream);audioChunks=[];isRecording=true;
+chatInputContainer.classList.add('recording');recordingUi.classList.remove('hidden');voiceRecordBtn.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+let seconds=0;recordingTimer.textContent="00:00";
+recordingTimerInterval=setInterval(()=>{seconds++;const m=Math.floor(seconds/60),s=seconds%60;recordingTimer.textContent=`${m<10?'0'+m:m}:${s<10?'0'+s:s}`;},1000);
+autoStopTimeout=setTimeout(()=>{if(isRecording){stopRecording(true);showNotification("Max 1 minute limit. Sending...");}},60000);
+mediaRecorder.addEventListener("dataavailable",e=>{audioChunks.push(e.data);});
+mediaRecorder.addEventListener("stop",()=>{stream.getTracks().forEach(t=>t.stop());});
+mediaRecorder.start();
+}catch(error){showNotification("Mic error: "+error.message);}
+}
+function stopRecording(shouldSend){
+if(!mediaRecorder||!isRecording)return;
+mediaRecorder.stop();isRecording=false;clearInterval(recordingTimerInterval);clearTimeout(autoStopTimeout);
+chatInputContainer.classList.remove('recording');recordingUi.classList.add('hidden');
+voiceRecordBtn.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>';
+if(shouldSend){setTimeout(()=>{const audioBlob=new Blob(audioChunks,{type:'audio/webm;codecs=opus'});convertBlobToBase64(audioBlob);},100);}
+}
+function convertBlobToBase64(blob){
+const reader=new FileReader();reader.readAsDataURL(blob);
+reader.onloadend=function(){sendAudioMessage(reader.result);}
+}
+function sendAudioMessage(base64Audio){
+if(!currentChatPartner)return;
+const chatId=getChatId(currentUser.uid,currentChatPartner.uid);
+const message={type:'audio',content:base64Audio,text:'🎤 Voice Message',senderId:currentUser.uid,receiverId:currentChatPartner.uid,timestamp:firebase.database.ServerValue.TIMESTAMP,status:'sent'};
+db.ref('messages/'+chatId).push(message);
+db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`).transaction(count=>(count||0)+1);
+}
 function createOrUpdateContactItem(contact,isFriendList=false){
 const listContainer=isFriendList?callsContent:homeContent;
 const existingItem=listContainer.querySelector(`.list-item[data-uid="${contact.uid}"]`);
-if(!isFriendList&&currentUserData.blockedUsers&&currentUserData.blockedUsers[contact.uid]){
-if(existingItem){
-existingItem.remove();
-}
-return;
-}
+if(!isFriendList&&currentUserData.blockedUsers&&currentUserData.blockedUsers[contact.uid]){if(existingItem)existingItem.remove();return;}
 const lastMsgData=lastMessageTimestamps[contact.uid]||{text:'Tap to chat',timestamp:0};
-const lastMsgText=lastMsgData.text;
-const timestamp=lastMsgData.timestamp;
 if(existingItem){
 existingItem.querySelector('.item-emoji').innerHTML=getProfilePicHTML(contact);
 existingItem.querySelector('.item-name-text').textContent=contact.name;
 const badgeContainer=existingItem.querySelector('.item-name.name-with-badge');
-const oldBadge=badgeContainer.querySelector('.verified-badge');
-if(oldBadge)oldBadge.remove();
+if(badgeContainer.querySelector('.verified-badge'))badgeContainer.querySelector('.verified-badge').remove();
 badgeContainer.insertAdjacentHTML('beforeend',getVerifiedBadgeHTML(contact));
 if(!isFriendList){
-existingItem.querySelector('.item-subtext').textContent=lastMsgText;
-// --- পরিবর্তন ১: মেসেজ না থাকলে চ্যাট লিস্ট থেকে লুকানো ---
-existingItem.classList.toggle('hidden', lastMsgData.timestamp === 0);
+existingItem.querySelector('.item-subtext').textContent=lastMsgData.text;
+existingItem.classList.toggle('hidden',lastMsgData.timestamp===0);
 }
 }else{
-const item=document.createElement('div');
-item.className='list-item';
-// --- পরিবর্তন ২: নতুন আইটেম তৈরির সময় মেসেজ না থাকলে লুকানো ---
-if(!isFriendList && lastMsgData.timestamp === 0){
-    item.classList.add('hidden');
-}
+const item=document.createElement('div');item.className='list-item';
+if(!isFriendList&&lastMsgData.timestamp===0)item.classList.add('hidden');
 item.dataset.uid=contact.uid;
-let itemHTML=`
-<div class="item-emoji">${getProfilePicHTML(contact)}</div>
-<div class="item-details">
-<div class="item-name name-with-badge">
-<span class="item-name-text">${contact.name}</span>
-${getVerifiedBadgeHTML(contact)}
-</div>
-`;
-if(isFriendList){
-itemHTML+=`</div>`;
-}else{
-itemHTML+=`
-<div class="item-subtext" id="subtext-${contact.uid}">${lastMsgText}</div>
-</div>
-<div class="item-actions">
-<span class="badge hidden" id="badge-${contact.uid}"></span>
-</div>
-`;
-}
+let itemHTML=`<div class="item-emoji">${getProfilePicHTML(contact)}</div><div class="item-details"><div class="item-name name-with-badge"><span class="item-name-text">${contact.name}</span>${getVerifiedBadgeHTML(contact)}</div>`;
+if(isFriendList)itemHTML+=`</div>`;else itemHTML+=`<div class="item-subtext" id="subtext-${contact.uid}">${lastMsgData.text}</div></div><div class="item-actions"><span class="badge hidden" id="badge-${contact.uid}"></span></div>`;
 item.innerHTML=itemHTML+'</div>';
-item.addEventListener('click',(e)=>{
-if(e.target.closest('.verified-badge'))return;
-openChat(contact);
-});
+item.addEventListener('click',(e)=>{if(e.target.closest('.verified-badge'))return;openChat(contact);});
 listContainer.appendChild(item);
 }
-if(!isFriendList){
-sortChatList();
+if(!isFriendList)sortChatList();
 }
-}
-
 function handleCustomBack(){
-    if(!verifiedInfoModal.classList.contains('hidden')){
-        verifiedInfoBtnOk.click();
-        return true;
-    }
-    if(!messageOptionsModal.classList.contains('hidden')){
-        showModal('message-options-modal',false);
-        return true;
-    }
-    if(!customAlertModal.classList.contains('hidden')){
-        customAlertBtnOk.click();
-        return true;
-    }
-    if(!customConfirmModal.classList.contains('hidden')){
-        customConfirmBtnNo.click();
-        return true;
-    }
-    if(!partnerProfileModal.classList.contains('hidden')){
-        showModal('partner-profile-modal',false);
-        return true;
-    }
-    if(!profileViewModal.classList.contains('hidden')){
-        showModal('profile-view-modal',false);
-        return true;
-    }
-    if(!addFriendModal.classList.contains('hidden')){
-        showModal('add-friend-modal',false);
-        return true;
-    }
-    if(!pinSetupModal.classList.contains('hidden')){
-        return true; 
-    }
-    if(!notificationView.classList.contains('hidden')){
-        notificationBackBtn.click();
-        return true;
-    }
-    if(!supportView.classList.contains('hidden')){
-        supportBackBtn.click();
-        return true;
-    }
-    if(!chatView.classList.contains('hidden')){
-        showView('main-view'); 
-        currentChatPartner=null;
-        if(currentChatListener){
-            currentChatListener.off();
-            currentChatListener=null;
-        }
-        return true;
-    }
-    if(!mainView.classList.contains('hidden')){
-        if(!homeContent.classList.contains('active')){
-            showPanel('home-content');
-            return true;
-        }else{
-            showView('calculator-lock-view');
-            isAppUnlocked = false;
-            return true;
-        }
-    }
-    if(!calculatorLockView.classList.contains('hidden')){
-        auth.signOut();
-        return true;
-    }
-    if(!authView.classList.contains('hidden')){
-        return false;
-    }
-    return false;
+if(!verifiedInfoModal.classList.contains('hidden')){verifiedInfoBtnOk.click();return true;}
+if(!messageOptionsModal.classList.contains('hidden')){showModal('message-options-modal',false);return true;}
+if(!customAlertModal.classList.contains('hidden')){customAlertBtnOk.click();return true;}
+if(!customConfirmModal.classList.contains('hidden')){customConfirmBtnNo.click();return true;}
+if(!partnerProfileModal.classList.contains('hidden')){showModal('partner-profile-modal',false);return true;}
+if(!profileViewModal.classList.contains('hidden')){showModal('profile-view-modal',false);return true;}
+if(!addFriendModal.classList.contains('hidden')){showModal('add-friend-modal',false);return true;}
+if(!pinSetupModal.classList.contains('hidden'))return true;
+if(!notificationView.classList.contains('hidden')){notificationBackBtn.click();return true;}
+if(!supportView.classList.contains('hidden')){supportBackBtn.click();return true;}
+if(!chatView.classList.contains('hidden')){showView('main-view');currentChatPartner=null;if(currentChatListener)currentChatListener.off();return true;}
+if(!mainView.classList.contains('hidden')){if(!homeContent.classList.contains('active')){showPanel('home-content');return true;}else{showView('calculator-lock-view');isAppUnlocked=false;return true;}}
+if(!calculatorLockView.classList.contains('hidden')){auth.signOut();return true;}
+return false;
 }
-
-function showNotification(message,duration=3000,actions=null){
-const notification=document.createElement('div');
-notification.className='custom-notification';
-const textSpan=document.createElement('span');
-textSpan.textContent=message;
-notification.appendChild(textSpan);
-let notificationTimeout;
-if(actions){
-const actionWrapper=document.createElement('div');
-actionWrapper.className='notification-action-buttons';
-actions.forEach(action=>{
-const btn=document.createElement('button');
-btn.textContent=action.text;
-btn.addEventListener('click',(e)=>{
-e.stopPropagation();
-action.callback();
-hideNotification(notification,notificationTimeout);
-});
-actionWrapper.appendChild(btn);
-});
-notification.appendChild(actionWrapper);
-if(!duration)duration=30000;
+function showNotification(msg,duration=3000){
+const notification=document.createElement('div');notification.className='custom-notification';notification.textContent=msg;notificationContainer.appendChild(notification);
+setTimeout(()=>notification.classList.add('show'),10);setTimeout(()=>{notification.classList.remove('show');setTimeout(()=>notification.remove(),300);},duration);
 }
-notificationContainer.appendChild(notification);
-setTimeout(()=>{
-notification.classList.add('show');
-},10);
-if(duration>0){
-notificationTimeout=setTimeout(()=>{
-hideNotification(notification);
-},duration);
+function customConfirm(msg){return new Promise(resolve=>{customConfirmResolver=resolve;customConfirmMessage.textContent=msg;showModal('custom-confirm-modal');history.pushState(null,'',window.location.pathname);});}
+customConfirmBtnYes.addEventListener('click',()=>{if(customConfirmResolver)customConfirmResolver(true);showModal('custom-confirm-modal',false);if(history.state)history.back();});
+customConfirmBtnNo.addEventListener('click',()=>{if(customConfirmResolver)customConfirmResolver(false);showModal('custom-confirm-modal',false);if(history.state)history.back();});
+function showCustomAlert(msg){customAlertMessage.textContent=msg;showModal('custom-alert-modal');history.pushState(null,'',window.location.pathname);}
+customAlertBtnOk.addEventListener('click',()=>{showModal('custom-alert-modal',false);if(history.state)history.back();});
+verifiedInfoBtnOk.addEventListener('click',()=>{showModal('verified-info-modal',false);if(history.state)history.back();});
+document.addEventListener('click',e=>{if(e.target.closest('.verified-badge')){e.stopPropagation();showModal('verified-info-modal');history.pushState(null,'',window.location.pathname);}});
+function getBengaliErrorMessage(code){
+switch(code){
+case 'auth/email-already-in-use':return"ইমেইলটি ইতিমধ্যে ব্যবহার হয়েছে।";
+case 'auth/invalid-email':return"ইমেইল ঠিকানাটি সঠিক নয়।";
+case 'auth/weak-password':return"পাসওয়ার্ড দুর্বল (৬+ অক্ষর)।";
+case 'auth/user-not-found':return"অ্যাকাউন্ট পাওয়া যায়নি।";
+case 'auth/wrong-password':return"পাসওয়ার্ড ভুল।";
+default:return"সমস্যা: "+code;
 }
-return{
-hide:()=>hideNotification(notification,notificationTimeout),
-element:notification,
-timeout:notificationTimeout
-};
 }
-function hideNotification(notification,timeout){
-clearTimeout(timeout);
-notification.classList.remove('show');
-notification.addEventListener('transitionend',()=>{
-notification.remove();
-},{once:true});
-}
-function customConfirm(message){
-return new Promise(resolve=>{
-customConfirmResolver=resolve;
-customConfirmMessage.textContent=message;
-showModal('custom-confirm-modal');
+function customPrompt(title,val=''){return new Promise(resolve=>{customPromptResolver=resolve;document.getElementById('prompt-modal-title').textContent=title;promptInput.value=val;showModal('custom-prompt-modal');history.pushState(null,'',window.location.pathname);});}
+customPromptForm.addEventListener('submit',e=>{e.preventDefault();if(customPromptResolver)customPromptResolver(promptInput.value);showModal('custom-prompt-modal',false);if(history.state)history.back();});
+document.querySelectorAll('.close-modal-btn').forEach(btn=>{btn.addEventListener('click',e=>{const m=e.target.closest('.modal');if(m){showModal(m.id,false);if(history.state)history.back();}});});
+function showModal(id,show=true){const m=document.getElementById(id);if(m)m.classList.toggle('hidden',!show);}
+function showPanel(id){allContentPanels.forEach(p=>p.classList.toggle('active',p.id===id));allNavTabs.forEach(t=>t.classList.toggle('active',t.id===`nav-${id.split('-')[0]}`));}
+function getChatId(u1,u2){return u1<u2?`${u1}_${u2}`:`${u2}_${u1}`;}
+function formatTimestamp(ts){const d=new Date(ts);let h=d.getHours();const m=d.getMinutes();const ap=h>=12?'PM':'AM';h=h%12||12;return`${h}:${m<10?'0'+m:m} ${ap}`;}
+function formatFullTimestamp(ts){const d=new Date(ts);return`${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()} at ${formatTimestamp(ts)}`;}
+function getProfilePicHTML(u,sz='2.5rem'){return u.profilePicUrl?`<img src="${u.profilePicUrl}" alt="Pic">`:`<span style="font-size:${sz};line-height:1;user-select:none;">${u.name?u.name.charAt(0).toUpperCase():'?'}</span>`;}
+function getVerifiedBadgeHTML(u){return(u&&u.isVerified)?`<span class="verified-badge" title="Verified"><svg viewBox="0 0 16 16"><path d="M6.75 12.13l-3.48-3.48c-.3-.3-.78-.3-1.06 0s-.3.78 0 1.06l4 4c.3.3.78.3 1.06 0l8.5-8.5c.3-.3.3-.78 0-1.06s-.78-.3-1.06 0L6.75 12.13z"/></svg></span>`:'';}
+function cleanupListeners(){if(currentChatListener)currentChatListener.off();if(notificationListener)notificationListener.off();if(supportListener)supportListener.off();if(contactListeners.currentUser)contactListeners.currentUser.off();Object.values(unreadListeners).forEach(l=>l&&l.off());Object.values(contactListeners).forEach(l=>l&&l.off());unreadListeners={};contactListeners={};lastMessageTimestamps={};messageElements={};}
+function copyText(txt,msg){if(!txt)return;const el=document.createElement('textarea');el.value=txt;el.setAttribute('readonly','');el.style.position='absolute';el.style.left='-9999px';document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);showNotification(msg);}
+window.addEventListener('popstate',()=>{if(handleCustomBack())history.pushState(null,'',window.location.pathname);});
 history.pushState(null,'',window.location.pathname);
-});
-}
-customConfirmBtnYes.addEventListener('click',()=>{
-if(customConfirmResolver){
-customConfirmResolver(true);
-customConfirmResolver=null;
-}
-showModal('custom-confirm-modal',false);
-if(history.state)history.back();
-});
-customConfirmBtnNo.addEventListener('click',()=>{
-if(customConfirmResolver){
-customConfirmResolver(false);
-customConfirmResolver=null;
-}
-showModal('custom-confirm-modal',false);
-if(history.state)history.back();
-});
-function showCustomAlert(message){
-return new Promise(resolve=>{
-customAlertResolver=resolve;
-customAlertMessage.textContent=message;
-showModal('custom-alert-modal');
-history.pushState(null,'',window.location.pathname);
-});
-}
-customAlertBtnOk.addEventListener('click',()=>{
-if(customAlertResolver){
-customAlertResolver();
-customAlertResolver=null;
-}
-showModal('custom-alert-modal',false);
-if(history.state)history.back();
-});
-verifiedInfoBtnOk.addEventListener('click',()=>{
-showModal('verified-info-modal',false);
-if(history.state)history.back();
-});
-document.addEventListener('click',(e)=>{
-const badge=e.target.closest('.verified-badge');
-if(badge){
-e.stopPropagation();
-showModal('verified-info-modal');
-history.pushState(null,'',window.location.pathname);
-}
-});
-function getBengaliErrorMessage(errorCode){
-switch(errorCode){
-case 'auth/email-already-in-use':
-return "এই ইমেইলটি ইতিমধ্যে ব্যবহার করা হয়েছে। অন্য ইমেইল চেষ্টা করুন।";
-case 'auth/invalid-email':
-return "ইমেইল ঠিকানাটি সঠিক নয়। দয়া করে সঠিক ইমেইল দিন।";
-case 'auth/weak-password':
-return "পাসওয়ার্ড খুব দুর্বল। অন্তত ৬ অক্ষরের পাসওয়ার্ড দিন।";
-case 'auth/user-not-found':
-return "এই ইমেইলে কোনো অ্যাকাউন্ট পাওয়া যায়নি। দয়া করে সাইন আপ করুন।";
-case 'auth/wrong-password':
-return "পাসওয়ার্ডটি ভুল। দয়া করে সঠিক পাসওয়ার্ড দিন।";
-case 'auth/network-request-failed':
-return "ইন্টারনেট সংযোগে সমস্যা। আপনার নেটওয়ার্ক চেক করুন।";
-case 'auth/too-many-requests':
-return "অনেকবার ভুল চেষ্টা করা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।";
-default:
-return "সমস্যা হয়েছে: "+errorCode;
-}
-}
-function customPrompt(title,defaultValue=''){
-return new Promise(resolve=>{
-customPromptResolver=resolve;
-document.getElementById('prompt-modal-title').textContent=title;
-promptInput.value=defaultValue;
-showModal('custom-prompt-modal');
-history.pushState(null,'',window.location.pathname);
-});
-}
-customPromptForm.addEventListener('submit',(e)=>{
-e.preventDefault();
-if(customPromptResolver){
-customPromptResolver(promptInput.value);
-customPromptResolver=null;
-}
-showModal('custom-prompt-modal',false);
-if(history.state)history.back();
-});
-customPromptModal.querySelector('.close-modal-btn').addEventListener('click',()=>{
-if(customPromptResolver){
-customPromptResolver(null);
-customPromptResolver=null;
-}
-showModal('custom-prompt-modal',false);
-if(history.state)history.back();
-});
-function showModal(modalId,show=true){
-const modal=document.getElementById(modalId);
-if(modal){
-modal.classList.toggle('hidden',!show);
-}
-}
-function showPanel(panelId){
-allContentPanels.forEach(panel=>{
-panel.classList.toggle('active',panel.id===panelId);
-});
-allNavTabs.forEach(tab=>{
-tab.classList.toggle('active',tab.id===`nav-${panelId.split('-')[0]}`);
-});
-}
-function getChatId(uid1,uid2){
-return uid1<uid2?`${uid1}_${uid2}`:`${uid2}_${uid1}`;
-}
-function formatTimestamp(timestamp){
-const date=new Date(timestamp);
-let hours=date.getHours();
-const minutes=date.getMinutes();
-const ampm=hours>=12?'PM':'AM';
-hours=hours%12;
-hours=hours?hours:12;
-const minutesStr=minutes<10?'0'+minutes:minutes;
-return`${hours}:${minutesStr} ${ampm}`;
-}
-function formatFullTimestamp(timestamp){
-const date=new Date(timestamp);
-const yyyy=date.getFullYear();
-const mm=String(date.getMonth()+1).padStart(2,'0');
-const dd=String(date.getDate()).padStart(2,'0');
-return`${dd}/${mm}/${yyyy} at ${formatTimestamp(timestamp)}`;
-}
-function getProfilePicHTML(user,placeholderSize='2.5rem'){
-if(user.profilePicUrl){
-return`<img src="${user.profilePicUrl}" alt="Pic">`;
-}else{
-const name=user.name||user.uid;
-const placeholder=name?name.charAt(0).toUpperCase():'?';
-return`<span style="font-size: ${placeholderSize}; line-height: 1; user-select: none;">${placeholder}</span>`;
-}
-}
-function getVerifiedBadgeHTML(user){
-if(user&&user.isVerified===true){
-return`
-<span class="verified-badge" title="Verified">
-<svg viewBox="0 0 16 16">
-<path d="M6.75 12.13l-3.48-3.48c-.3-.3-.78-.3-1.06 0s-.3.78 0 1.06l4 4c.3.3.78.3 1.06 0l8.5-8.5c.3-.3.3-.78 0-1.06s-.78-.3-1.06 0L6.75 12.13z"/>
-</svg>
-</span>`;
-}
-return'';
-}
-function cleanupListeners(){
-if(currentChatListener)currentChatListener.off();
-if(notificationListener)notificationListener.off();
-if(supportListener)supportListener.off();
-if(contactListeners.currentUser)contactListeners.currentUser.off();
-Object.values(unreadListeners).forEach(listener=>{
-if(listener&&typeof listener.off==='function'){
-listener.off();
-}
-});
-Object.values(contactListeners).forEach(listener=>{
-if(listener&&typeof listener.off==='function'){
-listener.off();
-}
-});
-unreadListeners={};
-contactListeners={};
-currentChatListener=null;
-notificationListener=null;
-supportListener=null;
-lastMessageTimestamps={};
-messageElements={};
-}
-function copyText(text,message){
-if(!text)return;
-try{
-const el=document.createElement('textarea');
-el.value=text;
-el.setAttribute('readonly','');
-el.style.position='absolute';
-el.style.left='-9999px';
-document.body.appendChild(el);
-const selected=document.getSelection().rangeCount>0
-?document.getSelection().getRangeAt(0)
-:false;
-el.select();
-document.execCommand('copy');
-document.body.removeChild(el);
-if(selected){
-document.getSelection().removeAllRanges();
-document.getSelection().addRange(selected);
-}
-showNotification(message);
-}catch(err){
-showNotification('Failed to copy.',5000);
-}
-}
-window.addEventListener('popstate',(event)=>{
-const handled=handleCustomBack();
-if(handled){
-history.pushState(null,'',window.location.pathname);
-}
-});
-history.pushState(null,'',window.location.pathname);
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-.then(()=>{
-initializeAuthListener();
-})
-.catch((error)=>{
-initializeAuthListener();
-});
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(initializeAuthListener).catch(initializeAuthListener);
 function listenForBlockedUsers(uid){
-const blockedRef=db.ref('blockedUsers/'+uid);
-if(contactListeners.blocked)contactListeners.blocked.off();
-blockedRef.on('value',snapshot=>{
-currentUserData.blockedUsers=snapshot.val()||{};
-if(!profileViewModal.classList.contains('hidden')){
-populateBlockedUsersList();
+const r=db.ref('blockedUsers/'+uid);if(contactListeners.blocked)contactListeners.blocked.off();
+r.on('value',s=>{currentUserData.blockedUsers=s.val()||{};if(!profileViewModal.classList.contains('hidden'))populateBlockedUsersList();populateAllFriendsList();});
+contactListeners.blocked=r;
 }
-populateAllFriendsList();
-});
-contactListeners.blocked=blockedRef;
-}
-logoutBtn.addEventListener('click',()=>{
-appInitialized=false;
-isAppUnlocked = false;
-showModal('pin-setup-modal', false);
-auth.signOut();
-showModal('profile-view-modal',false);
-});
-showSignupBtn.addEventListener('click',()=>{
-loginForm.classList.add('hidden');
-signupForm.classList.remove('hidden');
-});
-showLoginBtn.addEventListener('click',()=>{
-loginForm.classList.remove('hidden');
-signupForm.classList.add('hidden');
-});
+logoutBtn.addEventListener('click',()=>{appInitialized=false;isAppUnlocked=false;showModal('pin-setup-modal',false);auth.signOut();showModal('profile-view-modal',false);});
+showSignupBtn.addEventListener('click',()=>{loginForm.classList.add('hidden');signupForm.classList.remove('hidden');});
+showLoginBtn.addEventListener('click',()=>{loginForm.classList.remove('hidden');signupForm.classList.add('hidden');});
 menuBtn.addEventListener('click',()=>{
 if(!currentUserData)return;
-profilePicWrapper.innerHTML=getProfilePicHTML(currentUserData,'4.5rem');
-profileViewName.innerHTML=`${currentUserData.name}${getVerifiedBadgeHTML(currentUserData)}`;
-profileViewEmail.textContent=currentUserData.email;
-profileUserIdText.textContent=currentUserData.uid;
-profileUserEmailText.textContent=currentUserData.email;
-profileEditNameForm.classList.add('hidden');
-profileViewName.classList.remove('hidden');
-profileEditNameBtn.classList.remove('hidden');
-populateBlockedUsersList();
-showModal('profile-view-modal');
-history.pushState(null,'',window.location.pathname);
+profilePicWrapper.innerHTML=getProfilePicHTML(currentUserData,'4.5rem');profileViewName.innerHTML=`${currentUserData.name}${getVerifiedBadgeHTML(currentUserData)}`;
+profileViewEmail.textContent=currentUserData.email;profileUserIdText.textContent=currentUserData.uid;profileUserEmailText.textContent=currentUserData.email;
+profileEditNameForm.classList.add('hidden');profileViewName.classList.remove('hidden');profileEditNameBtn.classList.remove('hidden');populateBlockedUsersList();
+showModal('profile-view-modal');history.pushState(null,'',window.location.pathname);
 });
 profilePicWrapper.addEventListener('click',async()=>{
-const newUrl=await customPrompt('Enter new profile picture URL:',currentUserData.profilePicUrl||'');
-if(newUrl!==null){
-if(newUrl===''||(newUrl.startsWith('http://')||newUrl.startsWith('https://'))){
-db.ref(`users/${currentUser.uid}/profilePicUrl`).set(newUrl)
-.then(()=>{
-currentUserData.profilePicUrl=newUrl;
-profilePicWrapper.innerHTML=getProfilePicHTML(currentUserData,'4.5rem');
-showNotification('Profile picture updated!');
-})
-.catch(err=>showNotification('Error: '+err.message));
-}else{
-showNotification('Invalid URL. Must start with http:// or https://, or be empty.',5000);
-}
-}
+const url=await customPrompt('Enter profile picture URL:',currentUserData.profilePicUrl||'');
+if(url!==null){db.ref(`users/${currentUser.uid}/profilePicUrl`).set(url).then(()=>{showNotification('Profile picture updated!');}).catch(e=>showNotification('Error: '+e.message));}
 });
-profileEditNameBtn.addEventListener('click',()=>{
-profileEditNameForm.classList.remove('hidden');
-profileNameInput.value=currentUserData.name;
-profileViewName.classList.add('hidden');
-profileEditNameBtn.classList.add('hidden');
-});
+profileEditNameBtn.addEventListener('click',()=>{profileEditNameForm.classList.remove('hidden');profileNameInput.value=currentUserData.name;profileViewName.classList.add('hidden');profileEditNameBtn.classList.add('hidden');});
 profileSaveNameBtn.addEventListener('click',()=>{
-const newName=profileNameInput.value.trim();
-if(newName&&newName!==currentUserData.name){
-db.ref(`users/${currentUser.uid}/name`).set(newName)
-.then(()=>{
-currentUserData.name=newName;
-profileViewName.innerHTML=`${newName}${getVerifiedBadgeHTML(currentUserData)}`;
-showNotification('Name updated!');
-if(!currentUserData.profilePicUrl){
-profilePicWrapper.innerHTML=getProfilePicHTML(currentUserData,'4.5rem');
-}
-})
-.catch(err=>showNotification('Error: '+err.message))
-.finally(()=>{
-profileEditNameForm.classList.add('hidden');
-profileViewName.classList.remove('hidden');
-profileEditNameBtn.classList.remove('hidden');
+const n=profileNameInput.value.trim();
+if(n&&n!==currentUserData.name){db.ref(`users/${currentUser.uid}/name`).set(n).then(()=>{showNotification('Name updated!');}).finally(()=>{profileEditNameForm.classList.add('hidden');profileViewName.classList.remove('hidden');profileEditNameBtn.classList.remove('hidden');});}
+else{profileEditNameForm.classList.add('hidden');profileViewName.classList.remove('hidden');profileEditNameBtn.classList.remove('hidden');}
 });
-}else{
-profileEditNameForm.classList.add('hidden');
-profileViewName.classList.remove('hidden');
-profileEditNameBtn.classList.remove('hidden');
-}
-});
-profileCopyIdBtn.addEventListener('click',()=>{
-copyText(currentUserData.uid,'User ID copied to clipboard!');
-profileCopyIdBtn.style.boxShadow='inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff';
-setTimeout(()=>{
-profileCopyIdBtn.style.boxShadow='';
-},200);
-});
-profileCopyEmailBtn.addEventListener('click',()=>{
-copyText(currentUserData.email,'Email copied to clipboard!');
-profileCopyEmailBtn.style.boxShadow='inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff';
-setTimeout(()=>{
-profileCopyEmailBtn.style.boxShadow='';
-},200);
-});
-partnerModalCopyIdBtn.addEventListener('click',()=>{
-if(currentChatPartner){
-copyText(currentChatPartner.uid,'Friend ID copied to clipboard!');
-}
-});
-document.querySelectorAll('.close-modal-btn').forEach(btn=>{
-btn.addEventListener('click',(e)=>{
-const modal=e.target.closest('.modal');
-if(modal){
-showModal(modal.id,false);
-if(history.state){
-history.back();
-}
-}
-});
-});
-chatHeaderInfo.addEventListener('click',(e)=>{
-if(e.target.closest('.verified-badge'))return;
-if(currentChatPartner){
-partnerModalName.innerHTML=`${currentChatPartner.name}${getVerifiedBadgeHTML(currentChatPartner)}`;
-partnerModalIdText.textContent=currentChatPartner.uid;
-showModal('partner-profile-modal');
-history.pushState(null,'',window.location.pathname);
-}
-});
+profileCopyIdBtn.addEventListener('click',()=>{copyText(currentUserData.uid,'ID copied!');});
+profileCopyEmailBtn.addEventListener('click',()=>{copyText(currentUserData.email,'Email copied!');});
+partnerModalCopyIdBtn.addEventListener('click',()=>{if(currentChatPartner)copyText(currentChatPartner.uid,'Friend ID copied!');});
+chatHeaderInfo.addEventListener('click',e=>{if(e.target.closest('.verified-badge'))return;if(currentChatPartner){partnerModalName.innerHTML=`${currentChatPartner.name}${getVerifiedBadgeHTML(currentChatPartner)}`;partnerModalIdText.textContent=currentChatPartner.uid;showModal('partner-profile-modal');history.pushState(null,'',window.location.pathname);}});
 notificationBtn.addEventListener('click',()=>{
-showView('notification-view');
-history.pushState(null,'',window.location.pathname);
+showView('notification-view');history.pushState(null,'',window.location.pathname);
 if(unreadNotificationCount>0&&currentUser){
-const myUid=currentUser.uid;
-const notifRef=db.ref('notifications/'+myUid);
-notifRef.orderByChild('read').equalTo(false).once('value',snapshot=>{
-const updates={};
-snapshot.forEach(child=>{
-updates[child.key+'/read']=true;
-});
-if(Object.keys(updates).length>0){
-notifRef.update(updates);
+const r=db.ref('notifications/'+currentUser.uid);r.orderByChild('read').equalTo(false).once('value',s=>{const u={};s.forEach(c=>{u[c.key+'/read']=true;});if(Object.keys(u).length)r.update(u);});
 }
+unreadNotificationCount=0;updateNotificationBadge();
 });
-}
-unreadNotificationCount=0;
-updateNotificationBadge();
+notificationBackBtn.addEventListener('click',()=>{showView('main-view');});
+supportFabBtn.addEventListener('click',()=>{showView('support-view');history.pushState(null,'',window.location.pathname);listenForSupportMessages();});
+supportBackBtn.addEventListener('click',()=>{showView('main-view');if(supportListener)supportListener.off();supportListener=null;});
+supportSendBtn.addEventListener('click',()=>{
+const t=supportInput.value.trim();if(!t||!currentUser)return;
+db.ref(`support_chats/${currentUser.uid}`).push({text:t,sender:'user',timestamp:firebase.database.ServerValue.TIMESTAMP});
+db.ref('support_requests').push({uid:currentUser.uid,message:t,timestamp:firebase.database.ServerValue.TIMESTAMP}).then(()=>{supportInput.value='';supportMessages.scrollTop=supportMessages.scrollHeight;});
 });
-notificationBackBtn.addEventListener('click',()=>{
-showView('main-view');
-});
-supportFabBtn.addEventListener('click',()=>{
-showView('support-view');
-history.pushState(null,'',window.location.pathname);
-listenForSupportMessages();
-});
-supportBackBtn.addEventListener('click',()=>{
-showView('main-view');
-if(supportListener)supportListener.off();
-supportListener=null;
-});
-supportSendBtn.addEventListener('click',sendSupportMessage);
-supportInput.addEventListener('keypress',(e)=>{
-if(e.key==='Enter')sendSupportMessage();
-});
-function sendSupportMessage(){
-const text=supportInput.value.trim();
-if(!text||!currentUser)return;
-const chatData={
-text:text,
-sender:'user',
-timestamp:firebase.database.ServerValue.TIMESTAMP
-};
-db.ref(`support_chats/${currentUser.uid}`).push(chatData);
-const requestData={
-uid:currentUser.uid,
-message:text,
-timestamp:firebase.database.ServerValue.TIMESTAMP
-};
-db.ref('support_requests').push(requestData)
-.then(()=>{
-supportInput.value='';
-supportMessages.scrollTop=supportMessages.scrollHeight;
-})
-.catch(err=>{
-showNotification('Error sending message: '+err.message);
-});
-}
 function listenForSupportMessages(){
-if(!currentUser)return;
-if(supportListener)supportListener.off();
-supportMessages.innerHTML='';
-const chatRef=db.ref(`support_chats/${currentUser.uid}`);
-supportListener=chatRef.on('child_added',snapshot=>{
-const msg=snapshot.val();
-renderSupportMessage(msg);
+if(!currentUser)return;if(supportListener)supportListener.off();supportMessages.innerHTML='';
+supportListener=db.ref(`support_chats/${currentUser.uid}`).on('child_added',s=>{
+const m=s.val();const b=document.createElement('div');b.className=`support-bubble ${m.sender==='user'?'sent':'received'}`;b.textContent=m.text;supportMessages.appendChild(b);supportMessages.scrollTop=supportMessages.scrollHeight;
 });
-}
-function renderSupportMessage(msg){
-const bubble=document.createElement('div');
-const isSent=msg.sender==='user';
-bubble.className=`support-bubble ${isSent?'sent':'received'}`;
-bubble.textContent=msg.text;
-supportMessages.appendChild(bubble);
-supportMessages.scrollTop=supportMessages.scrollHeight;
-}
-function initializeApp(){
 }
 async function populateAllFriendsList(){
-if(!callsContent||!currentUser||!currentUserData)return;
-callsContent.innerHTML='';
+if(!callsContent||!currentUser)return;callsContent.innerHTML='';
 try{
-const contactsSnap=await db.ref('contacts/'+currentUser.uid).once('value');
-if(!contactsSnap.exists()||!contactsSnap.hasChildren()){
-callsContent.innerHTML='<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No friends found. Add friends using their ID.</p>';
-return;
+const snap=await db.ref('contacts/'+currentUser.uid).once('value');
+if(!snap.exists()){callsContent.innerHTML='<p style="padding:20px;text-align:center;color:var(--wa-text-secondary);">No friends found.</p>';return;}
+const uids=Object.keys(snap.val()),snaps=await Promise.all(uids.map(u=>currentUserData.blockedUsers&&currentUserData.blockedUsers[u]?null:db.ref('users/'+u).once('value')).filter(p=>p!==null));
+const friends=snaps.filter(s=>s.exists()).map(s=>s.val()).sort((a,b)=>a.name.localeCompare(b.name));
+friends.forEach(f=>createOrUpdateContactItem(f,true));
+if(friends.length===0)callsContent.innerHTML='<p style="padding:20px;text-align:center;color:var(--wa-text-secondary);">No friends found.</p>';
+}catch(e){callsContent.innerHTML='<p style="padding:20px;text-align:center;color:var(--call-end-red);">Error.</p>';}
 }
-let friendCount=0;
-const contactIds=Object.keys(contactsSnap.val());
-const userFetchPromises=contactIds.map(uid=>{
-if(currentUserData.blockedUsers&&currentUserData.blockedUsers[uid]){
-return null;
-}
-return db.ref('users/'+uid).once('value');
-}).filter(p=>p!==null);
-const userSnapshots=await Promise.all(userFetchPromises);
-const friendsData=[];
-userSnapshots.forEach(userSnap=>{
-if(userSnap.exists()){
-friendsData.push(userSnap.val());
-}
-});
-friendsData.sort((a,b)=>a.name.localeCompare(b.name));
-friendsData.forEach(user=>{
-createOrUpdateContactItem(user,true);
-friendCount++;
-});
-if(friendCount===0){
-callsContent.innerHTML='<p style="padding: 20px; text-align: center; color: var(--wa-text-secondary);">No friends found. Add friends using their ID.</p>';
-}
-}catch(err){
-callsContent.innerHTML='<p style="padding: 20px; text-align: center; color: var(--call-end-red);">Error loading friends list.</p>';
-}
-}
-addFriendBtn.addEventListener('click',()=>{
-addFriendForm.reset();
-showModal('add-friend-modal');
-history.pushState(null,'',window.location.pathname);
-});
-addFriendForm.addEventListener('submit',(e)=>{
-e.preventDefault();
-const friendId=friendIdInput.value.trim();
-if(friendId===currentUser.uid){
-showNotification("You can't add yourself as a friend.",5000);
-return;
-}
-db.ref('users/'+friendId).once('value',snapshot=>{
-if(snapshot.exists()){
-if(currentUserData.blockedUsers&&currentUserData.blockedUsers[friendId]){
-showNotification("This user is in your block list. Unblock them from Settings to add.",5000);
-return;
-}
-const myUid=currentUser.uid;
-const updates={};
-updates[`contacts/${myUid}/${friendId}`]=true;
-updates[`contacts/${friendId}/${myUid}`]=true;
-db.ref().update(updates).then(()=>{
-showNotification('Friend added successfully!');
-showModal('add-friend-modal',false);
-if(history.state)history.back();
-populateAllFriendsList();
-}).catch(err=>{
-showNotification('Error adding friend: '+err.message,5000);
-});
-}else{
-showNotification('User not found.',5000);
-}
+addFriendBtn.addEventListener('click',()=>{addFriendForm.reset();showModal('add-friend-modal');history.pushState(null,'',window.location.pathname);});
+addFriendForm.addEventListener('submit',e=>{
+e.preventDefault();const fid=friendIdInput.value.trim();
+if(fid===currentUser.uid){showNotification("Cannot add yourself.");return;}
+db.ref('users/'+fid).once('value',s=>{
+if(s.exists()){
+if(currentUserData.blockedUsers&&currentUserData.blockedUsers[fid]){showNotification("User blocked.");return;}
+const u={};u[`contacts/${currentUser.uid}/${fid}`]=true;u[`contacts/${fid}/${currentUser.uid}`]=true;
+db.ref().update(u).then(()=>{showNotification('Friend added!');showModal('add-friend-modal',false);if(history.state)history.back();populateAllFriendsList();});
+}else showNotification('User not found.');
 });
 });
 function sortChatList(){
-const chatItems=Array.from(homeContent.querySelectorAll('.list-item'));
-// --- পরিবর্তন ৩: শুধুমাত্র দৃশ্যমান আইটেম দিয়ে লিস্ট সর্ট ও চেক করা ---
-chatItems.sort((a,b)=>{
-const uidA=a.dataset.uid;
-const uidB=b.dataset.uid;
-const timeA=(lastMessageTimestamps[uidA]||{}).timestamp||0;
-const timeB=(lastMessageTimestamps[uidB]||{}).timestamp||0;
-return timeB-timeA;
+const items=Array.from(homeContent.querySelectorAll('.list-item'));
+items.sort((a,b)=>{
+const ta=(lastMessageTimestamps[a.dataset.uid]||{}).timestamp||0;
+const tb=(lastMessageTimestamps[b.dataset.uid]||{}).timestamp||0;
+return tb-ta;
 });
-chatItems.forEach(item=>homeContent.appendChild(item));
-const noChatsMsgId='no-chats-message';
-let noChatsMsg=homeContent.querySelector(`#${noChatsMsgId}`);
-const visibleItems = chatItems.filter(item => !item.classList.contains('hidden'));
-const allHiddenOrEmpty = visibleItems.length === 0;
-if(allHiddenOrEmpty&&!noChatsMsg){
-noChatsMsg=document.createElement('p');
-noChatsMsg.id=noChatsMsgId;
-noChatsMsg.style.padding='20px';
-noChatsMsg.style.textAlign='center';
-noChatsMsg.style.color='var(--wa-text-secondary)';
-noChatsMsg.textContent='No active chats. Start a new one from the "ALL FRIEND" tab.';
-homeContent.appendChild(noChatsMsg);
-}else if(!allHiddenOrEmpty&&noChatsMsg){
-noChatsMsg.remove();
+items.forEach(i=>homeContent.appendChild(i));
+const vis=items.filter(i=>!i.classList.contains('hidden'));
+let msg=homeContent.querySelector('#no-chats-message');
+if(vis.length===0){if(!msg){msg=document.createElement('p');msg.id='no-chats-message';msg.style.cssText='padding:20px;text-align:center;color:var(--wa-text-secondary);';msg.textContent='No active chats.';homeContent.appendChild(msg);}}
+else if(msg)msg.remove();
 }
-}
-function listenForLastMessageUpdates(contactId){
-if(currentUserData.blockedUsers&&currentUserData.blockedUsers[contactId]){
-return;
-}
-const chatId=getChatId(currentUser.uid,contactId);
-const messagesRef=db.ref('messages/'+chatId).limitToLast(1);
-if(contactListeners[contactId+'_msg'])contactListeners[contactId+'_msg'].off();
-contactListeners[contactId+'_msg']=messagesRef;
-messagesRef.on('child_added',snapshot=>{
-const msg=snapshot.val();
-if(currentUserData.blockedUsers&&currentUserData.blockedUsers[msg.senderId]){
-return;
-}
-const sender=msg.senderId===currentUser.uid?'You: ':'';
-lastMessageTimestamps[contactId]={
-text:`${sender}${msg.text}`,
-timestamp:msg.timestamp
-};
-const item=homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
-if(item){
-item.querySelector('.item-subtext').textContent=`${sender}${msg.text}`;
-// --- পরিবর্তন ৪: নতুন মেসেজ আসলে চ্যাট শো করা ---
-item.classList.remove('hidden');
-sortChatList();
-}
+function listenForLastMessageUpdates(cid){
+if(currentUserData.blockedUsers&&currentUserData.blockedUsers[cid])return;
+const ref=db.ref('messages/'+getChatId(currentUser.uid,cid)).limitToLast(1);
+if(contactListeners[cid+'_msg'])contactListeners[cid+'_msg'].off();contactListeners[cid+'_msg']=ref;
+ref.on('child_added',s=>{
+const m=s.val();if(currentUserData.blockedUsers&&currentUserData.blockedUsers[m.senderId])return;
+lastMessageTimestamps[cid]={text:m.type==='audio'?'🎤 Voice Message':(m.senderId===currentUser.uid?'You: ':'')+m.text,timestamp:m.timestamp};
+const i=homeContent.querySelector(`.list-item[data-uid="${cid}"]`);
+if(i){i.querySelector('.item-subtext').textContent=lastMessageTimestamps[cid].text;i.classList.remove('hidden');sortChatList();}
 });
-messagesRef.on('child_removed',()=>{
-db.ref('messages/'+chatId).limitToLast(1).once('value',snapshot=>{
-const item=homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
-if(!item)return;
-if(snapshot.exists()){
-snapshot.forEach(child=>{
-const msg=child.val();
-const sender=msg.senderId===currentUser.uid?'You: ':'';
-lastMessageTimestamps[contactId]={text:`${sender}${msg.text}`,timestamp:msg.timestamp};
-if(item)item.querySelector('.item-subtext').textContent=`${sender}${msg.text}`;
-});
-}else{
-lastMessageTimestamps[contactId]={text:'Tap to chat',timestamp:0};
-if(item){
-item.querySelector('.item-subtext').textContent='Tap to chat';
-// --- পরিবর্তন ৫: মেসেজ মুছে গেলে চ্যাট লুকানো ---
-item.classList.add('hidden');
-}
-}
+ref.on('child_removed',()=>{
+db.ref('messages/'+getChatId(currentUser.uid,cid)).limitToLast(1).once('value',s=>{
+const i=homeContent.querySelector(`.list-item[data-uid="${cid}"]`);if(!i)return;
+if(s.exists()){
+s.forEach(c=>{const m=c.val();lastMessageTimestamps[cid]={text:m.type==='audio'?'🎤 Voice Message':(m.senderId===currentUser.uid?'You: ':'')+m.text,timestamp:m.timestamp};i.querySelector('.item-subtext').textContent=lastMessageTimestamps[cid].text;});
+}else{lastMessageTimestamps[cid]={text:'Tap to chat',timestamp:0};i.querySelector('.item-subtext').textContent='Tap to chat';i.classList.add('hidden');}
 sortChatList();
 });
 });
-}
-function listenToContactListeners(contactId){
-const userRef=db.ref('users/'+contactId);
-if(contactListeners[contactId+'_user'])contactListeners[contactId+'_user'].off();
-contactListeners[contactId+'_user']=userRef;
-userRef.on('value',snapshot=>{
-if(snapshot.exists()){
-const contact=snapshot.val();
-createOrUpdateContactItem(contact,false);
-}
-});
-listenForLastMessageUpdates(contactId);
-}
-function stopListeningToContact(contactId){
-if(contactListeners[contactId+'_user']){
-contactListeners[contactId+'_user'].off();
-delete contactListeners[contactId+'_user'];
-}
-if(contactListeners[contactId+'_msg']){
-contactListeners[contactId+'_msg'].off();
-delete contactListeners[contactId+'_msg'];
-}
-const chatItem=homeContent.querySelector(`.list-item[data-uid="${contactId}"]`);
-if(chatItem)chatItem.remove();
-delete lastMessageTimestamps[contactId];
 }
 function listenForContacts(){
 if(contactListeners.main)contactListeners.main.off();
-const contactsRef=db.ref('contacts/'+currentUser.uid);
-contactListeners.main=contactsRef;
-contactsRef.on('child_added',snapshot=>{
-const contactId=snapshot.key;
-if(currentUserData.blockedUsers&&currentUserData.blockedUsers[contactId]){
-return;
-}
-listenToContactListeners(contactId);
+const r=db.ref('contacts/'+currentUser.uid);contactListeners.main=r;
+r.on('child_added',s=>{const id=s.key;if(currentUserData.blockedUsers&&currentUserData.blockedUsers[id])return;
+const ur=db.ref('users/'+id);if(contactListeners[id+'_user'])contactListeners[id+'_user'].off();
+contactListeners[id+'_user']=ur;ur.on('value',sn=>{if(sn.exists())createOrUpdateContactItem(sn.val());});
+listenForLastMessageUpdates(id);
 });
-contactsRef.on('child_removed',snapshot=>{
-const contactId=snapshot.key;
-stopListeningToContact(contactId);
-sortChatList();
-});
+r.on('child_removed',s=>{const id=s.key;if(contactListeners[id+'_user'])contactListeners[id+'_user'].off();if(contactListeners[id+'_msg'])contactListeners[id+'_msg'].off();const i=homeContent.querySelector(`.list-item[data-uid="${id}"]`);if(i)i.remove();delete lastMessageTimestamps[id];sortChatList();});
 }
-function deleteChatHistory(partnerId){
-const myUid=currentUser.uid;
-const updates={};
-const chatId=getChatId(myUid,partnerId);
-updates[`messages/${chatId}`]=null;
-updates[`unreadCounts/${myUid}/${partnerId}`]=null;
-updates[`unreadCounts/${partnerId}/${myUid}`]=null;
-db.ref().update(updates)
-.then(()=>{
+function deleteChatHistory(pid){
+const cid=getChatId(currentUser.uid,pid);
+const u={};u[`messages/${cid}`]=null;u[`unreadCounts/${currentUser.uid}/${pid}`]=null;u[`unreadCounts/${pid}/${currentUser.uid}`]=null;
+db.ref().update(u).then(()=>{
 showNotification('Chat history removed.');
-const chatItem = homeContent.querySelector(`.list-item[data-uid="${partnerId}"]`);
-if(chatItem){
-    // --- পরিবর্তন ৬: চ্যাট হিস্টোরি ডিলিট হলে চ্যাট লুকানো ---
-    lastMessageTimestamps[partnerId] = {text:'Tap to chat', timestamp:0};
-    chatItem.querySelector('.item-subtext').textContent = 'Tap to chat';
-    chatItem.classList.add('hidden');
-    sortChatList();
-}
-db.ref(`unreadCounts/${myUid}/${partnerId}`).remove();
-})
-.catch(err=>{
-showNotification(`Error deleting chat: ${err.message}`,5000);
+const i=homeContent.querySelector(`.list-item[data-uid="${pid}"]`);
+if(i){lastMessageTimestamps[pid]={text:'Tap to chat',timestamp:0};i.querySelector('.item-subtext').textContent='Tap to chat';i.classList.add('hidden');sortChatList();}
 });
 }
-allNavTabs.forEach(tab=>{
-tab.addEventListener('click',()=>{
-const panelId=`${tab.id.split('-')[1]}-content`;
-showPanel(panelId);
-history.pushState(null,'',window.location.pathname);
+allNavTabs.forEach(t=>{t.addEventListener('click',()=>{showPanel(t.id.split('-')[1]+'-content');history.pushState(null,'',window.location.pathname);});});
+function openChat(p){
+currentChatPartner=p;chatHeaderPicWrapper.innerHTML=getProfilePicHTML(p,'1.8rem');
+chatHeaderName.innerHTML=`<span class="item-name-text">${p.name}</span>${getVerifiedBadgeHTML(p)}`;
+chatMessages.innerHTML='';messageElements={};showView('chat-view');history.pushState(null,'',window.location.pathname);
+db.ref(`unreadCounts/${currentUser.uid}/${p.uid}`).remove();
+if(currentChatListener)currentChatListener.off();
+const ref=db.ref('messages/'+getChatId(currentUser.uid,p.uid));
+currentChatListener=ref.limitToLast(50);
+currentChatListener.on('child_added',s=>{
+const m=s.val();if(currentUserData.blockedUsers&&currentUserData.blockedUsers[m.senderId])return;
+renderMessage(s.key,m);if(m.receiverId===currentUser.uid&&m.status!=='seen')ref.child(s.key).update({status:'seen'});
 });
-});
-function openChat(partner){
-const myUid=currentUser.uid;
-const partnerId=partner.uid;
-currentChatPartner=partner;
-chatHeaderPicWrapper.innerHTML=getProfilePicHTML(partner,'1.8rem');
-chatHeaderName.innerHTML=`<span class="item-name-text">${partner.name}</span>${getVerifiedBadgeHTML(partner)}`;
-chatMessages.innerHTML='';
-messageElements={};
-showView('chat-view');
-history.pushState(null,'',window.location.pathname);
-db.ref(`unreadCounts/${currentUser.uid}/${partner.uid}`).remove();
-const chatId=getChatId(currentUser.uid,partner.uid);
-if(currentChatListener){
-currentChatListener.off();
+currentChatListener.on('child_changed',s=>{if(s.val().senderId===currentUser.uid&&messageElements[s.key])document.getElementById(`status-${s.key}`).innerHTML=getStatusSVG(s.val().status);});
+currentChatListener.on('child_removed',s=>{if(messageElements[s.key]){messageElements[s.key].remove();delete messageElements[s.key];}});
 }
-const messagesRef=db.ref('messages/'+chatId);
-currentChatListener=messagesRef.limitToLast(50);
-currentChatListener.on('child_added',snapshot=>{
-const msg=snapshot.val();
-if(currentUserData.blockedUsers&&currentUserData.blockedUsers[msg.senderId]){
-return;
+function getStatusSVG(s){const seen=s==='seen';return`<svg class="message-status-icon ${seen?'seen':''}" viewBox="0 0 24 24" fill="${seen?'var(--wa-accent-blue)':'var(--wa-text-secondary)'}"><path d="${seen?'M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z':'M9.01 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9.01 16.2zm7-9.9l1.4 1.4L9 16.2l-1.4-1.4L9 13.4l7-7z'}"/></svg>`;}
+function renderMessage(mid,m){
+const isMe=m.senderId===currentUser.uid;
+const hidden=JSON.parse(localStorage.getItem(`hidden_msgs_${currentUser.uid}`))||[];
+if(hidden.includes(mid)||messageElements[mid])return;
+const b=document.createElement('div');b.className=`message-bubble ${isMe?'message-sent':'message-received'}`;b.id=`msg-${mid}`;
+let pt;const sp=()=>{pt=setTimeout(()=>{openMessageOptions(mid,m.text,isMe);},600);},cp=()=>{clearTimeout(pt);};
+b.addEventListener('mousedown',sp);b.addEventListener('mouseup',cp);b.addEventListener('mouseleave',cp);b.addEventListener('touchstart',sp);b.addEventListener('touchend',cp);b.addEventListener('touchmove',cp);
+const cw=document.createElement('div');cw.className='message-content-wrapper';
+if(m.type==='audio'){
+const aud=document.createElement('audio');aud.controls=true;aud.className='audio-player';aud.src=m.content;cw.appendChild(aud);
+}else{
+const t=document.createElement('span');t.className='message-text';t.textContent=m.text;cw.appendChild(t);
 }
-renderMessage(snapshot.key,msg);
-if(msg.receiverId===currentUser.uid&&msg.status!=='seen'){
-messagesRef.child(snapshot.key).update({status:'seen'});
-}
-});
-currentChatListener.on('child_changed',snapshot=>{
-const msg=snapshot.val();
-if(msg.senderId===currentUser.uid&&msg.receiverId===partner.uid&&messageElements[snapshot.key]){
-updateMessageStatus(snapshot.key,msg.status);
-}
-});
-currentChatListener.on('child_removed',snapshot=>{
-const msgId=snapshot.key;
-if(messageElements[msgId]){
-messageElements[msgId].remove();
-delete messageElements[msgId];
-}
-});
-}
-function getStatusSVG(status){
-const baseClass='message-status-icon';
-const isSeen=status==='seen';
-const fill=isSeen?'var(--wa-accent-blue)':'var(--wa-text-secondary)';
-const svgPath=isSeen
-?'M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z'
-:'M9.01 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9.01 16.2zm7-9.9l1.4 1.4L9 16.2l-1.4-1.4L9 13.4l7-7z';
-return`
-<svg class="${baseClass} ${isSeen?'seen':''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${fill}">
-<path d="${svgPath}"/>
-</svg>
-`;
-}
-function renderMessage(msgId,msg){
-const isSent=msg.senderId===currentUser.uid;
-const deletedForMe=JSON.parse(localStorage.getItem(`hidden_msgs_${currentUser.uid}`))||[];
-if(deletedForMe.includes(msgId))return;
-if(messageElements[msgId])return;
-const bubble=document.createElement('div');
-bubble.className=`message-bubble ${isSent?'message-sent':'message-received'}`;
-bubble.id=`msg-${msgId}`;
-bubble.oncontextmenu=function(){return false;};
-let pressTimer;
-const startPress=(e)=>{
-pressTimer=setTimeout(()=>{
-openMessageOptions(msgId,msg.text,isSent);
-},600);
-};
-const cancelPress=(e)=>{
-clearTimeout(pressTimer);
-};
-bubble.addEventListener('mousedown',startPress);
-bubble.addEventListener('mouseup',cancelPress);
-bubble.addEventListener('mouseleave',cancelPress);
-bubble.addEventListener('touchstart',startPress);
-bubble.addEventListener('touchend',cancelPress);
-bubble.addEventListener('touchmove',cancelPress);
-const contentWrapper=document.createElement('div');
-contentWrapper.className='message-content-wrapper';
-const textSpan=document.createElement('span');
-textSpan.className='message-text';
-textSpan.textContent=msg.text;
-const timeStatusWrapper=document.createElement('div');
-timeStatusWrapper.className='message-time-status';
-const timeSpan=document.createElement('span');
-timeSpan.textContent=formatTimestamp(msg.timestamp);
-timeStatusWrapper.appendChild(timeSpan);
-if(isSent){
-const statusIconWrapper=document.createElement('span');
-statusIconWrapper.id=`status-${msgId}`;
-statusIconWrapper.innerHTML=getStatusSVG(msg.status||'sent');
-timeStatusWrapper.appendChild(statusIconWrapper);
-}
-contentWrapper.appendChild(textSpan);
-contentWrapper.appendChild(timeStatusWrapper);
-bubble.appendChild(contentWrapper);
-chatMessages.appendChild(bubble);
-messageElements[msgId]=bubble;
-if(chatMessages.scrollHeight-chatMessages.clientHeight<=chatMessages.scrollTop+100){
-chatMessages.scrollTop=chatMessages.scrollHeight;
-}
-}
-function updateMessageStatus(msgId,newStatus){
-const statusEl=document.getElementById(`status-${msgId}`);
-if(statusEl){
-statusEl.innerHTML=getStatusSVG(newStatus);
-}
+const tw=document.createElement('div');tw.className='message-time-status';
+const ts=document.createElement('span');ts.textContent=formatTimestamp(m.timestamp);tw.appendChild(ts);
+if(isMe){const si=document.createElement('span');si.id=`status-${mid}`;si.innerHTML=getStatusSVG(m.status||'sent');tw.appendChild(si);}
+cw.appendChild(tw);b.appendChild(cw);chatMessages.appendChild(b);messageElements[mid]=b;
+if(chatMessages.scrollHeight-chatMessages.clientHeight<=chatMessages.scrollTop+100)chatMessages.scrollTop=chatMessages.scrollHeight;
 }
 chatSendBtn.addEventListener('click',sendMessage);
-chatInput.addEventListener('keypress',(e)=>{
-if(e.key==='Enter'){
-sendMessage();
-}
-});
+chatInput.addEventListener('keypress',e=>{if(e.key==='Enter')sendMessage();});
 function sendMessage(){
-const text=chatInput.value.trim();
-if(text===''||!currentChatPartner)return;
-const chatId=getChatId(currentUser.uid,currentChatPartner.uid);
-const message={
-text:text,
-senderId:currentUser.uid,
-receiverId:currentChatPartner.uid,
-timestamp:firebase.database.ServerValue.TIMESTAMP,
-status:'sent'
-};
-db.ref('messages/'+chatId).push(message);
-const unreadRef=db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`);
-unreadRef.transaction(count=>(count||0)+1);
-chatInput.value='';
-chatInput.focus();
+const t=chatInput.value.trim();if(!t||!currentChatPartner)return;
+db.ref('messages/'+getChatId(currentUser.uid,currentChatPartner.uid)).push({text:t,senderId:currentUser.uid,receiverId:currentChatPartner.uid,timestamp:firebase.database.ServerValue.TIMESTAMP,status:'sent'});
+db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`).transaction(c=>(c||0)+1);chatInput.value='';chatInput.focus();
 }
-chatBackBtn.addEventListener('click',()=>{
-showView('main-view');
-currentChatPartner=null;
-if(currentChatListener){
-currentChatListener.off();
-currentChatListener=null;
+chatBackBtn.addEventListener('click',()=>{showView('main-view');currentChatPartner=null;if(currentChatListener)currentChatListener.off();});
+function openMessageOptions(mid,txt,isMe){
+currentSelectedMsgId=mid;currentSelectedMsgText=txt;currentSelectedMsgIsSender=isMe;
+msgOptDeleteEveryone.classList.toggle('hidden',!isMe);showModal('message-options-modal');history.pushState(null,'',window.location.pathname);
 }
-if(history.state){
-}
-});
-function openMessageOptions(msgId,text,isSender){
-currentSelectedMsgId=msgId;
-currentSelectedMsgText=text;
-currentSelectedMsgIsSender=isSender;
-if(isSender){
-msgOptDeleteEveryone.classList.remove('hidden');
-}else{
-msgOptDeleteEveryone.classList.add('hidden');
-}
-showModal('message-options-modal');
-history.pushState(null,'',window.location.pathname);
-}
-msgOptCopy.addEventListener('click',()=>{
-copyText(currentSelectedMsgText,'Message copied');
-showModal('message-options-modal',false);
-if(history.state)history.back();
-});
-msgOptCancel.addEventListener('click',()=>{
-showModal('message-options-modal',false);
-if(history.state)history.back();
-});
+msgOptCopy.addEventListener('click',()=>{copyText(currentSelectedMsgText,'Message copied');showModal('message-options-modal',false);if(history.state)history.back();});
+msgOptCancel.addEventListener('click',()=>{showModal('message-options-modal',false);if(history.state)history.back();});
 msgOptDeleteMe.addEventListener('click',()=>{
-if(!currentSelectedMsgId||!currentUser)return;
-const key=`hidden_msgs_${currentUser.uid}`;
-const hiddenMsgs=JSON.parse(localStorage.getItem(key))||[];
-hiddenMsgs.push(currentSelectedMsgId);
-localStorage.setItem(key,JSON.stringify(hiddenMsgs));
-const bubble=document.getElementById(`msg-${currentSelectedMsgId}`);
-if(bubble)bubble.remove();
-delete messageElements[currentSelectedMsgId];
-showNotification('Message deleted for you');
-showModal('message-options-modal',false);
-if(history.state)history.back();
+if(!currentSelectedMsgId)return;
+const k=`hidden_msgs_${currentUser.uid}`;const h=JSON.parse(localStorage.getItem(k))||[];h.push(currentSelectedMsgId);localStorage.setItem(k,JSON.stringify(h));
+const b=document.getElementById(`msg-${currentSelectedMsgId}`);if(b)b.remove();delete messageElements[currentSelectedMsgId];
+showNotification('Deleted for you');showModal('message-options-modal',false);if(history.state)history.back();
 });
 msgOptDeleteEveryone.addEventListener('click',()=>{
-if(!currentSelectedMsgId||!currentChatPartner||!currentSelectedMsgIsSender)return;
-const chatId=getChatId(currentUser.uid,currentChatPartner.uid);
-db.ref(`messages/${chatId}/${currentSelectedMsgId}`).remove()
-.then(()=>{
-showNotification('Message deleted for everyone');
-})
-.catch(err=>{
-showNotification('Error deleting: '+err.message);
-});
-showModal('message-options-modal',false);
-if(history.state)history.back();
+if(!currentSelectedMsgId||!currentChatPartner)return;
+db.ref(`messages/${getChatId(currentUser.uid,currentChatPartner.uid)}/${currentSelectedMsgId}`).remove().then(()=>{showNotification('Deleted for everyone');});
+showModal('message-options-modal',false);if(history.state)history.back();
 });
 function listenForUnreadCounts(){
-const myUid=currentUser.uid;
-if(unreadListeners.main)unreadListeners.main.off();
-const unreadRoot=db.ref('unreadCounts/'+myUid);
-unreadRoot.on('value',snapshot=>{
-let totalUnread=0;
-const counts=snapshot.val()||{};
-const blockedUids=currentUserData.blockedUsers||{};
-const filteredCounts={};
-for(const uid in counts){
-if(!blockedUids[uid]){
-filteredCounts[uid]=counts[uid];
-}
-}
-document.querySelectorAll('.list-item').forEach(item=>{
-const uid=item.dataset.uid;
-if(uid){
-const badge=document.getElementById(`badge-${uid}`);
-const count=filteredCounts[uid]||0;
-if(badge){
-badge.textContent=count;
-badge.classList.toggle('hidden',count===0);
-}
-}
+const ur=db.ref('unreadCounts/'+currentUser.uid);if(unreadListeners.main)unreadListeners.main.off();
+ur.on('value',s=>{
+let tot=0;const c=s.val()||{},blk=currentUserData.blockedUsers||{};
+document.querySelectorAll('.list-item').forEach(i=>{
+const uid=i.dataset.uid;if(uid&&!blk[uid]){const cnt=c[uid]||0;const b=document.getElementById(`badge-${uid}`);if(b){b.textContent=cnt;b.classList.toggle('hidden',cnt===0);}tot+=cnt;}
 });
-totalUnread=Object.values(filteredCounts).reduce((sum,count)=>sum+count,0);
-chatsBadge.textContent=totalUnread;
-chatsBadge.classList.toggle('hidden',totalUnread===0);
+chatsBadge.textContent=tot;chatsBadge.classList.toggle('hidden',tot===0);
 });
-unreadListeners.main=unreadRoot;
+unreadListeners.main=ur;
 }
-function updateNotificationBadge(){
-notificationBadge.textContent=unreadNotificationCount;
-notificationBadge.classList.toggle('hidden',unreadNotificationCount===0);
-}
-function checkShowNoNotificationsMsg(){
-setTimeout(()=>{
-const noMsg=notificationListContent.querySelector('#no-notifications-msg');
-const hasItems=notificationListContent.querySelectorAll('.notification-item').length>0;
-if(!hasItems&&!noMsg){
-notificationListContent.innerHTML='<p id="no-notifications-msg">You have no notifications.</p>';
-}else if(hasItems&&noMsg){
-noMsg.remove();
-}
-},50);
-}
-function deleteNotification(notifId){
-if(!currentUser||!notifId)return;
-db.ref(`notifications/${currentUser.uid}/${notifId}`).remove()
-.catch(err=>{
-showNotification('Error deleting notification: '+err.message,4000);
-});
-}
-function renderNotification(notifId,notifData){
-const existing=document.getElementById(notifId);
-if(existing)existing.remove();
-const item=document.createElement('div');
-item.className='notification-item';
-item.id=notifId;
-const text=document.createElement('div');
-text.className='notification-item-text';
-text.textContent=notifData.message;
-const time=document.createElement('div');
-time.className='notification-item-time';
-time.textContent=formatFullTimestamp(notifData.timestamp);
-const deleteBtn=document.createElement('button');
-deleteBtn.className='notif-delete-btn';
-deleteBtn.innerHTML='&times;';
-deleteBtn.title='Delete Notification';
-deleteBtn.addEventListener('click',(e)=>{
-e.stopPropagation();
-customConfirm('Are you sure you want to delete this notification?')
-.then(isConfirmed=>{
-if(isConfirmed){
-deleteNotification(notifId);
-}
-});
-});
-item.appendChild(text);
-item.appendChild(time);
-item.appendChild(deleteBtn);
-const noMsg=notificationListContent.querySelector('#no-notifications-msg');
-if(noMsg)noMsg.remove();
-notificationListContent.prepend(item);
-}
+function updateNotificationBadge(){notificationBadge.textContent=unreadNotificationCount;notificationBadge.classList.toggle('hidden',unreadNotificationCount===0);}
 function listenForNotifications(){
-if(notificationListener)notificationListener.off();
-if(!currentUser||!currentUser.uid)return;
-const myUid=currentUser.uid;
-const notifRef=db.ref('notifications/'+myUid);
-notificationListener=notifRef.orderByChild('timestamp').limitToLast(30);
-notificationListContent.innerHTML='';
-unreadNotificationCount=0;
-let initialLoadComplete=false;
-notificationListener.on('child_added',snapshot=>{
-const notifData=snapshot.val();
-renderNotification(snapshot.key,notifData);
-if(notifData.read===false){
-unreadNotificationCount++;
-updateNotificationBadge();
-}
-if(initialLoadComplete){
-checkShowNoNotificationsMsg();
-}
+if(notificationListener)notificationListener.off();if(!currentUser)return;
+const nr=db.ref('notifications/'+currentUser.uid);notificationListener=nr.orderByChild('timestamp').limitToLast(30);
+notificationListContent.innerHTML='';unreadNotificationCount=0;
+notificationListener.on('child_added',s=>{
+const n=s.val(),id=s.key;if(document.getElementById(id))return;
+const i=document.createElement('div');i.className='notification-item';i.id=id;
+i.innerHTML=`<div class="notification-item-text">${n.message}</div><div class="notification-item-time">${formatFullTimestamp(n.timestamp)}</div>`;
+const db=document.createElement('button');db.className='notif-delete-btn';db.innerHTML='&times;';
+db.addEventListener('click',e=>{e.stopPropagation();customConfirm('Delete notification?').then(y=>{if(y)db.ref(`notifications/${currentUser.uid}/${id}`).remove();});});
+i.appendChild(db);
+const nm=notificationListContent.querySelector('#no-notifications-msg');if(nm)nm.remove();notificationListContent.prepend(i);
+if(!n.read){unreadNotificationCount++;updateNotificationBadge();}
 });
-notificationListener.on('child_changed',snapshot=>{
-renderNotification(snapshot.key,snapshot.val());
-const notifData=snapshot.val();
-if(notifData.read===true){
-}
-});
-notificationListener.on('child_removed',snapshot=>{
-const notifId=snapshot.key;
-const item=document.getElementById(notifId);
-if(item){
-item.remove();
-}
-checkShowNoNotificationsMsg();
-});
-notificationListener.once('value',snapshot=>{
-initialLoadComplete=true;
-checkShowNoNotificationsMsg();
-});
+notificationListener.on('child_removed',s=>{const el=document.getElementById(s.key);if(el)el.remove();if(!notificationListContent.children.length)notificationListContent.innerHTML='<p id="no-notifications-msg">No notifications.</p>';});
 }
 async function populateBlockedUsersList(){
-if(!blockedUsersListEl)return;
-blockedUsersListEl.innerHTML='<p style="padding: 8px 12px; color: #666;">Loading...</p>';
-const blockedIds=Object.keys(currentUserData.blockedUsers||{});
-if(blockedIds.length===0){
-blockedUsersListEl.innerHTML='<p style="padding: 8px 12px; color: #666;">No users blocked.</p>';
-return;
-}
+if(!blockedUsersListEl)return;blockedUsersListEl.innerHTML='Loading...';
+const blk=Object.keys(currentUserData.blockedUsers||{});
+if(!blk.length){blockedUsersListEl.innerHTML='No users blocked.';return;}
 blockedUsersListEl.innerHTML='';
-for(const uid of blockedIds){
-const userSnap=await db.ref('users/'+uid).once('value');
-if(userSnap.exists()){
-const user=userSnap.val();
-const item=document.createElement('div');
-item.className='blocked-user-item';
-item.innerHTML=`
-<span class="name-with-badge">
-<span class="item-name-text">${user.name||uid}</span>
-${getVerifiedBadgeHTML(user)}
-</span>
-<button class="unblock-btn" data-uid="${uid}">Unblock</button>
-`;
-blockedUsersListEl.appendChild(item);
-}else{
-const item=document.createElement('div');
-item.className='blocked-user-item';
-item.innerHTML=`
-<span class="name-with-badge">
-<span class="item-name-text">${uid} (Unknown)</span>
-</span>
-<button class="unblock-btn" data-uid="${uid}">Unblock</button>
-`;
-blockedUsersListEl.appendChild(item);
+for(const uid of blk){
+const s=await db.ref('users/'+uid).once('value'),u=s.exists()?s.val():{name:uid};
+const d=document.createElement('div');d.className='blocked-user-item';
+d.innerHTML=`<span class="name-with-badge"><span class="item-name-text">${u.name}</span>${getVerifiedBadgeHTML(u)}</span><button class="unblock-btn" data-uid="${uid}">Unblock</button>`;
+blockedUsersListEl.appendChild(d);
 }
 }
-}
+blockedUsersListEl.addEventListener('click',e=>{if(e.target.classList.contains('unblock-btn'))unblockUser(e.target.dataset.uid);});
 function unblockUser(uid){
-const myUid=currentUser.uid;
-const updates={};
-updates[`blockedUsers/${myUid}/${uid}`]=null;
-updates[`contacts/${myUid}/${uid}`]=true;
-updates[`contacts/${uid}/${myUid}`]=true;
-db.ref().update(updates)
-.then(()=>{
-showNotification('User unblocked and re-added to friends.');
-})
-.catch(err=>{
-showNotification('Error unblocking user: '+err.message,5000);
-});
+const u={};u[`blockedUsers/${currentUser.uid}/${uid}`]=null;u[`contacts/${currentUser.uid}/${uid}`]=true;u[`contacts/${uid}/${currentUser.uid}`]=true;
+db.ref().update(u).then(()=>{showNotification('Unblocked.');});
 }
-async function blockUser(uid){
-if(uid===currentUser.uid){
-showNotification("You cannot block yourself.",5000);
-return;
-}
-const isConfirmed=await customConfirm(`Block this user? You will be removed from each other's contact lists and chats.`);
-if(!isConfirmed)return;
-const myUid=currentUser.uid;
-const updates={};
-updates[`blockedUsers/${myUid}/${uid}`]=true;
-updates[`contacts/${myUid}/${uid}`]=null;
-updates[`contacts/${uid}/${myUid}`]=null;
-const chatId=getChatId(myUid,uid);
-updates[`messages/${chatId}`]=null;
-updates[`unreadCounts/${myUid}/${uid}`]=null;
-updates[`unreadCounts/${uid}/${myUid}`]=null;
-db.ref().update(updates)
-.then(()=>{
-showNotification('User blocked and removed from friends.');
-showModal('partner-profile-modal',false);
-chatBackBtn.click();
-if(history.state)history.back();
-})
-.catch(err=>{
-showNotification('Error blocking user: '+err.message,5000);
-});
-}
-blockedUsersListEl.addEventListener('click',e=>{
-if(e.target.classList.contains('unblock-btn')){
-const uidToUnblock=e.target.dataset.uid;
-if(uidToUnblock){
-unblockUser(uidToUnblock);
-}
-}
-});
-partnerModalDeleteChatBtn.addEventListener('click',async()=>{
-if(currentChatPartner){
-const isConfirmed=await customConfirm('Are you sure you want to delete this chat and remove from chat list?');
-if(isConfirmed){
-deleteChatHistory(currentChatPartner.uid); 
-showModal('partner-profile-modal',false);
-if(history.state)history.back();
-chatBackBtn.click();
-}
-}
-});
 partnerModalBlockBtn.addEventListener('click',()=>{
-if(currentChatPartner){
-blockUser(currentChatPartner.uid);
+if(currentChatPartner)customConfirm("Block user?").then(y=>{
+if(y){
+const uid=currentChatPartner.uid,u={};
+u[`blockedUsers/${currentUser.uid}/${uid}`]=true;u[`contacts/${currentUser.uid}/${uid}`]=null;u[`contacts/${uid}/${currentUser.uid}`]=null;u[`messages/${getChatId(currentUser.uid,uid)}`]=null;
+db.ref().update(u).then(()=>{showNotification('Blocked.');showModal('partner-profile-modal',false);if(history.state)history.back();chatBackBtn.click();});
 }
+});
+});
+partnerModalDeleteChatBtn.addEventListener('click',()=>{
+if(currentChatPartner)customConfirm("Delete chat history?").then(y=>{if(y){deleteChatHistory(currentChatPartner.uid);showModal('partner-profile-modal',false);if(history.state)history.back();chatBackBtn.click();}});
 });
 });
 </script>
