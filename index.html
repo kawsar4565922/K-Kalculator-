@@ -88,13 +88,17 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 #chat-input-container.recording #chat-input{display:none;}
 #chat-input-container.recording #voice-record-btn{background-color:#ffdddd;}
 #chat-input-container.recording #voice-record-btn svg{fill:red;}
-/* Voice Preview UI Styles */
 #audio-preview-container {display:flex;align-items:center;background:#fff;padding:5px 10px;border-radius:24px;flex:1;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,0.1);}
 #audio-preview-container.hidden {display:none;}
 #preview-audio-player {flex:1;height:35px;width:100%;}
 #delete-recording-btn {background:none;border:none;cursor:pointer;padding:8px;color:var(--call-end-red);display:flex;align-items:center;justify-content:center;}
 #delete-recording-btn svg {fill:var(--call-end-red);width:20px;height:20px;}
-/* Modal & Profile Styles */
+
+/* NEW VIEW ONCE STYLES */
+.view-once-bubble {display:flex;align-items:center;gap:10px;padding:8px;background:rgba(0,0,0,0.05);border-radius:10px;cursor:pointer;}
+.view-once-text {font-style:italic;font-weight:500;color:var(--wa-text-primary);}
+.view-once-expired {text-decoration:line-through;opacity:0.6;}
+
 .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;max-width:450px;max-height:950px;margin:auto;}
 .modal-content{background:var(--modal-bg);padding:30px;border-radius:var(--modal-border-radius);width:90%;max-width:380px;box-shadow:var(--modal-shadow);display:flex;flex-direction:column;gap:20px;transform:scale(1);transition:transform 0.3s ease-out;color:#555;border:none;}
 .modal.hidden .modal-content{transform:scale(0.95);opacity:0;}
@@ -308,6 +312,11 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 </button>
 <audio id="preview-audio-player" controls></audio>
 </div>
+
+<button id="attach-media-btn" class="icon-btn" title="Send View-Once Media" style="margin-right: 5px;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+</button>
+
 <textarea id="chat-input" placeholder="Type a message..." rows="1"></textarea>
 <button id="voice-record-btn" class="icon-btn" title="Record Voice">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
@@ -421,6 +430,15 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 </div>
 </div>
 <div id="notification-container"></div>
+
+<div id="media-view-modal" class="modal hidden" style="z-index: 2000;">
+    <div class="modal-content" style="background: #000; width: 100%; height: 100%; max-width: 100%; max-height: 100%; border-radius: 0; display: flex; justify-content: center; align-items: center; position: relative; padding: 0;">
+        <button id="close-media-btn" style="position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.5); color: white; border: none; font-size: 2rem; z-index: 10; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&times;</button>
+        <div id="media-content-display" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"></div>
+    </div>
+</div>
+<input type="file" id="media-file-input" accept="image/*,video/*" style="display: none;">
+
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -438,7 +456,6 @@ let currentChatPartner=null,currentChatListener=null,unreadListeners={},contactL
 let customPromptResolver=null,customConfirmResolver=null,customAlertResolver=null;
 let notificationListener=null,unreadNotificationCount=0,supportListener=null;
 let mediaRecorder=null,audioChunks=[],isRecording=false,recordingTimerInterval=null,autoStopTimeout=null;
-// New variables for WhatsApp style voice logic
 let currentAudioBlob = null;
 let isRecordingSaved = false;
 
@@ -447,13 +464,17 @@ const appContainer=document.getElementById('app-container'),authView=document.ge
 const addFriendModal=document.getElementById('add-friend-modal'),profileViewModal=document.getElementById('profile-view-modal'),customPromptModal=document.getElementById('custom-prompt-modal'),customPromptForm=document.getElementById('custom-prompt-form'),promptInput=document.getElementById('prompt-input'),pinSetupModal=document.getElementById('pin-setup-modal'),pinInputField=document.getElementById('pin-input-field'),setPinButton=document.getElementById('set-pin-button'),pinSetupError=document.getElementById('pin-setup-error'),allModals=document.querySelectorAll('.modal');
 const loginForm=document.getElementById('login-form'),signupForm=document.getElementById('signup-form'),addFriendBtn=document.getElementById('add-friend-btn'),menuBtn=document.getElementById('menu-btn'),navHome=document.getElementById('nav-home'),navCalls=document.getElementById('nav-calls'),homeContent=document.getElementById('home-content'),callsContent=document.getElementById('calls-content'),allNavTabs=document.querySelectorAll('.nav-tab'),allContentPanels=document.querySelectorAll('.content-panel'),chatsBadge=document.getElementById('chats-badge'),chatBackBtn=document.getElementById('chat-back-btn'),chatHeaderInfo=document.getElementById('chat-header-info'),chatHeaderPicWrapper=document.getElementById('chat-header-pic-wrapper'),chatHeaderName=document.getElementById('chat-header-name'),chatMessages=document.getElementById('chat-messages'),chatInput=document.getElementById('chat-input'),chatSendBtn=document.getElementById('chat-send-btn');
 const voiceRecordBtn=document.getElementById('voice-record-btn'),recordingUi=document.getElementById('recording-ui'),recordingTimer=document.getElementById('recording-timer'),cancelRecordingBtn=document.getElementById('cancel-recording-btn'),chatInputContainer=document.getElementById('chat-input-container');
-// New Elements for Voice Preview
 const audioPreviewContainer=document.getElementById('audio-preview-container'),deleteRecordingBtn=document.getElementById('delete-recording-btn'),previewAudioPlayer=document.getElementById('preview-audio-player');
 
 const addFriendForm=document.getElementById('add-friend-form'),friendIdInput=document.getElementById('friend-id-input'),profilePicWrapper=document.getElementById('profile-pic-wrapper'),profileViewName=document.getElementById('profile-view-name'),profileViewEmail=document.getElementById('profile-view-email'),profileEditNameBtn=document.getElementById('profile-edit-name-btn'),profileEditNameForm=document.getElementById('profile-edit-name-form'),profileNameInput=document.getElementById('profile-name-input'),profileSaveNameBtn=document.getElementById('profile-save-name-btn'),profileUserIdText=document.getElementById('profile-user-id-text'),profileUserEmailText=document.getElementById('profile-user-email-text'),profileCopyIdBtn=document.getElementById('profile-copy-id-btn'),profileCopyEmailBtn=document.getElementById('profile-copy-email-btn'),notificationContainer=document.getElementById('notification-container'),partnerProfileModal=document.getElementById('partner-profile-modal'),partnerModalName=document.getElementById('partner-modal-name'),partnerModalIdText=document.getElementById('partner-modal-id-text'),partnerModalCopyIdBtn=document.getElementById('partner-modal-copy-id-btn'),blockedUsersListEl=document.getElementById('blocked-users-list'),partnerModalBlockBtn=document.getElementById('partner-modal-block-btn'),partnerModalDeleteChatBtn=document.getElementById('partner-modal-delete-chat-btn'),logoutBtn=document.getElementById('logout-btn'),showSignupBtn=document.getElementById('show-signup'),showLoginBtn=document.getElementById('show-login');
 const customConfirmModal=document.getElementById('custom-confirm-modal'),customConfirmMessage=document.getElementById('custom-confirm-message'),customConfirmBtnYes=document.getElementById('custom-confirm-btn-yes'),customConfirmBtnNo=document.getElementById('custom-confirm-btn-no'),customAlertModal=document.getElementById('custom-alert-modal'),customAlertMessage=document.getElementById('custom-alert-message'),customAlertBtnOk=document.getElementById('custom-alert-btn-ok'),verifiedInfoModal=document.getElementById('verified-info-modal'),verifiedInfoBtnOk=document.getElementById('verified-info-btn-ok'),messageOptionsModal=document.getElementById('message-options-modal'),msgOptCopy=document.getElementById('msg-opt-copy'),msgOptDeleteMe=document.getElementById('msg-opt-delete-me'),msgOptDeleteEveryone=document.getElementById('msg-opt-delete-everyone'),msgOptCancel=document.getElementById('msg-opt-cancel');
 const notificationView=document.getElementById('notification-view'),notificationBtn=document.getElementById('notification-btn'),notificationBadge=document.getElementById('notification-badge'),notificationListContent=document.getElementById('notification-list-content'),notificationBackBtn=document.getElementById('notification-back-btn'),supportFabBtn=document.getElementById('support-fab-btn'),supportView=document.getElementById('support-view'),supportBackBtn=document.getElementById('support-back-btn'),supportMessages=document.getElementById('support-messages'),supportInput=document.getElementById('support-input'),supportSendBtn=document.getElementById('support-send-btn');
 const calculatorScreen=document.getElementById('calculator-screen'),calcButtons=document.querySelectorAll('#calculator-lock-view .calc-btn');
+
+// NEW VARIABLES FOR ONE-TIME MEDIA
+const attachMediaBtn=document.getElementById('attach-media-btn'),mediaFileInput=document.getElementById('media-file-input'),mediaViewModal=document.getElementById('media-view-modal'),mediaContentDisplay=document.getElementById('media-content-display'),closeMediaBtn=document.getElementById('close-media-btn');
+let currentViewingMsgId=null;
+
 let currentExpression='0',userSecretPin=null,isAppUnlocked=false;
 function resetCalculator(){currentExpression='0';calculatorScreen.textContent=currentExpression;}
 function updateCalculatorScreen(){calculatorScreen.textContent=currentExpression||'0';}
@@ -536,12 +557,11 @@ if(userDataResolve){userDataResolve();userDataResolve=null;}
 loginForm.addEventListener('submit',(e)=>{e.preventDefault();auth.signInWithEmailAndPassword(loginForm['login-email'].value,loginForm['login-password'].value).then((u)=>handleSuccessfulAuth(u.user)).catch(e=>showCustomAlert(getBengaliErrorMessage(e.code)));});
 signupForm.addEventListener('submit',(e)=>{e.preventDefault();auth.createUserWithEmailAndPassword(signupForm['signup-email'].value,signupForm['signup-password'].value).then((u)=>{const user=u.user;db.ref('users/'+user.uid).set({uid:user.uid,email:user.email,name:user.uid,profilePicUrl:"",isVerified:false}).then(()=>handleSuccessfulAuth(user)).catch(e=>showCustomAlert(e.message));}).catch(e=>showCustomAlert(getBengaliErrorMessage(e.code)));});
 
-// Updated Voice Logic
 voiceRecordBtn.addEventListener('click', async () => {
     if (!isRecording) {
         startRecording();
     } else {
-        stopRecordingForPreview(); // Logic change: Stop, don't send immediately
+        stopRecordingForPreview();
     }
 });
 cancelRecordingBtn.addEventListener('click', () => { stopRecording(false); });
@@ -561,8 +581,8 @@ async function startRecording(){
         
         chatInputContainer.classList.add('recording');
         recordingUi.classList.remove('hidden');
-        audioPreviewContainer.classList.add('hidden'); // Hide preview
-        voiceRecordBtn.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'; // Stop icon
+        audioPreviewContainer.classList.add('hidden');
+        voiceRecordBtn.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
         
         let seconds=0;recordingTimer.textContent="00:00";
         recordingTimerInterval=setInterval(()=>{seconds++;const m=Math.floor(seconds/60),s=seconds%60;recordingTimer.textContent=`${m<10?'0'+m:m}:${s<10?'0'+s:s}`;},1000);
@@ -600,9 +620,10 @@ function stopRecordingForPreview() {
 function showAudioPreviewUI(blob) {
     chatInputContainer.classList.remove('recording');
     recordingUi.classList.add('hidden');
-    chatInput.style.display = 'none'; // Ensure text input is hidden
-    voiceRecordBtn.classList.add('hidden'); // Hide mic button
-    audioPreviewContainer.classList.remove('hidden'); // Show preview
+    chatInput.style.display = 'none';
+    voiceRecordBtn.classList.add('hidden');
+    attachMediaBtn.classList.add('hidden'); // Hide attach btn too
+    audioPreviewContainer.classList.remove('hidden');
     
     const audioUrl = URL.createObjectURL(blob);
     previewAudioPlayer.src = audioUrl;
@@ -612,8 +633,9 @@ function resetChatInputUI() {
     chatInputContainer.classList.remove('recording');
     recordingUi.classList.add('hidden');
     audioPreviewContainer.classList.add('hidden');
-    chatInput.style.display = 'block'; // Show text input
-    voiceRecordBtn.classList.remove('hidden'); // Show mic button
+    chatInput.style.display = 'block';
+    voiceRecordBtn.classList.remove('hidden');
+    attachMediaBtn.classList.remove('hidden'); // Show attach btn
     chatInput.value = '';
     
     voiceRecordBtn.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>';
@@ -631,7 +653,73 @@ function sendAudioMessage(base64Audio){
     db.ref('messages/'+chatId).push(message);
     db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`).transaction(count=>(count||0)+1);
 }
-// End Updated Voice Logic
+
+// NEW MEDIA ATTACH & SEND LOGIC
+attachMediaBtn.addEventListener('click', () => {
+    mediaFileInput.click();
+});
+
+mediaFileInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 3 * 1024 * 1024) {
+        showNotification("File too large! Max 3MB allowed.");
+        this.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const base64String = event.target.result;
+        const type = file.type.startsWith('image/') ? 'view_once_image' : 'view_once_video';
+        sendOneTimeMedia(type, base64String);
+    };
+    reader.readAsDataURL(file);
+    this.value = '';
+});
+
+function sendOneTimeMedia(type, content) {
+    if (!currentChatPartner) return;
+    
+    const chatId = getChatId(currentUser.uid, currentChatPartner.uid);
+    const message = {
+        type: type,
+        content: content,
+        text: type === 'view_once_image' ? '📷 Photo (View Once)' : '🎥 Video (View Once)',
+        senderId: currentUser.uid,
+        receiverId: currentChatPartner.uid,
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        status: 'sent',
+        isViewed: false
+    };
+
+    db.ref('messages/' + chatId).push(message)
+        .then(() => {
+            showNotification(`${type === 'view_once_image' ? 'Photo' : 'Video'} sent!`);
+        })
+        .catch(err => showNotification("Failed to send: " + err.message));
+        
+    db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`).transaction(count => (count || 0) + 1);
+}
+
+// MEDIA CLOSE & DELETE LOGIC
+closeMediaBtn.addEventListener('click', () => {
+    if (currentViewingMsgId && currentChatPartner) {
+        mediaViewModal.classList.add('hidden');
+        mediaContentDisplay.innerHTML = ''; 
+        
+        // This deletes the content from firebase immediately
+        const chatId = getChatId(currentUser.uid, currentChatPartner.uid);
+        db.ref(`messages/${chatId}/${currentViewingMsgId}`).update({
+            content: null,
+            text: '⭕ Media Expired'
+        });
+        
+        currentViewingMsgId = null;
+    }
+});
+
 
 function createOrUpdateContactItem(contact,isFriendList=false){
 const listContainer=isFriendList?callsContent:homeContent;
@@ -668,6 +756,7 @@ if(!customConfirmModal.classList.contains('hidden')){customConfirmBtnNo.click();
 if(!partnerProfileModal.classList.contains('hidden')){showModal('partner-profile-modal',false);return true;}
 if(!profileViewModal.classList.contains('hidden')){showModal('profile-view-modal',false);return true;}
 if(!addFriendModal.classList.contains('hidden')){showModal('add-friend-modal',false);return true;}
+if(!mediaViewModal.classList.contains('hidden')){closeMediaBtn.click();return true;}
 if(!pinSetupModal.classList.contains('hidden'))return true;
 if(!notificationView.classList.contains('hidden')){notificationBackBtn.click();return true;}
 if(!supportView.classList.contains('hidden')){supportBackBtn.click();return true;}
@@ -804,7 +893,13 @@ const ref=db.ref('messages/'+getChatId(currentUser.uid,cid)).limitToLast(1);
 if(contactListeners[cid+'_msg'])contactListeners[cid+'_msg'].off();contactListeners[cid+'_msg']=ref;
 ref.on('child_added',s=>{
 const m=s.val();if(currentUserData.blockedUsers&&currentUserData.blockedUsers[m.senderId])return;
-lastMessageTimestamps[cid]={text:m.type==='audio'?'🎤 Voice Message':(m.senderId===currentUser.uid?'You: ':'')+m.text,timestamp:m.timestamp};
+let previewText = '';
+if(m.type==='audio') previewText = '🎤 Voice Message';
+else if(m.type==='view_once_image') previewText = '📷 Photo';
+else if(m.type==='view_once_video') previewText = '🎥 Video';
+else previewText = m.text;
+
+lastMessageTimestamps[cid]={text:(m.senderId===currentUser.uid?'You: ':'')+previewText,timestamp:m.timestamp};
 const i=homeContent.querySelector(`.list-item[data-uid="${cid}"]`);
 if(i){i.querySelector('.item-subtext').textContent=lastMessageTimestamps[cid].text;i.classList.remove('hidden');sortChatList();}
 });
@@ -812,7 +907,15 @@ ref.on('child_removed',()=>{
 db.ref('messages/'+getChatId(currentUser.uid,cid)).limitToLast(1).once('value',s=>{
 const i=homeContent.querySelector(`.list-item[data-uid="${cid}"]`);if(!i)return;
 if(s.exists()){
-s.forEach(c=>{const m=c.val();lastMessageTimestamps[cid]={text:m.type==='audio'?'🎤 Voice Message':(m.senderId===currentUser.uid?'You: ':'')+m.text,timestamp:m.timestamp};i.querySelector('.item-subtext').textContent=lastMessageTimestamps[cid].text;});
+s.forEach(c=>{
+    const m=c.val();
+    let previewText = '';
+    if(m.type==='audio') previewText = '🎤 Voice Message';
+    else if(m.type==='view_once_image') previewText = '📷 Photo';
+    else if(m.type==='view_once_video') previewText = '🎥 Video';
+    else previewText = m.text;
+    
+    lastMessageTimestamps[cid]={text:(m.senderId===currentUser.uid?'You: ':'')+previewText,timestamp:m.timestamp};i.querySelector('.item-subtext').textContent=lastMessageTimestamps[cid].text;});
 }else{lastMessageTimestamps[cid]={text:'Tap to chat',timestamp:0};i.querySelector('.item-subtext').textContent='Tap to chat';i.classList.add('hidden');}
 sortChatList();
 });
@@ -854,6 +957,7 @@ currentChatListener.on('child_changed',s=>{if(s.val().senderId===currentUser.uid
 currentChatListener.on('child_removed',s=>{if(messageElements[s.key]){messageElements[s.key].remove();delete messageElements[s.key];}});
 }
 function getStatusSVG(s){const seen=s==='seen';return`<svg class="message-status-icon ${seen?'seen':''}" viewBox="0 0 24 24" fill="${seen?'var(--wa-accent-blue)':'var(--wa-text-secondary)'}"><path d="${seen?'M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z':'M9.01 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9.01 16.2zm7-9.9l1.4 1.4L9 16.2l-1.4-1.4L9 13.4l7-7z'}"/></svg>`;}
+
 function renderMessage(mid,m){
 const isMe=m.senderId===currentUser.uid;
 const hidden=JSON.parse(localStorage.getItem(`hidden_msgs_${currentUser.uid}`))||[];
@@ -862,32 +966,77 @@ const b=document.createElement('div');b.className=`message-bubble ${isMe?'messag
 let pt;const sp=()=>{pt=setTimeout(()=>{openMessageOptions(mid,m.text,isMe);},600);},cp=()=>{clearTimeout(pt);};
 b.addEventListener('mousedown',sp);b.addEventListener('mouseup',cp);b.addEventListener('mouseleave',cp);b.addEventListener('touchstart',sp);b.addEventListener('touchend',cp);b.addEventListener('touchmove',cp);
 const cw=document.createElement('div');cw.className='message-content-wrapper';
+
 if(m.type==='audio'){
 const aud=document.createElement('audio');aud.controls=true;aud.className='audio-player';aud.src=m.content;cw.appendChild(aud);
-}else{
+}
+// NEW VIEW ONCE RENDER LOGIC
+else if(m.type==='view_once_image'||m.type==='view_once_video'){
+    const expired=!m.content; // If content is null, it's expired
+    const d=document.createElement('div');d.className='view-once-bubble';
+    
+    let iconSvg = '';
+    if (m.type === 'view_once_image') iconSvg = '<svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:var(--wa-text-primary);"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>';
+    else iconSvg = '<svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:var(--wa-text-primary);"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>';
+
+    let label = '';
+    if (isMe) {
+        label = expired ? 'Opened' : 'Sent (View Once)';
+    } else {
+        label = expired ? 'Opened' : 'Tap to View';
+    }
+
+    d.innerHTML=`${iconSvg}<span class="view-once-text ${expired?'view-once-expired':''}">${label}</span>`;
+    
+    // Only receiver can view, and only if not expired
+    if(!isMe && !expired){
+        d.addEventListener('click',()=>{
+            currentViewingMsgId=mid;
+            mediaViewModal.classList.remove('hidden');
+            mediaContentDisplay.innerHTML='';
+            
+            if(m.type==='view_once_image'){
+                const el=document.createElement('img');
+                el.src=m.content;
+                el.style.cssText='max-width:100%;max-height:100%;object-fit:contain;';
+                mediaContentDisplay.appendChild(el);
+            } else {
+                const el=document.createElement('video');
+                el.src=m.content;
+                el.controls=true;
+                el.autoplay=true;
+                el.style.cssText='max-width:100%;max-height:100%;';
+                // Auto close video when done
+                el.onended=()=>closeMediaBtn.click();
+                mediaContentDisplay.appendChild(el);
+            }
+        });
+    }
+    cw.appendChild(d);
+}
+else{
 const t=document.createElement('span');t.className='message-text';t.textContent=m.text;cw.appendChild(t);
 }
+
 const tw=document.createElement('div');tw.className='message-time-status';
 const ts=document.createElement('span');ts.textContent=formatTimestamp(m.timestamp);tw.appendChild(ts);
 if(isMe){const si=document.createElement('span');si.id=`status-${mid}`;si.innerHTML=getStatusSVG(m.status||'sent');tw.appendChild(si);}
 cw.appendChild(tw);b.appendChild(cw);chatMessages.appendChild(b);messageElements[mid]=b;
 if(chatMessages.scrollHeight-chatMessages.clientHeight<=chatMessages.scrollTop+100)chatMessages.scrollTop=chatMessages.scrollHeight;
 }
-// Modified Send Message function to handle Voice or Text
+
 chatSendBtn.addEventListener('click', sendMessage);
 
 function sendMessage(){
     if(!currentChatPartner)return;
 
-    // Check if there is a pending audio recording
     if (currentAudioBlob) {
         convertBlobToBase64(currentAudioBlob);
         currentAudioBlob = null;
         resetChatInputUI();
-        return; // Exit, don't send text
+        return; 
     }
 
-    // Normal Text Message Logic
     const t=chatInput.value.trim();
     if(!t)return;
     db.ref('messages/'+getChatId(currentUser.uid,currentChatPartner.uid)).push({text:t,senderId:currentUser.uid,receiverId:currentChatPartner.uid,timestamp:firebase.database.ServerValue.TIMESTAMP,status:'sent'});
