@@ -76,6 +76,12 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 .message-time-status{display:flex;align-items:center;font-size:0.75rem;color:var(--wa-text-secondary);user-select:none;line-height:1;margin-left:8px;flex-shrink:0;}
 .message-status-icon{width:14px;height:14px;margin-left:4px;fill:var(--wa-text-secondary);}
 .message-status-icon.seen{fill:var(--wa-accent-blue);}
+/* Sending Animation */
+.message-status-icon.sending {fill: #888; animation: spin 1s linear infinite; transform-origin: center;}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* Media Download Button REMOVED from here */
+
 #chat-input-container{display:flex;align-items:center;gap:8px;padding:8px 12px;background-color:var(--wa-app-bg);flex-shrink:0;}
 #chat-input{flex:1;padding:12px 18px;border:none;border-radius:24px;font-size:1rem;height:48px;resize:none;overflow-y:auto;font-family:'Roboto',sans-serif;}
 #chat-input:focus{outline:none;}
@@ -432,7 +438,12 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 
 <div id="media-view-modal" class="modal hidden" style="z-index: 2000;">
     <div class="modal-content" style="background: #000; width: 100%; height: 100%; max-width: 100%; max-height: 100%; border-radius: 0; display: flex; justify-content: center; align-items: center; position: relative; padding: 0;">
-        <button id="close-media-btn" style="position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.5); color: white; border: none; font-size: 2rem; z-index: 10; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&times;</button>
+        <div style="position: absolute; top: 20px; right: 20px; z-index: 10; display: flex; gap: 10px;">
+             <button id="modal-download-btn" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 1.5rem; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: white;"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            </button>
+            <button id="close-media-btn" style="background: rgba(0,0,0,0.5); color: white; border: none; font-size: 2rem; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">&times;</button>
+        </div>
         <div id="media-content-display" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"></div>
     </div>
 </div>
@@ -462,7 +473,7 @@ let notificationListener=null,unreadNotificationCount=0,supportListener=null;
 let mediaRecorder=null,audioChunks=[],isRecording=false,recordingTimerInterval=null,autoStopTimeout=null;
 let currentAudioBlob = null;
 let isRecordingSaved = false;
-let sendImmediately = false; // FLAG FOR IMMEDIATE SEND
+let sendImmediately = false;
 
 let currentSelectedMsgId=null,currentSelectedMsgText=null,currentSelectedMsgIsSender=false;
 const appContainer=document.getElementById('app-container'),authView=document.getElementById('auth-view'),mainView=document.getElementById('main-view'),chatView=document.getElementById('chat-view'),calculatorLockView=document.getElementById('calculator-lock-view'),allViews=document.querySelectorAll('.view');
@@ -479,6 +490,10 @@ const calculatorScreen=document.getElementById('calculator-screen'),calcButtons=
 // MEDIA VARIABLES
 const attachMediaBtn=document.getElementById('attach-media-btn'),mediaFileInput=document.getElementById('media-file-input'),mediaViewModal=document.getElementById('media-view-modal'),mediaContentDisplay=document.getElementById('media-content-display'),closeMediaBtn=document.getElementById('close-media-btn');
 let currentViewingMsgId=null;
+// NEW VARIABLES FOR DOWNLOAD
+let currentMediaUrl = null;
+let currentMediaType = null;
+const modalDownloadBtn = document.getElementById('modal-download-btn');
 
 let currentExpression='0',userSecretPin=null,isAppUnlocked=false;
 function resetCalculator(){currentExpression='0';calculatorScreen.textContent=currentExpression;}
@@ -579,7 +594,7 @@ async function startRecording(){
     try {
         currentAudioBlob = null;
         isRecordingSaved = false;
-        sendImmediately = false; // Reset flag
+        sendImmediately = false; 
         const stream = await navigator.mediaDevices.getUserMedia({audio:true});
         mediaRecorder = new MediaRecorder(stream);
         audioChunks = [];
@@ -593,8 +608,6 @@ async function startRecording(){
         let seconds=0;recordingTimer.textContent="00:00";
         recordingTimerInterval=setInterval(()=>{seconds++;const m=Math.floor(seconds/60),s=seconds%60;recordingTimer.textContent=`${m<10?'0'+m:m}:${s<10?'0'+s:s}`;},1000);
         
-        // REMOVED TIME LIMIT
-        
         mediaRecorder.addEventListener("dataavailable",e=>{audioChunks.push(e.data);});
         mediaRecorder.addEventListener("stop",()=>{
             stream.getTracks().forEach(t=>t.stop());
@@ -604,16 +617,9 @@ async function startRecording(){
                 
                 if (sendImmediately) {
                     sendImmediately = false;
-                    showNotification("Sending voice message...");
-                    chatSendBtn.disabled = true;
-                    uploadToCloudinary(audioBlob, 'video').then(url => {
-                        chatSendBtn.disabled = false;
-                        if(url) {
-                            sendAudioMessage(url);
-                            currentAudioBlob = null;
-                            resetChatInputUI();
-                        }
-                    });
+                    handleMediaSend(audioBlob, 'audio'); // New Optimistic Handler
+                    currentAudioBlob = null;
+                    resetChatInputUI();
                 } else {
                     showAudioPreviewUI(audioBlob);
                 }
@@ -668,7 +674,7 @@ async function uploadToCloudinary(file, resourceType) {
     formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
     try {
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`, {
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`, { // Modified to use correct resource type
             method: 'POST',
             body: formData
         });
@@ -687,14 +693,6 @@ async function uploadToCloudinary(file, resourceType) {
 }
 // =====================================
 
-function sendAudioMessage(audioUrl){
-    if(!currentChatPartner)return;
-    const chatId=getChatId(currentUser.uid,currentChatPartner.uid);
-    const message={type:'audio',content:audioUrl,text:'🎤 Voice Message',senderId:currentUser.uid,receiverId:currentChatPartner.uid,timestamp:firebase.database.ServerValue.TIMESTAMP,status:'sent'};
-    db.ref('messages/'+chatId).push(message);
-    db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`).transaction(count=>(count||0)+1);
-}
-
 attachMediaBtn.addEventListener('click', () => {
     mediaFileInput.click();
 });
@@ -709,52 +707,77 @@ mediaFileInput.addEventListener('change', async function(e) {
         return;
     }
 
-    // CHANGED: Use permanent type names
     const msgType = file.type.startsWith('image/') ? 'image' : 'video';
-    
-    showNotification("Uploading... Please wait");
-    chatSendBtn.disabled = true;
-    
-    const url = await uploadToCloudinary(file, 'auto');
-    
-    chatSendBtn.disabled = false;
+    handleMediaSend(file, msgType); // Optimistic handling
     this.value = '';
-
-    if(url) {
-        sendMediaMessage(msgType, url);
-    }
 });
 
-// CHANGED: Function name and logic for permanent media
-function sendMediaMessage(type, contentUrl) {
+// ==== NEW OPTIMISTIC SEND HANDLER ====
+function handleMediaSend(fileOrBlob, type) {
     if (!currentChatPartner) return;
-    
+
+    const tempId = 'temp_' + Date.now();
+    const blobUrl = URL.createObjectURL(fileOrBlob);
     const chatId = getChatId(currentUser.uid, currentChatPartner.uid);
-    const message = {
+
+    // Create fake message object
+    let textLabel = '';
+    if(type==='audio') textLabel = '🎤 Voice Message';
+    else if(type==='image') textLabel = '📷 Photo';
+    else if(type==='video') textLabel = '🎥 Video';
+
+    const tempMsg = {
+        text: textLabel,
         type: type,
-        content: contentUrl,
-        text: type === 'image' ? '📷 Photo' : '🎥 Video', // CHANGED: Simple text
+        content: blobUrl,
         senderId: currentUser.uid,
         receiverId: currentChatPartner.uid,
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-        status: 'sent'
-        // REMOVED: isViewed field
+        timestamp: Date.now(),
+        status: 'sending' // Custom status for optimistic UI
     };
 
-    db.ref('messages/' + chatId).push(message)
-        .then(() => {
-            showNotification(`${type === 'image' ? 'Photo' : 'Video'} sent!`);
-        })
-        .catch(err => showNotification("Failed to send: " + err.message));
-        
-    db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`).transaction(count => (count || 0) + 1);
+    // Render immediately
+    renderMessage(tempId, tempMsg);
+
+    // Upload in background
+    const resourceType = (type === 'audio' || type === 'video') ? 'video' : 'image';
+    
+    uploadToCloudinary(fileOrBlob, resourceType).then(url => {
+        if(url) {
+            // Send to Real DB
+            const dbMsg = { ...tempMsg, content: url, status: 'sent' }; // Usually 'sent', but let's push 'sent' directly
+            // Note: Firebase server timestamp will slightly differ, but that's okay.
+            dbMsg.timestamp = firebase.database.ServerValue.TIMESTAMP;
+            
+            db.ref('messages/' + chatId).push(dbMsg);
+            db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`).transaction(count => (count || 0) + 1);
+
+            // Remove the temp message (the real one comes via listener)
+            const tempEl = document.getElementById('msg-' + tempId);
+            if(tempEl) tempEl.remove();
+            delete messageElements[tempId]; 
+        } else {
+             showNotification("Failed to send media.");
+             const tempEl = document.getElementById('msg-' + tempId);
+             if(tempEl) tempEl.style.opacity = '0.5'; // Visual cue for failure
+        }
+    });
 }
+// =====================================
 
 closeMediaBtn.addEventListener('click', () => {
-    // CHANGED: Just close modal, DO NOT DELETE content
     mediaViewModal.classList.add('hidden');
     mediaContentDisplay.innerHTML = ''; 
     currentViewingMsgId = null;
+    currentMediaUrl = null;
+    currentMediaType = null;
+});
+
+// NEW DOWNLOAD FUNCTIONALITY
+modalDownloadBtn.addEventListener('click', () => {
+    if(currentMediaUrl && currentMediaType) {
+        downloadMedia(currentMediaUrl, currentMediaType);
+    }
 });
 
 function createOrUpdateContactItem(contact,isFriendList=false){
@@ -853,7 +876,6 @@ profileEditNameForm.classList.add('hidden');profileViewName.classList.remove('hi
 showModal('profile-view-modal');history.pushState(null,'',window.location.pathname);
 });
 profilePicWrapper.addEventListener('click',async()=>{
-    // Profile Pic Upload to Cloudinary Logic
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
@@ -1008,13 +1030,43 @@ renderMessage(s.key,m);if(m.receiverId===currentUser.uid&&m.status!=='seen')ref.
 currentChatListener.on('child_changed',s=>{if(s.val().senderId===currentUser.uid&&messageElements[s.key])document.getElementById(`status-${s.key}`).innerHTML=getStatusSVG(s.val().status);});
 currentChatListener.on('child_removed',s=>{if(messageElements[s.key]){messageElements[s.key].remove();delete messageElements[s.key];}});
 }
-function getStatusSVG(s){const seen=s==='seen';return`<svg class="message-status-icon ${seen?'seen':''}" viewBox="0 0 24 24" fill="${seen?'var(--wa-accent-blue)':'var(--wa-text-secondary)'}"><path d="${seen?'M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z':'M9.01 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9.01 16.2zm7-9.9l1.4 1.4L9 16.2l-1.4-1.4L9 13.4l7-7z'}"/></svg>`;}
+function getStatusSVG(s){
+    // If sending, show a clock icon with animation
+    if(s === 'sending') return `<svg class="message-status-icon sending" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>`;
+    
+    const seen=s==='seen';
+    return `<svg class="message-status-icon ${seen?'seen':''}" viewBox="0 0 24 24" fill="${seen?'var(--wa-accent-blue)':'var(--wa-text-secondary)'}"><path d="${seen?'M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z':'M9.01 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9.01 16.2zm7-9.9l1.4 1.4L9 16.2l-1.4-1.4L9 13.4l7-7z'}"/></svg>`;
+}
+
+async function downloadMedia(url, type) {
+    showNotification("Downloading...");
+    try {
+        const response = await fetch(url, { mode: 'cors' });
+        if (!response.ok) throw new Error('Network response was not ok');
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = `secret_media_${Date.now()}.${type==='image'?'jpg':'mp4'}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+    } catch(e) { 
+        showNotification("Download failed. Opening in new tab...");
+        window.open(url, '_blank');
+    }
+}
 
 function renderMessage(mid,m){
 const isMe=m.senderId===currentUser.uid;
 const hidden=JSON.parse(localStorage.getItem(`hidden_msgs_${currentUser.uid}`))||[];
 if(hidden.includes(mid)||messageElements[mid])return;
 const b=document.createElement('div');b.className=`message-bubble ${isMe?'message-sent':'message-received'}`;b.id=`msg-${mid}`;
+
+// Reduce opacity slightly if sending
+if(m.status === 'sending') b.style.opacity = '0.8';
+
 let pt;const sp=()=>{pt=setTimeout(()=>{openMessageOptions(mid,m.text,isMe);},600);},cp=()=>{clearTimeout(pt);};
 b.addEventListener('mousedown',sp);b.addEventListener('mouseup',cp);b.addEventListener('mouseleave',cp);b.addEventListener('touchstart',sp);b.addEventListener('touchend',cp);b.addEventListener('touchmove',cp);
 const cw=document.createElement('div');cw.className='message-content-wrapper';
@@ -1022,7 +1074,6 @@ const cw=document.createElement('div');cw.className='message-content-wrapper';
 if(m.type==='audio'){
 const aud=document.createElement('audio');aud.controls=true;aud.className='audio-player';aud.src=m.content;cw.appendChild(aud);
 }
-// CHANGED: PERMANENT MEDIA RENDER
 else if(m.type==='image'||m.type==='video'){
     const d=document.createElement('div');d.className='media-bubble';
     
@@ -1033,8 +1084,20 @@ else if(m.type==='image'||m.type==='video'){
     let label = m.type === 'image' ? '📷 Photo' : '🎥 Video';
     d.innerHTML=`${iconSvg}<span class="media-text">${label}</span>`;
     
+    // DOWNLOAD BUTTON REMOVED FROM HERE
+
     d.addEventListener('click',()=>{
         currentViewingMsgId=mid;
+        currentMediaUrl = m.content;
+        currentMediaType = m.type;
+        
+        // LOGIC: IF I SENT IT, HIDE DOWNLOAD. IF PARTNER SENT IT, SHOW DOWNLOAD.
+        if (isMe) {
+            modalDownloadBtn.style.display = 'none';
+        } else {
+            modalDownloadBtn.style.display = 'flex';
+        }
+
         mediaViewModal.classList.remove('hidden');
         mediaContentDisplay.innerHTML='';
         
@@ -1071,31 +1134,38 @@ chatSendBtn.addEventListener('click', sendMessage);
 function sendMessage(){
     if(!currentChatPartner)return;
 
-    // NEW LOGIC: If recording, stop and send immediately
     if (isRecording) {
         sendImmediately = true;
-        stopRecording(true); // This triggers the 'stop' event listener which handles the upload
+        stopRecording(true); 
         return;
     }
 
     if (currentAudioBlob) {
-        showNotification("Sending voice message...");
-        chatSendBtn.disabled = true;
-        
-        uploadToCloudinary(currentAudioBlob, 'video').then(url => { // Audio often uploads as video type in cloudinary
-            chatSendBtn.disabled = false;
-            if(url) {
-                sendAudioMessage(url);
-                currentAudioBlob = null;
-                resetChatInputUI();
-            }
-        });
+        handleMediaSend(currentAudioBlob, 'audio'); // Optimistic
+        currentAudioBlob = null;
+        resetChatInputUI();
         return; 
     }
 
     const t=chatInput.value.trim();
     if(!t)return;
-    db.ref('messages/'+getChatId(currentUser.uid,currentChatPartner.uid)).push({text:t,senderId:currentUser.uid,receiverId:currentChatPartner.uid,timestamp:firebase.database.ServerValue.TIMESTAMP,status:'sent'});
+
+    // Optimistic Text Send
+    const msgData = {
+        text:t,
+        senderId:currentUser.uid,
+        receiverId:currentChatPartner.uid,
+        timestamp:firebase.database.ServerValue.TIMESTAMP,
+        status:'sending' // Start as sending
+    };
+
+    const pushRef = db.ref('messages/'+getChatId(currentUser.uid,currentChatPartner.uid)).push(msgData);
+    
+    // When successfully synced to server, update status to 'sent'
+    pushRef.then(() => {
+        pushRef.update({status: 'sent'});
+    });
+
     db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`).transaction(c=>(c||0)+1);
     chatInput.value='';
     chatInput.focus();
