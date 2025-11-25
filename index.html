@@ -462,6 +462,7 @@ let notificationListener=null,unreadNotificationCount=0,supportListener=null;
 let mediaRecorder=null,audioChunks=[],isRecording=false,recordingTimerInterval=null,autoStopTimeout=null;
 let currentAudioBlob = null;
 let isRecordingSaved = false;
+let sendImmediately = false; // FLAG FOR IMMEDIATE SEND
 
 let currentSelectedMsgId=null,currentSelectedMsgText=null,currentSelectedMsgIsSender=false;
 const appContainer=document.getElementById('app-container'),authView=document.getElementById('auth-view'),mainView=document.getElementById('main-view'),chatView=document.getElementById('chat-view'),calculatorLockView=document.getElementById('calculator-lock-view'),allViews=document.querySelectorAll('.view');
@@ -578,6 +579,7 @@ async function startRecording(){
     try {
         currentAudioBlob = null;
         isRecordingSaved = false;
+        sendImmediately = false; // Reset flag
         const stream = await navigator.mediaDevices.getUserMedia({audio:true});
         mediaRecorder = new MediaRecorder(stream);
         audioChunks = [];
@@ -591,7 +593,7 @@ async function startRecording(){
         let seconds=0;recordingTimer.textContent="00:00";
         recordingTimerInterval=setInterval(()=>{seconds++;const m=Math.floor(seconds/60),s=seconds%60;recordingTimer.textContent=`${m<10?'0'+m:m}:${s<10?'0'+s:s}`;},1000);
         
-        autoStopTimeout=setTimeout(()=>{if(isRecording){stopRecordingForPreview();showNotification("Max 1 minute limit.");}},60000);
+        // REMOVED TIME LIMIT
         
         mediaRecorder.addEventListener("dataavailable",e=>{audioChunks.push(e.data);});
         mediaRecorder.addEventListener("stop",()=>{
@@ -599,7 +601,22 @@ async function startRecording(){
             if (isRecordingSaved) {
                 const audioBlob = new Blob(audioChunks, {type: 'audio/webm;codecs=opus'});
                 currentAudioBlob = audioBlob;
-                showAudioPreviewUI(audioBlob);
+                
+                if (sendImmediately) {
+                    sendImmediately = false;
+                    showNotification("Sending voice message...");
+                    chatSendBtn.disabled = true;
+                    uploadToCloudinary(audioBlob, 'video').then(url => {
+                        chatSendBtn.disabled = false;
+                        if(url) {
+                            sendAudioMessage(url);
+                            currentAudioBlob = null;
+                            resetChatInputUI();
+                        }
+                    });
+                } else {
+                    showAudioPreviewUI(audioBlob);
+                }
             }
         });
         mediaRecorder.start();
@@ -612,7 +629,6 @@ function stopRecording(save){
     mediaRecorder.stop();
     isRecording = false;
     clearInterval(recordingTimerInterval);
-    clearTimeout(autoStopTimeout);
     
     if(!save) resetChatInputUI();
 }
@@ -687,8 +703,8 @@ mediaFileInput.addEventListener('change', async function(e) {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (file.size > 10 * 1024 * 1024) { 
-        showNotification("File too large! Max 10MB allowed.");
+    if (file.size > 100 * 1024 * 1024) { 
+        showNotification("File too large! Max 100MB allowed.");
         this.value = '';
         return;
     }
@@ -1054,6 +1070,13 @@ chatSendBtn.addEventListener('click', sendMessage);
 
 function sendMessage(){
     if(!currentChatPartner)return;
+
+    // NEW LOGIC: If recording, stop and send immediately
+    if (isRecording) {
+        sendImmediately = true;
+        stopRecording(true); // This triggers the 'stop' event listener which handles the upload
+        return;
+    }
 
     if (currentAudioBlob) {
         showNotification("Sending voice message...");
