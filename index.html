@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
+/* CSS Styles */
 :root{--wa-header-bg:#FF0055;--wa-accent-blue:#34B7F1;--wa-message-out-bg:#FFF4DF;--wa-message-in-bg:#A5F1F6;--wa-app-bg:#AA00FF;--wa-chat-bg:#0000ff;--wa-icon-color:#f0f2f5;--wa-text-primary:#111b21;--wa-text-secondary:#667781;--wa-border-color:#EFD1D4;--wa-active-tab-indicator:var(--wa-accent-blue);--wa-button-color:#00FF55;--wa-link-color:#00a8e8;--wa-shadow:rgba(17,27,33,0.15);--call-end-red:#e91e63;--modal-bg:#FBE8ED;--modal-border-radius:20px;--modal-shadow:12px 12px 24px #bebebe, -12px -12px 24px #ffffff;}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;}
 html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;display:flex;align-items:center;justify-content:center;color:var(--wa-text-primary);}
@@ -81,6 +82,7 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 #chat-send-btn, #voice-record-btn{background-color:var(--wa-button-color);border-radius:50%;padding:12px;transition:background-color 0.2s;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 #chat-send-btn:hover, #voice-record-btn:hover{background-color:#006652;}
 #chat-send-btn svg, #voice-record-btn svg{fill:white;width:20px;height:20px;}
+#chat-send-btn:disabled, #voice-record-btn:disabled {background-color: #ccc; cursor: not-allowed;}
 #recording-ui{display:flex;align-items:center;background:#fff;padding:5px 15px;border-radius:20px;margin-right:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);flex:1;}
 .recording-dot{width:10px;height:10px;background-color:red;border-radius:50%;margin-left:8px;animation:blink 1s infinite;}
 @keyframes blink{0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
@@ -93,12 +95,9 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 #preview-audio-player {flex:1;height:35px;width:100%;}
 #delete-recording-btn {background:none;border:none;cursor:pointer;padding:8px;color:var(--call-end-red);display:flex;align-items:center;justify-content:center;}
 #delete-recording-btn svg {fill:var(--call-end-red);width:20px;height:20px;}
-
-/* NEW VIEW ONCE STYLES */
-.view-once-bubble {display:flex;align-items:center;gap:10px;padding:8px;background:rgba(0,0,0,0.05);border-radius:10px;cursor:pointer;}
-.view-once-text {font-style:italic;font-weight:500;color:var(--wa-text-primary);}
-.view-once-expired {text-decoration:line-through;opacity:0.6;}
-
+/* MEDIA STYLES - PERMANENT VIEW */
+.media-bubble {display:flex;align-items:center;gap:10px;padding:8px;background:rgba(0,0,0,0.05);border-radius:10px;cursor:pointer;min-width: 150px;}
+.media-text {font-weight:500;color:var(--wa-text-primary);}
 .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;max-width:450px;max-height:950px;margin:auto;}
 .modal-content{background:var(--modal-bg);padding:30px;border-radius:var(--modal-border-radius);width:90%;max-width:380px;box-shadow:var(--modal-shadow);display:flex;flex-direction:column;gap:20px;transform:scale(1);transition:transform 0.3s ease-out;color:#555;border:none;}
 .modal.hidden .modal-content{transform:scale(0.95);opacity:0;}
@@ -313,7 +312,7 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 <audio id="preview-audio-player" controls></audio>
 </div>
 
-<button id="attach-media-btn" class="icon-btn" title="Send View-Once Media" style="margin-right: 5px;">
+<button id="attach-media-btn" class="icon-btn" title="Send Media" style="margin-right: 5px;">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
 </button>
 
@@ -443,6 +442,11 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
+// ========= CLOUDINARY CONFIGURATION =========
+const CLOUDINARY_CLOUD_NAME = 'dinorzrp4'; 
+const CLOUDINARY_UPLOAD_PRESET = 'kcalculator07'; 
+// ============================================
+
 document.addEventListener('DOMContentLoaded',()=>{
 const firebaseConfig={apiKey:"AIzaSyBh7oN1SOlJvTdV4ld5JRP6wBRWu-DL_nQ",authDomain:"kawsar-messaging-apps.firebaseapp.com",databaseURL:"https://kawsar-messaging-apps-default-rtdb.firebaseio.com",projectId:"kawsar-messaging-apps",storageBucket:"kawsar-messaging-apps.firebasestorage.app",messagingSenderId:"738233086903",appId:"1:738233086903:web:9357e641d888c2f9a76e32",measurementId:"G-18N3ZJFVKW"};
 firebase.initializeApp(firebaseConfig);
@@ -471,7 +475,7 @@ const customConfirmModal=document.getElementById('custom-confirm-modal'),customC
 const notificationView=document.getElementById('notification-view'),notificationBtn=document.getElementById('notification-btn'),notificationBadge=document.getElementById('notification-badge'),notificationListContent=document.getElementById('notification-list-content'),notificationBackBtn=document.getElementById('notification-back-btn'),supportFabBtn=document.getElementById('support-fab-btn'),supportView=document.getElementById('support-view'),supportBackBtn=document.getElementById('support-back-btn'),supportMessages=document.getElementById('support-messages'),supportInput=document.getElementById('support-input'),supportSendBtn=document.getElementById('support-send-btn');
 const calculatorScreen=document.getElementById('calculator-screen'),calcButtons=document.querySelectorAll('#calculator-lock-view .calc-btn');
 
-// NEW VARIABLES FOR ONE-TIME MEDIA
+// MEDIA VARIABLES
 const attachMediaBtn=document.getElementById('attach-media-btn'),mediaFileInput=document.getElementById('media-file-input'),mediaViewModal=document.getElementById('media-view-modal'),mediaContentDisplay=document.getElementById('media-content-display'),closeMediaBtn=document.getElementById('close-media-btn');
 let currentViewingMsgId=null;
 
@@ -622,7 +626,7 @@ function showAudioPreviewUI(blob) {
     recordingUi.classList.add('hidden');
     chatInput.style.display = 'none';
     voiceRecordBtn.classList.add('hidden');
-    attachMediaBtn.classList.add('hidden'); // Hide attach btn too
+    attachMediaBtn.classList.add('hidden'); 
     audioPreviewContainer.classList.remove('hidden');
     
     const audioUrl = URL.createObjectURL(blob);
@@ -635,91 +639,107 @@ function resetChatInputUI() {
     audioPreviewContainer.classList.add('hidden');
     chatInput.style.display = 'block';
     voiceRecordBtn.classList.remove('hidden');
-    attachMediaBtn.classList.remove('hidden'); // Show attach btn
+    attachMediaBtn.classList.remove('hidden');
     chatInput.value = '';
     
     voiceRecordBtn.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>';
 }
 
-function convertBlobToBase64(blob){
-    const reader=new FileReader();reader.readAsDataURL(blob);
-    reader.onloadend=function(){sendAudioMessage(reader.result);}
-}
+// ==== CLOUDINARY UPLOAD FUNCTION ====
+async function uploadToCloudinary(file, resourceType) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
-function sendAudioMessage(base64Audio){
+    try {
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        
+        if(data.error) {
+            console.error("Cloudinary Error:", data.error);
+            throw new Error(data.error.message);
+        }
+        return data.secure_url;
+    } catch (error) {
+        console.error("Upload error:", error);
+        showNotification("Upload Failed: " + error.message);
+        return null;
+    }
+}
+// =====================================
+
+function sendAudioMessage(audioUrl){
     if(!currentChatPartner)return;
     const chatId=getChatId(currentUser.uid,currentChatPartner.uid);
-    const message={type:'audio',content:base64Audio,text:'🎤 Voice Message',senderId:currentUser.uid,receiverId:currentChatPartner.uid,timestamp:firebase.database.ServerValue.TIMESTAMP,status:'sent'};
+    const message={type:'audio',content:audioUrl,text:'🎤 Voice Message',senderId:currentUser.uid,receiverId:currentChatPartner.uid,timestamp:firebase.database.ServerValue.TIMESTAMP,status:'sent'};
     db.ref('messages/'+chatId).push(message);
     db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`).transaction(count=>(count||0)+1);
 }
 
-// NEW MEDIA ATTACH & SEND LOGIC
 attachMediaBtn.addEventListener('click', () => {
     mediaFileInput.click();
 });
 
-mediaFileInput.addEventListener('change', function(e) {
+mediaFileInput.addEventListener('change', async function(e) {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (file.size > 3 * 1024 * 1024) {
-        showNotification("File too large! Max 3MB allowed.");
+    if (file.size > 10 * 1024 * 1024) { 
+        showNotification("File too large! Max 10MB allowed.");
         this.value = '';
         return;
     }
 
-    const reader = new FileReader();
-    reader.onload = function(event) {
-        const base64String = event.target.result;
-        const type = file.type.startsWith('image/') ? 'view_once_image' : 'view_once_video';
-        sendOneTimeMedia(type, base64String);
-    };
-    reader.readAsDataURL(file);
+    // CHANGED: Use permanent type names
+    const msgType = file.type.startsWith('image/') ? 'image' : 'video';
+    
+    showNotification("Uploading... Please wait");
+    chatSendBtn.disabled = true;
+    
+    const url = await uploadToCloudinary(file, 'auto');
+    
+    chatSendBtn.disabled = false;
     this.value = '';
+
+    if(url) {
+        sendMediaMessage(msgType, url);
+    }
 });
 
-function sendOneTimeMedia(type, content) {
+// CHANGED: Function name and logic for permanent media
+function sendMediaMessage(type, contentUrl) {
     if (!currentChatPartner) return;
     
     const chatId = getChatId(currentUser.uid, currentChatPartner.uid);
     const message = {
         type: type,
-        content: content,
-        text: type === 'view_once_image' ? '📷 Photo (View Once)' : '🎥 Video (View Once)',
+        content: contentUrl,
+        text: type === 'image' ? '📷 Photo' : '🎥 Video', // CHANGED: Simple text
         senderId: currentUser.uid,
         receiverId: currentChatPartner.uid,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
-        status: 'sent',
-        isViewed: false
+        status: 'sent'
+        // REMOVED: isViewed field
     };
 
     db.ref('messages/' + chatId).push(message)
         .then(() => {
-            showNotification(`${type === 'view_once_image' ? 'Photo' : 'Video'} sent!`);
+            showNotification(`${type === 'image' ? 'Photo' : 'Video'} sent!`);
         })
         .catch(err => showNotification("Failed to send: " + err.message));
         
     db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`).transaction(count => (count || 0) + 1);
 }
 
-// MEDIA CLOSE & DELETE LOGIC
 closeMediaBtn.addEventListener('click', () => {
-    if (currentViewingMsgId && currentChatPartner) {
-        mediaViewModal.classList.add('hidden');
-        mediaContentDisplay.innerHTML = ''; 
-        
-        // This deletes the content from firebase immediately
-        const chatId = getChatId(currentUser.uid, currentChatPartner.uid);
-        db.ref(`messages/${chatId}/${currentViewingMsgId}`).update({
-            content: null,
-            text: '⭕ Media Expired'
-        });
-        
-        currentViewingMsgId = null;
-    }
+    // CHANGED: Just close modal, DO NOT DELETE content
+    mediaViewModal.classList.add('hidden');
+    mediaContentDisplay.innerHTML = ''; 
+    currentViewingMsgId = null;
 });
-
 
 function createOrUpdateContactItem(contact,isFriendList=false){
 const listContainer=isFriendList?callsContent:homeContent;
@@ -817,8 +837,24 @@ profileEditNameForm.classList.add('hidden');profileViewName.classList.remove('hi
 showModal('profile-view-modal');history.pushState(null,'',window.location.pathname);
 });
 profilePicWrapper.addEventListener('click',async()=>{
-const url=await customPrompt('Enter profile picture URL:',currentUserData.profilePicUrl||'');
-if(url!==null){db.ref(`users/${currentUser.uid}/profilePicUrl`).set(url).then(()=>{showNotification('Profile picture updated!');}).catch(e=>showNotification('Error: '+e.message));}
+    // Profile Pic Upload to Cloudinary Logic
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.onchange = async (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        
+        showNotification("Uploading profile pic...");
+        const url = await uploadToCloudinary(file, 'image');
+        
+        if(url){
+            db.ref(`users/${currentUser.uid}/profilePicUrl`).set(url)
+            .then(()=>{showNotification('Profile picture updated!');})
+            .catch(e=>showNotification('Error: '+e.message));
+        }
+    };
+    fileInput.click();
 });
 profileEditNameBtn.addEventListener('click',()=>{profileEditNameForm.classList.remove('hidden');profileNameInput.value=currentUserData.name;profileViewName.classList.add('hidden');profileEditNameBtn.classList.add('hidden');});
 profileSaveNameBtn.addEventListener('click',()=>{
@@ -895,8 +931,8 @@ ref.on('child_added',s=>{
 const m=s.val();if(currentUserData.blockedUsers&&currentUserData.blockedUsers[m.senderId])return;
 let previewText = '';
 if(m.type==='audio') previewText = '🎤 Voice Message';
-else if(m.type==='view_once_image') previewText = '📷 Photo';
-else if(m.type==='view_once_video') previewText = '🎥 Video';
+else if(m.type==='image') previewText = '📷 Photo';
+else if(m.type==='video') previewText = '🎥 Video';
 else previewText = m.text;
 
 lastMessageTimestamps[cid]={text:(m.senderId===currentUser.uid?'You: ':'')+previewText,timestamp:m.timestamp};
@@ -911,8 +947,8 @@ s.forEach(c=>{
     const m=c.val();
     let previewText = '';
     if(m.type==='audio') previewText = '🎤 Voice Message';
-    else if(m.type==='view_once_image') previewText = '📷 Photo';
-    else if(m.type==='view_once_video') previewText = '🎥 Video';
+    else if(m.type==='image') previewText = '📷 Photo';
+    else if(m.type==='video') previewText = '🎥 Video';
     else previewText = m.text;
     
     lastMessageTimestamps[cid]={text:(m.senderId===currentUser.uid?'You: ':'')+previewText,timestamp:m.timestamp};i.querySelector('.item-subtext').textContent=lastMessageTimestamps[cid].text;});
@@ -970,48 +1006,37 @@ const cw=document.createElement('div');cw.className='message-content-wrapper';
 if(m.type==='audio'){
 const aud=document.createElement('audio');aud.controls=true;aud.className='audio-player';aud.src=m.content;cw.appendChild(aud);
 }
-// NEW VIEW ONCE RENDER LOGIC
-else if(m.type==='view_once_image'||m.type==='view_once_video'){
-    const expired=!m.content; // If content is null, it's expired
-    const d=document.createElement('div');d.className='view-once-bubble';
+// CHANGED: PERMANENT MEDIA RENDER
+else if(m.type==='image'||m.type==='video'){
+    const d=document.createElement('div');d.className='media-bubble';
     
     let iconSvg = '';
-    if (m.type === 'view_once_image') iconSvg = '<svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:var(--wa-text-primary);"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>';
+    if (m.type === 'image') iconSvg = '<svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:var(--wa-text-primary);"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>';
     else iconSvg = '<svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:var(--wa-text-primary);"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>';
 
-    let label = '';
-    if (isMe) {
-        label = expired ? 'Opened' : 'Sent (View Once)';
-    } else {
-        label = expired ? 'Opened' : 'Tap to View';
-    }
-
-    d.innerHTML=`${iconSvg}<span class="view-once-text ${expired?'view-once-expired':''}">${label}</span>`;
+    let label = m.type === 'image' ? '📷 Photo' : '🎥 Video';
+    d.innerHTML=`${iconSvg}<span class="media-text">${label}</span>`;
     
-    // Only receiver can view, and only if not expired
-    if(!isMe && !expired){
-        d.addEventListener('click',()=>{
-            currentViewingMsgId=mid;
-            mediaViewModal.classList.remove('hidden');
-            mediaContentDisplay.innerHTML='';
-            
-            if(m.type==='view_once_image'){
-                const el=document.createElement('img');
-                el.src=m.content;
-                el.style.cssText='max-width:100%;max-height:100%;object-fit:contain;';
-                mediaContentDisplay.appendChild(el);
-            } else {
-                const el=document.createElement('video');
-                el.src=m.content;
-                el.controls=true;
-                el.autoplay=true;
-                el.style.cssText='max-width:100%;max-height:100%;';
-                // Auto close video when done
-                el.onended=()=>closeMediaBtn.click();
-                mediaContentDisplay.appendChild(el);
-            }
-        });
-    }
+    d.addEventListener('click',()=>{
+        currentViewingMsgId=mid;
+        mediaViewModal.classList.remove('hidden');
+        mediaContentDisplay.innerHTML='';
+        
+        if(m.type==='image'){
+            const el=document.createElement('img');
+            el.src=m.content;
+            el.style.cssText='max-width:100%;max-height:100%;object-fit:contain;';
+            mediaContentDisplay.appendChild(el);
+        } else {
+            const el=document.createElement('video');
+            el.src=m.content;
+            el.controls=true;
+            el.autoplay=true;
+            el.style.cssText='max-width:100%;max-height:100%;';
+            el.onended=()=>closeMediaBtn.click();
+            mediaContentDisplay.appendChild(el);
+        }
+    });
     cw.appendChild(d);
 }
 else{
@@ -1031,9 +1056,17 @@ function sendMessage(){
     if(!currentChatPartner)return;
 
     if (currentAudioBlob) {
-        convertBlobToBase64(currentAudioBlob);
-        currentAudioBlob = null;
-        resetChatInputUI();
+        showNotification("Sending voice message...");
+        chatSendBtn.disabled = true;
+        
+        uploadToCloudinary(currentAudioBlob, 'video').then(url => { // Audio often uploads as video type in cloudinary
+            chatSendBtn.disabled = false;
+            if(url) {
+                sendAudioMessage(url);
+                currentAudioBlob = null;
+                resetChatInputUI();
+            }
+        });
         return; 
     }
 
