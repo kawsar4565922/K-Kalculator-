@@ -443,6 +443,10 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:#d1d7db;displa
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
+
+// 🔴🔴 Google Drive Script URL INTEGRATED 🔴🔴
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7DArC5Z4pMVjucZhdm6OYxb3vezWiPau3OxlQhTgtwyTarICYf86YxmygnGkx3VvPzg/exec"; 
+
 document.addEventListener('DOMContentLoaded',()=>{
 const firebaseConfig={apiKey:"AIzaSyBh7oN1SOlJvTdV4ld5JRP6wBRWu-DL_nQ",authDomain:"kawsar-messaging-apps.firebaseapp.com",databaseURL:"https://kawsar-messaging-apps-default-rtdb.firebaseio.com",projectId:"kawsar-messaging-apps",storageBucket:"kawsar-messaging-apps.firebasestorage.app",messagingSenderId:"738233086903",appId:"1:738233086903:web:9357e641d888c2f9a76e32",measurementId:"G-18N3ZJFVKW"};
 firebase.initializeApp(firebaseConfig);
@@ -474,6 +478,60 @@ const calculatorScreen=document.getElementById('calculator-screen'),calcButtons=
 // NEW VARIABLES FOR ONE-TIME MEDIA
 const attachMediaBtn=document.getElementById('attach-media-btn'),mediaFileInput=document.getElementById('media-file-input'),mediaViewModal=document.getElementById('media-view-modal'),mediaContentDisplay=document.getElementById('media-content-display'),closeMediaBtn=document.getElementById('close-media-btn');
 let currentViewingMsgId=null;
+
+// -------- GOOGLE DRIVE UPLOAD HELPER FUNCTION --------
+async function uploadToDrive(base64Str, fileName, mimeType) {
+    showNotification("Uploading to Cloud..."); // Show uploading status
+    
+    const payload = {
+        action: "upload",
+        file: base64Str,
+        filename: fileName,
+        mimeType: mimeType
+    };
+
+    try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: { "Content-Type": "text/plain" }
+        });
+        
+        const result = await response.json();
+        
+        if(result.status === 'success') {
+            return result; // Contains fileUrl and fileId
+        } else {
+            throw new Error(result.message);
+        }
+    } catch (error) {
+        console.error("Upload Error:", error);
+        showCustomAlert("Upload Failed: " + error.message);
+        return null;
+    }
+}
+
+// -------- GOOGLE DRIVE DELETE HELPER FUNCTION --------
+async function deleteFromDrive(fileId) {
+    if(!fileId) return;
+
+    const payload = {
+        action: "delete",
+        fileId: fileId
+    };
+
+    try {
+         await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify(payload),
+             headers: { "Content-Type": "text/plain" }
+        });
+        console.log("File deleted from Drive:", fileId);
+    } catch (e) {
+        console.error("Delete failed:", e);
+    }
+}
+
 
 let currentExpression='0',userSecretPin=null,isAppUnlocked=false;
 function resetCalculator(){currentExpression='0';calculatorScreen.textContent=currentExpression;}
@@ -643,13 +701,34 @@ function resetChatInputUI() {
 
 function convertBlobToBase64(blob){
     const reader=new FileReader();reader.readAsDataURL(blob);
-    reader.onloadend=function(){sendAudioMessage(reader.result);}
+    reader.onloadend=function(){
+        // Modified to upload to Drive first
+        sendAudioMessage(reader.result, blob.type);
+    }
 }
 
-function sendAudioMessage(base64Audio){
+// MODIFIED: Uploads to Google Drive first, then saves URL to Firebase
+async function sendAudioMessage(base64Audio, mimeType){
     if(!currentChatPartner)return;
+    
+    const timestamp = new Date().getTime();
+    const filename = `voice_${currentUser.uid}_${timestamp}.webm`;
+    
+    // Upload to Drive
+    const uploadResult = await uploadToDrive(base64Audio, filename, mimeType || 'audio/webm');
+    if(!uploadResult) return;
+
     const chatId=getChatId(currentUser.uid,currentChatPartner.uid);
-    const message={type:'audio',content:base64Audio,text:'🎤 Voice Message',senderId:currentUser.uid,receiverId:currentChatPartner.uid,timestamp:firebase.database.ServerValue.TIMESTAMP,status:'sent'};
+    const message={
+        type:'audio',
+        content: uploadResult.fileUrl, // Use Drive URL
+        fileId: uploadResult.fileId,   // Store File ID for deletion if needed
+        text:'🎤 Voice Message',
+        senderId:currentUser.uid,
+        receiverId:currentChatPartner.uid,
+        timestamp:firebase.database.ServerValue.TIMESTAMP,
+        status:'sent'
+    };
     db.ref('messages/'+chatId).push(message);
     db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`).transaction(count=>(count||0)+1);
 }
@@ -663,8 +742,9 @@ mediaFileInput.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (file.size > 3 * 1024 * 1024) {
-        showNotification("File too large! Max 3MB allowed.");
+    // Client-side size check (also done on server script)
+    if (file.size > 10 * 1024 * 1024) {
+        showCustomAlert("File too large! Max 10MB allowed.");
         this.value = '';
         return;
     }
@@ -673,19 +753,26 @@ mediaFileInput.addEventListener('change', function(e) {
     reader.onload = function(event) {
         const base64String = event.target.result;
         const type = file.type.startsWith('image/') ? 'view_once_image' : 'view_once_video';
-        sendOneTimeMedia(type, base64String);
+        // Send filename and mimeType
+        sendOneTimeMedia(type, base64String, file.name, file.type);
     };
     reader.readAsDataURL(file);
     this.value = '';
 });
 
-function sendOneTimeMedia(type, content) {
+// MODIFIED: Uploads to Google Drive first
+async function sendOneTimeMedia(type, base64Content, filename, mimeType) {
     if (!currentChatPartner) return;
+    
+    // Upload to Drive
+    const uploadResult = await uploadToDrive(base64Content, filename, mimeType);
+    if(!uploadResult) return;
     
     const chatId = getChatId(currentUser.uid, currentChatPartner.uid);
     const message = {
         type: type,
-        content: content,
+        content: uploadResult.fileUrl, // Drive URL
+        fileId: uploadResult.fileId,   // Drive File ID
         text: type === 'view_once_image' ? '📷 Photo (View Once)' : '🎥 Video (View Once)',
         senderId: currentUser.uid,
         receiverId: currentChatPartner.uid,
@@ -703,17 +790,29 @@ function sendOneTimeMedia(type, content) {
     db.ref(`unreadCounts/${currentChatPartner.uid}/${currentUser.uid}`).transaction(count => (count || 0) + 1);
 }
 
-// MEDIA CLOSE & DELETE LOGIC
+// MODIFIED: DELETE FROM DRIVE ON CLOSE
 closeMediaBtn.addEventListener('click', () => {
     if (currentViewingMsgId && currentChatPartner) {
         mediaViewModal.classList.add('hidden');
         mediaContentDisplay.innerHTML = ''; 
         
-        // This deletes the content from firebase immediately
         const chatId = getChatId(currentUser.uid, currentChatPartner.uid);
-        db.ref(`messages/${chatId}/${currentViewingMsgId}`).update({
-            content: null,
-            text: '⭕ Media Expired'
+        const msgRef = db.ref(`messages/${chatId}/${currentViewingMsgId}`);
+
+        // Get fileId to delete from Drive
+        msgRef.once('value').then(snapshot => {
+            if(snapshot.exists()) {
+                const msg = snapshot.val();
+                if(msg.fileId) {
+                    deleteFromDrive(msg.fileId); // Delete from Google Drive
+                }
+            }
+             // Delete content from Firebase
+            msgRef.update({
+                content: null,
+                fileId: null,
+                text: '⭕ Media Expired'
+            });
         });
         
         currentViewingMsgId = null;
