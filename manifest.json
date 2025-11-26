@@ -1,11 +1,12 @@
 {
   "name": "Secret Messaging App",
   "short_name": "Secret Chat",
-  "start_url": "./index.html",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#AA00FF",
   "theme_color": "#FF0055",
   "orientation": "portrait",
+  "scope": "/K-Kalculator-/",
   "icons": [
     {
       "src": "https://i.postimg.cc/B64K9zC9/20251122-030333.png",
