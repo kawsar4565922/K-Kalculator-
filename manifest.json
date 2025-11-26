@@ -1,6 +1,6 @@
 {
   "name": "Secret Messaging App",
-  "short_name": "Secret Chat",
+  "short_name": "Calculator",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#AA00FF",
